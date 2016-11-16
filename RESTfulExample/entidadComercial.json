@@ -1,0 +1,22 @@
+{
+	"clave": "nuevo",
+	"cuit": "30-99999999-3",
+	"tipoIdentificacion": "80",
+	"nombre": "Juan Perez",
+	"esproveedor": "N",
+	"esCliente": "Y",
+	"esEmpleado": "N",
+	"direccion": "Corrientes 880",
+	"cp": "1043",
+	"ciudad": "Capital Federal",
+	"codigoPais": "119",
+	"provincia": "1000082",
+	"comercial": "",
+	"codigoIVA": "1010065",
+	"nroIIBB": "",
+	"grupoEC": "LOCAL",
+	"clientePotencial": "N",
+	"telefono": "6363-9833",
+	"estadoCredito": "",
+	"limitecredito": "0"
+}
