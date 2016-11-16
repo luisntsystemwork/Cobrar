@@ -1,0 +1,823 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from LibertyaWSService WSDL service -->
+
+  <service name="LibertyaWS" provider="java:RPC" style="rpc" use="encoded">
+      <parameter name="wsdlTargetNamespace" value="org.libertya.ws"/>
+      <parameter name="wsdlServiceElement" value="LibertyaWSService"/>
+      <parameter name="schemaUnqualified" value="org.libertya.ws,http://result.bean.ws.libertya.org,http://xml.apache.org/xml-soap,http://parameter.bean.ws.libertya.org,http://common.wse.libertya.org"/>
+      <parameter name="wsdlServicePort" value="LibertyaWS"/>
+      <parameter name="className" value="org.libertya.ws.LibertyaWSImpl"/>
+      <parameter name="wsdlPortType" value="LibertyaWS"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="bPartnerCreate" qname="operNS:bPartnerCreate" xmlns:operNS="org.libertya.ws" returnQName="bPartnerCreateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:BPartnerParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <operation name="bPartnerRetrieveByID" qname="operNS:bPartnerRetrieveByID" xmlns:operNS="org.libertya.ws" returnQName="bPartnerRetrieveByIDReturn" returnType="rtns:BPartnerResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerRetrieveByValue" qname="operNS:bPartnerRetrieveByValue" xmlns:operNS="org.libertya.ws" returnQName="bPartnerRetrieveByValueReturn" returnType="rtns:BPartnerResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerRetrieveByTaxID" qname="operNS:bPartnerRetrieveByTaxID" xmlns:operNS="org.libertya.ws" returnQName="bPartnerRetrieveByTaxIDReturn" returnType="rtns:BPartnerResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerUpdate" qname="operNS:bPartnerUpdate" xmlns:operNS="org.libertya.ws" returnQName="bPartnerUpdateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:BPartnerParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerDelete" qname="operNS:bPartnerDelete" xmlns:operNS="org.libertya.ws" returnQName="bPartnerDeleteReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceCreateCustomer" qname="operNS:invoiceCreateCustomer" xmlns:operNS="org.libertya.ws" returnQName="invoiceCreateCustomerReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:InvoiceParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceCreateCustomerFromOrderByID" qname="operNS:invoiceCreateCustomerFromOrderByID" xmlns:operNS="org.libertya.ws" returnQName="invoiceCreateCustomerFromOrderByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:InvoiceParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceCreateCustomerFromOrderByColumn" qname="operNS:invoiceCreateCustomerFromOrderByColumn" xmlns:operNS="org.libertya.ws" returnQName="invoiceCreateCustomerFromOrderByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:InvoiceParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceCreateVendor" qname="operNS:invoiceCreateVendor" xmlns:operNS="org.libertya.ws" returnQName="invoiceCreateVendorReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:InvoiceParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceCreateVendorFromOrderByID" qname="operNS:invoiceCreateVendorFromOrderByID" xmlns:operNS="org.libertya.ws" returnQName="invoiceCreateVendorFromOrderByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:InvoiceParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceCreateVendorFromOrderByColumn" qname="operNS:invoiceCreateVendorFromOrderByColumn" xmlns:operNS="org.libertya.ws" returnQName="invoiceCreateVendorFromOrderByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:InvoiceParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceDeleteByID" qname="operNS:invoiceDeleteByID" xmlns:operNS="org.libertya.ws" returnQName="invoiceDeleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceDeleteByColumn" qname="operNS:invoiceDeleteByColumn" xmlns:operNS="org.libertya.ws" returnQName="invoiceDeleteByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceCompleteByID" qname="operNS:invoiceCompleteByID" xmlns:operNS="org.libertya.ws" returnQName="invoiceCompleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceCompleteByColumn" qname="operNS:invoiceCompleteByColumn" xmlns:operNS="org.libertya.ws" returnQName="invoiceCompleteByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceVoidByID" qname="operNS:invoiceVoidByID" xmlns:operNS="org.libertya.ws" returnQName="invoiceVoidByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceVoidByColumn" qname="operNS:invoiceVoidByColumn" xmlns:operNS="org.libertya.ws" returnQName="invoiceVoidByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="invoiceUpdateByID" qname="operNS:invoiceUpdateByID" xmlns:operNS="org.libertya.ws" returnQName="invoiceUpdateByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productCreate" qname="operNS:productCreate" xmlns:operNS="org.libertya.ws" returnQName="productCreateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <operation name="productCreate" qname="operNS:productCreate" xmlns:operNS="org.libertya.ws" returnQName="productCreateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productRetrieveByID" qname="operNS:productRetrieveByID" xmlns:operNS="org.libertya.ws" returnQName="productRetrieveByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productRetrieveByValue" qname="operNS:productRetrieveByValue" xmlns:operNS="org.libertya.ws" returnQName="productRetrieveByValueReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productUpdateByID" qname="operNS:productUpdateByID" xmlns:operNS="org.libertya.ws" returnQName="productUpdateByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productUpdateByValue" qname="operNS:productUpdateByValue" xmlns:operNS="org.libertya.ws" returnQName="productUpdateByValueReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productDelete" qname="operNS:productDelete" xmlns:operNS="org.libertya.ws" returnQName="productDeleteReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentRetrieveOrderByID" qname="operNS:documentRetrieveOrderByID" xmlns:operNS="org.libertya.ws" returnQName="documentRetrieveOrderByIDReturn" returnType="rtns:DocumentResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentRetrieveOrderByColumn" qname="operNS:documentRetrieveOrderByColumn" xmlns:operNS="org.libertya.ws" returnQName="documentRetrieveOrderByColumnReturn" returnType="rtns:DocumentResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentRetrieveInvoiceByID" qname="operNS:documentRetrieveInvoiceByID" xmlns:operNS="org.libertya.ws" returnQName="documentRetrieveInvoiceByIDReturn" returnType="rtns:InvoiceResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentRetrieveInvoiceByColumn" qname="operNS:documentRetrieveInvoiceByColumn" xmlns:operNS="org.libertya.ws" returnQName="documentRetrieveInvoiceByColumnReturn" returnType="rtns:InvoiceResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentRetrieveInOutByID" qname="operNS:documentRetrieveInOutByID" xmlns:operNS="org.libertya.ws" returnQName="documentRetrieveInOutByIDReturn" returnType="rtns:DocumentResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentRetrieveInOutByColumn" qname="operNS:documentRetrieveInOutByColumn" xmlns:operNS="org.libertya.ws" returnQName="documentRetrieveInOutByColumnReturn" returnType="rtns:DocumentResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentRetrieveAllocationByID" qname="operNS:documentRetrieveAllocationByID" xmlns:operNS="org.libertya.ws" returnQName="documentRetrieveAllocationByIDReturn" returnType="rtns:DocumentResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentRetrieveAllocationByColumn" qname="operNS:documentRetrieveAllocationByColumn" xmlns:operNS="org.libertya.ws" returnQName="documentRetrieveAllocationByColumnReturn" returnType="rtns:DocumentResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentQueryOrders" qname="operNS:documentQueryOrders" xmlns:operNS="org.libertya.ws" returnQName="documentQueryOrdersReturn" returnType="rtns:MultipleDocumentsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in7" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in8" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in9" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentQueryOrders" qname="operNS:documentQueryOrders" xmlns:operNS="org.libertya.ws" returnQName="documentQueryOrdersReturn" returnType="rtns:MultipleDocumentsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in7" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in8" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in9" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in10" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in11" type="tns:ArrayOf_xsd_string" xmlns:tns="org.libertya.ws"/>
+      </operation>
+      <operation name="documentQueryInvoices" qname="operNS:documentQueryInvoices" xmlns:operNS="org.libertya.ws" returnQName="documentQueryInvoicesReturn" returnType="rtns:MultipleDocumentsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in7" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in8" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in9" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in10" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in11" type="tns:ArrayOf_xsd_string" xmlns:tns="org.libertya.ws"/>
+      </operation>
+      <operation name="documentQueryInvoices" qname="operNS:documentQueryInvoices" xmlns:operNS="org.libertya.ws" returnQName="documentQueryInvoicesReturn" returnType="rtns:MultipleDocumentsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in7" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in8" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in9" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in10" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentQueryInOuts" qname="operNS:documentQueryInOuts" xmlns:operNS="org.libertya.ws" returnQName="documentQueryInOutsReturn" returnType="rtns:MultipleDocumentsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in7" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in8" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in9" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in10" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in11" type="tns:ArrayOf_xsd_string" xmlns:tns="org.libertya.ws"/>
+      </operation>
+      <operation name="documentQueryInOuts" qname="operNS:documentQueryInOuts" xmlns:operNS="org.libertya.ws" returnQName="documentQueryInOutsReturn" returnType="rtns:MultipleDocumentsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in7" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in8" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in9" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentQueryAllocations" qname="operNS:documentQueryAllocations" xmlns:operNS="org.libertya.ws" returnQName="documentQueryAllocationsReturn" returnType="rtns:MultipleDocumentsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in7" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in8" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in9" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="documentQueryAllocations" qname="operNS:documentQueryAllocations" xmlns:operNS="org.libertya.ws" returnQName="documentQueryAllocationsReturn" returnType="rtns:MultipleDocumentsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in7" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in8" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in9" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in10" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in11" type="tns:ArrayOf_xsd_string" xmlns:tns="org.libertya.ws"/>
+      </operation>
+      <operation name="orderCreateCustomer" qname="operNS:orderCreateCustomer" xmlns:operNS="org.libertya.ws" returnQName="orderCreateCustomerReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:OrderParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in7" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in8" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderCreateCustomer" qname="operNS:orderCreateCustomer" xmlns:operNS="org.libertya.ws" returnQName="orderCreateCustomerReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:OrderParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderCreateVendor" qname="operNS:orderCreateVendor" xmlns:operNS="org.libertya.ws" returnQName="orderCreateVendorReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:OrderParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderDeleteByID" qname="operNS:orderDeleteByID" xmlns:operNS="org.libertya.ws" returnQName="orderDeleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderDeleteByColumn" qname="operNS:orderDeleteByColumn" xmlns:operNS="org.libertya.ws" returnQName="orderDeleteByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderCompleteByID" qname="operNS:orderCompleteByID" xmlns:operNS="org.libertya.ws" returnQName="orderCompleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:OrderParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderCompleteByID" qname="operNS:orderCompleteByID" xmlns:operNS="org.libertya.ws" returnQName="orderCompleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:OrderParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderCompleteByColumn" qname="operNS:orderCompleteByColumn" xmlns:operNS="org.libertya.ws" returnQName="orderCompleteByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:OrderParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderCompleteByColumn" qname="operNS:orderCompleteByColumn" xmlns:operNS="org.libertya.ws" returnQName="orderCompleteByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:OrderParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderVoidByID" qname="operNS:orderVoidByID" xmlns:operNS="org.libertya.ws" returnQName="orderVoidByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderVoidByColumn" qname="operNS:orderVoidByColumn" xmlns:operNS="org.libertya.ws" returnQName="orderVoidByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderUpdateByID" qname="operNS:orderUpdateByID" xmlns:operNS="org.libertya.ws" returnQName="orderUpdateByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="orderUpdateByColumn" qname="operNS:orderUpdateByColumn" xmlns:operNS="org.libertya.ws" returnQName="orderUpdateByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inOutCreateCustomer" qname="operNS:inOutCreateCustomer" xmlns:operNS="org.libertya.ws" returnQName="inOutCreateCustomerReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:DocumentParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inOutCreateVendor" qname="operNS:inOutCreateVendor" xmlns:operNS="org.libertya.ws" returnQName="inOutCreateVendorReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:DocumentParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inOutCreateFromOrder" qname="operNS:inOutCreateFromOrder" xmlns:operNS="org.libertya.ws" returnQName="inOutCreateFromOrderReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:DocumentParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inOutDeleteByID" qname="operNS:inOutDeleteByID" xmlns:operNS="org.libertya.ws" returnQName="inOutDeleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inOutDeleteByColumn" qname="operNS:inOutDeleteByColumn" xmlns:operNS="org.libertya.ws" returnQName="inOutDeleteByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inOutCompleteByID" qname="operNS:inOutCompleteByID" xmlns:operNS="org.libertya.ws" returnQName="inOutCompleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inOutCompleteByColumn" qname="operNS:inOutCompleteByColumn" xmlns:operNS="org.libertya.ws" returnQName="inOutCompleteByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inOutVoidByID" qname="operNS:inOutVoidByID" xmlns:operNS="org.libertya.ws" returnQName="inOutVoidByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inOutVoidByColumn" qname="operNS:inOutVoidByColumn" xmlns:operNS="org.libertya.ws" returnQName="inOutVoidByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerBalanceSumOrdersNotInvoiced" qname="operNS:bPartnerBalanceSumOrdersNotInvoiced" xmlns:operNS="org.libertya.ws" returnQName="bPartnerBalanceSumOrdersNotInvoicedReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:ArrayOf_xsd_int" xmlns:tns="org.libertya.ws"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerBalanceSumInvoices" qname="operNS:bPartnerBalanceSumInvoices" xmlns:operNS="org.libertya.ws" returnQName="bPartnerBalanceSumInvoicesReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:ArrayOf_xsd_int" xmlns:tns="org.libertya.ws"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerBalanceSumPayments" qname="operNS:bPartnerBalanceSumPayments" xmlns:operNS="org.libertya.ws" returnQName="bPartnerBalanceSumPaymentsReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:ArrayOf_xsd_int" xmlns:tns="org.libertya.ws"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerBalanceSumChecks" qname="operNS:bPartnerBalanceSumChecks" xmlns:operNS="org.libertya.ws" returnQName="bPartnerBalanceSumChecksReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:ArrayOf_xsd_int" xmlns:tns="org.libertya.ws"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="allocationCreateReceipt" qname="operNS:allocationCreateReceipt" xmlns:operNS="org.libertya.ws" returnQName="allocationCreateReceiptReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:AllocationParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="allocationCreateEarlyReceipt" qname="operNS:allocationCreateEarlyReceipt" xmlns:operNS="org.libertya.ws" returnQName="allocationCreateEarlyReceiptReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:AllocationParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="allocationVoidByID" qname="operNS:allocationVoidByID" xmlns:operNS="org.libertya.ws" returnQName="allocationVoidByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:AllocationParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="allocationVoidByColumn" qname="operNS:allocationVoidByColumn" xmlns:operNS="org.libertya.ws" returnQName="allocationVoidByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:AllocationParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="userCreate" qname="operNS:userCreate" xmlns:operNS="org.libertya.ws" returnQName="userCreateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <operation name="userRetrieveByID" qname="operNS:userRetrieveByID" xmlns:operNS="org.libertya.ws" returnQName="userRetrieveByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="userRetrieveByColumn" qname="operNS:userRetrieveByColumn" xmlns:operNS="org.libertya.ws" returnQName="userRetrieveByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="userUpdateByID" qname="operNS:userUpdateByID" xmlns:operNS="org.libertya.ws" returnQName="userUpdateByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="userDeleteByID" qname="operNS:userDeleteByID" xmlns:operNS="org.libertya.ws" returnQName="userDeleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="storageQuery" qname="operNS:storageQuery" xmlns:operNS="org.libertya.ws" returnQName="storageQueryReturn" returnType="rtns:StorageResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:ArrayOf_xsd_int" xmlns:tns="org.libertya.ws"/>
+        <parameter qname="in2" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in4" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in5" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in6" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inventoryCreate" qname="operNS:inventoryCreate" xmlns:operNS="org.libertya.ws" returnQName="inventoryCreateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:DocumentParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inventoryCompleteByID" qname="operNS:inventoryCompleteByID" xmlns:operNS="org.libertya.ws" returnQName="inventoryCompleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inventoryCompleteByColumn" qname="operNS:inventoryCompleteByColumn" xmlns:operNS="org.libertya.ws" returnQName="inventoryCompleteByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inventoryDeleteByID" qname="operNS:inventoryDeleteByID" xmlns:operNS="org.libertya.ws" returnQName="inventoryDeleteByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inventoryDeleteByColumn" qname="operNS:inventoryDeleteByColumn" xmlns:operNS="org.libertya.ws" returnQName="inventoryDeleteByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inventoryVoidByID" qname="operNS:inventoryVoidByID" xmlns:operNS="org.libertya.ws" returnQName="inventoryVoidByIDReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="inventoryVoidByColumn" qname="operNS:inventoryVoidByColumn" xmlns:operNS="org.libertya.ws" returnQName="inventoryVoidByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerLocationCreate" qname="operNS:bPartnerLocationCreate" xmlns:operNS="org.libertya.ws" returnQName="bPartnerLocationCreateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <operation name="bPartnerLocationUpdate" qname="operNS:bPartnerLocationUpdate" xmlns:operNS="org.libertya.ws" returnQName="bPartnerLocationUpdateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerLocationDelete" qname="operNS:bPartnerLocationDelete" xmlns:operNS="org.libertya.ws" returnQName="bPartnerLocationDeleteReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="bPartnerLocationRetrieve" qname="operNS:bPartnerLocationRetrieve" xmlns:operNS="org.libertya.ws" returnQName="bPartnerLocationRetrieveReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productPriceCreateUpdate" qname="operNS:productPriceCreateUpdate" xmlns:operNS="org.libertya.ws" returnQName="productPriceCreateUpdateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <operation name="productPriceDelete" qname="operNS:productPriceDelete" xmlns:operNS="org.libertya.ws" returnQName="productPriceDeleteReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productPriceRetrieve" qname="operNS:productPriceRetrieve" xmlns:operNS="org.libertya.ws" returnQName="productPriceRetrieveReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productionOrderCreate" qname="operNS:productionOrderCreate" xmlns:operNS="org.libertya.ws" returnQName="productionOrderCreateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:DocumentParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productionOrderDelete" qname="operNS:productionOrderDelete" xmlns:operNS="org.libertya.ws" returnQName="productionOrderDeleteReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productionOrderComplete" qname="operNS:productionOrderComplete" xmlns:operNS="org.libertya.ws" returnQName="productionOrderCompleteReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productionOrderVoid" qname="operNS:productionOrderVoid" xmlns:operNS="org.libertya.ws" returnQName="productionOrderVoidReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="productionOrderVoidByColumn" qname="operNS:productionOrderVoidByColumn" xmlns:operNS="org.libertya.ws" returnQName="productionOrderVoidByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="depositSlipCreate" qname="operNS:depositSlipCreate" xmlns:operNS="org.libertya.ws" returnQName="depositSlipCreateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:DocumentParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="depositSlipDelete" qname="operNS:depositSlipDelete" xmlns:operNS="org.libertya.ws" returnQName="depositSlipDeleteReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="depositSlipComplete" qname="operNS:depositSlipComplete" xmlns:operNS="org.libertya.ws" returnQName="depositSlipCompleteReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="depositSlipVoid" qname="operNS:depositSlipVoid" xmlns:operNS="org.libertya.ws" returnQName="depositSlipVoidReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="depositSlipVoidByColumn" qname="operNS:depositSlipVoidByColumn" xmlns:operNS="org.libertya.ws" returnQName="depositSlipVoidByColumnReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="billOfMaterialCreate" qname="operNS:billOfMaterialCreate" xmlns:operNS="org.libertya.ws" returnQName="billOfMaterialCreateReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <operation name="billOfMaterialDelete" qname="operNS:billOfMaterialDelete" xmlns:operNS="org.libertya.ws" returnQName="billOfMaterialDeleteReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="processFiscalPrinterClose" qname="operNS:processFiscalPrinterClose" xmlns:operNS="org.libertya.ws" returnQName="processFiscalPrinterCloseReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <operation name="processCreditCardBatchClose" qname="operNS:processCreditCardBatchClose" xmlns:operNS="org.libertya.ws" returnQName="processCreditCardBatchCloseReturn" returnType="rtns:ResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <operation name="replicate" qname="operNS:replicate" xmlns:operNS="org.libertya.ws" returnQName="replicateReturn" returnType="rtns:ReplicationResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:ReplicationParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <operation name="recordQuery" qname="operNS:recordQuery" xmlns:operNS="org.libertya.ws" returnQName="recordQueryReturn" returnType="rtns:MultipleRecordsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:FilteredColumnsParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in3" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="recordQueryDirect" qname="operNS:recordQueryDirect" xmlns:operNS="org.libertya.ws" returnQName="recordQueryDirectReturn" returnType="rtns:MultipleRecordsResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:FilteredColumnsParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+        <parameter qname="in1" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="in2" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="customService" qname="operNS:customService" xmlns:operNS="org.libertya.ws" returnQName="customServiceReturn" returnType="rtns:CustomServiceResultBean" xmlns:rtns="http://result.bean.ws.libertya.org" soapAction="" >
+        <parameter qname="in0" type="tns:CustomServiceParameterBean" xmlns:tns="http://parameter.bean.ws.libertya.org"/>
+      </operation>
+      <parameter name="allowedMethods" value="invoiceCompleteByColumn depositSlipDelete processCreditCardBatchClose bPartnerRetrieveByValue inOutVoidByColumn invoiceCreateVendorFromOrderByColumn bPartnerBalanceSumPayments inventoryCompleteByColumn inventoryCreate storageQuery orderCompleteByColumn invoiceUpdateByID productRetrieveByID customService documentRetrieveAllocationByColumn invoiceDeleteByID inOutVoidByID bPartnerBalanceSumOrdersNotInvoiced inventoryDeleteByID invoiceCreateCustomer documentQueryInOuts bPartnerUpdate productDelete depositSlipComplete processFiscalPrinterClose inventoryCompleteByID invoiceVoidByID inOutCompleteByColumn allocationVoidByColumn documentRetrieveInOutByColumn orderDeleteByID orderDeleteByColumn bPartnerRetrieveByID documentRetrieveAllocationByID productRetrieveByValue bPartnerLocationUpdate allocationVoidByID inventoryVoidByID productPriceRetrieve inOutCreateCustomer inOutCreateVendor orderCompleteByID recordQueryDirect orderUpdateByColumn documentRetrieveOrderByColumn billOfMaterialCreate inventoryVoidByColumn depositSlipVoidByColumn inventoryDeleteByColumn allocationCreateReceipt inOutDeleteByID productionOrderCreate productUpdateByValue orderVoidByID userCreate invoiceCreateCustomerFromOrderByColumn documentRetrieveInvoiceByID userDeleteByID documentRetrieveInOutByID invoiceCreateCustomerFromOrderByID billOfMaterialDelete bPartnerRetrieveByTaxID productionOrderVoid inOutCompleteByID productionOrderVoidByColumn depositSlipVoid bPartnerBalanceSumInvoices bPartnerCreate bPartnerLocationDelete documentQueryAllocations documentQueryInvoices productUpdateByID orderCreateCustomer productionOrderComplete productPriceCreateUpdate bPartnerDelete productPriceDelete allocationCreateEarlyReceipt productCreate documentRetrieveOrderByID inOutDeleteByColumn orderCreateVendor userUpdateByID bPartnerLocationCreate userRetrieveByID bPartnerBalanceSumChecks invoiceVoidByColumn userRetrieveByColumn invoiceCompleteByID depositSlipCreate recordQuery productionOrderDelete invoiceCreateVendorFromOrderByID invoiceDeleteByColumn bPartnerLocationRetrieve orderUpdateByID replicate documentRetrieveInvoiceByColumn inOutCreateFromOrder orderVoidByColumn documentQueryOrders invoiceCreateVendor"/>
+      <parameter name="scope" value="Application"/>
+
+      <arrayMapping
+        xmlns:ns="org.libertya.ws"
+        qname="ns:ArrayOf_xsd_string"
+        type="java:java.lang.String[]"
+        innerType="cmp-ns:string" xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://result.bean.ws.libertya.org"
+        qname="ns:ReplicationResultBean"
+        type="java:org.libertya.ws.bean.result.ReplicationResultBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://result.bean.ws.libertya.org"
+        qname="ns:MultipleDocumentsResultBean"
+        type="java:org.libertya.ws.bean.result.MultipleDocumentsResultBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://parameter.bean.ws.libertya.org"
+        qname="ns:InvoiceParameterBean"
+        type="java:org.libertya.ws.bean.parameter.InvoiceParameterBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://result.bean.ws.libertya.org"
+        qname="ns:InvoiceResultBean"
+        type="java:org.libertya.ws.bean.result.InvoiceResultBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://parameter.bean.ws.libertya.org"
+        qname="ns:AllocationParameterBean"
+        type="java:org.libertya.ws.bean.parameter.AllocationParameterBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <arrayMapping
+        xmlns:ns="org.libertya.ws"
+        qname="ns:ArrayOf_xsd_int"
+        type="java:int[]"
+        innerType="cmp-ns:int" xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://xml.apache.org/xml-soap"
+        qname="ns:mapItem"
+        type="java:org.apache.xml.xml_soap.MapItem"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://result.bean.ws.libertya.org"
+        qname="ns:MultipleRecordsResultBean"
+        type="java:org.libertya.ws.bean.result.MultipleRecordsResultBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://parameter.bean.ws.libertya.org"
+        qname="ns:OrderParameterBean"
+        type="java:org.libertya.ws.bean.parameter.OrderParameterBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://common.wse.libertya.org"
+        qname="ns:ListedMap"
+        type="java:org.libertya.wse.common.ListedMap"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://result.bean.ws.libertya.org"
+        qname="ns:CustomServiceResultBean"
+        type="java:org.libertya.ws.bean.result.CustomServiceResultBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://parameter.bean.ws.libertya.org"
+        qname="ns:FilteredColumnsParameterBean"
+        type="java:org.libertya.ws.bean.parameter.FilteredColumnsParameterBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://parameter.bean.ws.libertya.org"
+        qname="ns:ParameterBean"
+        type="java:org.libertya.ws.bean.parameter.ParameterBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://result.bean.ws.libertya.org"
+        qname="ns:DocumentResultBean"
+        type="java:org.libertya.ws.bean.result.DocumentResultBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://parameter.bean.ws.libertya.org"
+        qname="ns:ReplicationParameterBean"
+        type="java:org.libertya.ws.bean.parameter.ReplicationParameterBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <arrayMapping
+        xmlns:ns="org.libertya.ws"
+        qname="ns:ArrayOf_tns3_ListedMap"
+        type="java:org.libertya.wse.common.ListedMap[]"
+        innerType="cmp-ns:ListedMap" xmlns:cmp-ns="http://common.wse.libertya.org"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://result.bean.ws.libertya.org"
+        qname="ns:ResultBean"
+        type="java:org.libertya.ws.bean.result.ResultBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://result.bean.ws.libertya.org"
+        qname="ns:StorageResultBean"
+        type="java:org.libertya.ws.bean.result.StorageResultBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://parameter.bean.ws.libertya.org"
+        qname="ns:DocumentParameterBean"
+        type="java:org.libertya.ws.bean.parameter.DocumentParameterBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <arrayMapping
+        xmlns:ns="org.libertya.ws"
+        qname="ns:ArrayOf_xsd_anyType"
+        type="java:java.lang.Object[]"
+        innerType="cmp-ns:anyType" xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://parameter.bean.ws.libertya.org"
+        qname="ns:BPartnerParameterBean"
+        type="java:org.libertya.ws.bean.parameter.BPartnerParameterBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://result.bean.ws.libertya.org"
+        qname="ns:BPartnerResultBean"
+        type="java:org.libertya.ws.bean.result.BPartnerResultBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://parameter.bean.ws.libertya.org"
+        qname="ns:CustomServiceParameterBean"
+        type="java:org.libertya.ws.bean.parameter.CustomServiceParameterBean"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+  </service>
+</deployment>

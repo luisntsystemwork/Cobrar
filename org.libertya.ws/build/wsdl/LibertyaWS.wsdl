@@ -1,0 +1,5020 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="org.libertya.ws" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="org.libertya.ws" xmlns:intf="org.libertya.ws" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns1="http://parameter.bean.ws.libertya.org" xmlns:tns2="http://result.bean.ws.libertya.org" xmlns:tns3="http://common.wse.libertya.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema targetNamespace="http://xml.apache.org/xml-soap" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://common.wse.libertya.org"/>
+   <import namespace="http://parameter.bean.ws.libertya.org"/>
+   <import namespace="http://result.bean.ws.libertya.org"/>
+   <import namespace="org.libertya.ws"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="mapItem">
+    <sequence>
+     <element name="key" nillable="true" type="xsd:anyType"/>
+     <element name="value" nillable="true" type="xsd:anyType"/>
+    </sequence>
+   </complexType>
+   <complexType name="Map">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="apachesoap:mapItem"/>
+    </sequence>
+   </complexType>
+   <complexType name="Vector">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="xsd:anyType"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://parameter.bean.ws.libertya.org" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://common.wse.libertya.org"/>
+   <import namespace="http://xml.apache.org/xml-soap"/>
+   <import namespace="http://result.bean.ws.libertya.org"/>
+   <import namespace="org.libertya.ws"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="ParameterBean">
+    <sequence>
+     <element name="clientID" type="xsd:int"/>
+     <element name="mainTable" nillable="true" type="apachesoap:Map"/>
+     <element name="orgID" type="xsd:int"/>
+     <element name="password" nillable="true" type="xsd:string"/>
+     <element name="userName" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="BPartnerParameterBean">
+    <complexContent>
+     <extension base="tns1:ParameterBean">
+      <sequence>
+       <element name="BPartnerColumns" nillable="true" type="apachesoap:Map"/>
+       <element name="location" nillable="true" type="apachesoap:Map"/>
+       <element name="locationColumns" nillable="true" type="apachesoap:Map"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="DocumentParameterBean">
+    <complexContent>
+     <extension base="tns1:ParameterBean">
+      <sequence>
+       <element name="documentLines" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="InvoiceParameterBean">
+    <complexContent>
+     <extension base="tns1:DocumentParameterBean">
+      <sequence>
+       <element name="otherTaxes" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="OrderParameterBean">
+    <complexContent>
+     <extension base="tns1:DocumentParameterBean">
+      <sequence>
+       <element name="invoiceDocTypeTargetID" type="xsd:int"/>
+       <element name="invoicePuntoDeVenta" type="xsd:int"/>
+       <element name="invoiceTipoComprobante" nillable="true" type="xsd:string"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="AllocationParameterBean">
+    <complexContent>
+     <extension base="tns1:ParameterBean">
+      <sequence>
+       <element name="invoices" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+       <element name="payments" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="ReplicationParameterBean">
+    <complexContent>
+     <extension base="tns1:ParameterBean">
+      <sequence>
+       <element name="actionsXML" nillable="true" type="xsd:base64Binary"/>
+       <element name="sourceHostPos" type="xsd:int"/>
+       <element name="targetHostPos" type="xsd:int"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="FilteredColumnsParameterBean">
+    <complexContent>
+     <extension base="tns1:ParameterBean">
+      <sequence>
+       <element name="filterColumns" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="CustomServiceParameterBean">
+    <complexContent>
+     <extension base="tns1:ParameterBean">
+      <sequence>
+       <element name="className" nillable="true" type="xsd:string"/>
+       <element name="methodName" nillable="true" type="xsd:string"/>
+       <element name="rawArguments" nillable="true" type="impl:ArrayOf_tns3_ListedMap"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://result.bean.ws.libertya.org" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://common.wse.libertya.org"/>
+   <import namespace="http://parameter.bean.ws.libertya.org"/>
+   <import namespace="http://xml.apache.org/xml-soap"/>
+   <import namespace="org.libertya.ws"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="ResultBean">
+    <sequence>
+     <element name="error" type="xsd:boolean"/>
+     <element name="errorMsg" nillable="true" type="xsd:string"/>
+     <element name="mainResult" nillable="true" type="apachesoap:Map"/>
+    </sequence>
+   </complexType>
+   <complexType name="BPartnerResultBean">
+    <complexContent>
+     <extension base="tns2:ResultBean">
+      <sequence>
+       <element name="billAddress" nillable="true" type="apachesoap:Map"/>
+       <element name="moreAddresses" type="xsd:boolean"/>
+       <element name="userContact" nillable="true" type="apachesoap:Map"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="DocumentResultBean">
+    <complexContent>
+     <extension base="tns2:ResultBean">
+      <sequence>
+       <element name="documentLines" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="InvoiceResultBean">
+    <complexContent>
+     <extension base="tns2:DocumentResultBean">
+      <sequence>
+       <element name="taxes" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="MultipleDocumentsResultBean">
+    <complexContent>
+     <extension base="tns2:ResultBean">
+      <sequence>
+       <element name="documentHeaders" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="StorageResultBean">
+    <complexContent>
+     <extension base="tns2:ResultBean">
+      <sequence>
+       <element name="stockList" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="ReplicationResultBean">
+    <complexContent>
+     <extension base="tns2:ResultBean">
+      <sequence>
+       <element name="eventLog" nillable="true" type="apachesoap:Vector"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="MultipleRecordsResultBean">
+    <complexContent>
+     <extension base="tns2:ResultBean">
+      <sequence>
+       <element name="records" nillable="true" type="impl:ArrayOf_xsd_anyType"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="CustomServiceResultBean">
+    <complexContent>
+     <extension base="tns2:ResultBean">
+      <sequence>
+       <element name="result" nillable="true" type="impl:ArrayOf_tns3_ListedMap"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+  </schema>
+  <schema targetNamespace="org.libertya.ws" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://common.wse.libertya.org"/>
+   <import namespace="http://parameter.bean.ws.libertya.org"/>
+   <import namespace="http://xml.apache.org/xml-soap"/>
+   <import namespace="http://result.bean.ws.libertya.org"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="ArrayOf_xsd_anyType">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:anyType[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="ArrayOf_xsd_string">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:string[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="ArrayOf_xsd_int">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:int[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="ArrayOf_tns3_ListedMap">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="tns3:ListedMap[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://common.wse.libertya.org" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://parameter.bean.ws.libertya.org"/>
+   <import namespace="http://xml.apache.org/xml-soap"/>
+   <import namespace="http://result.bean.ws.libertya.org"/>
+   <import namespace="org.libertya.ws"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="ListedMap">
+    <sequence>
+     <element name="key" nillable="true" type="xsd:string"/>
+     <element name="values" nillable="true" type="impl:ArrayOf_xsd_string"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="orderCompleteByIDResponse1">
+
+      <wsdl:part name="orderCompleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productPriceCreateUpdateResponse">
+
+      <wsdl:part name="productPriceCreateUpdateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderCompleteResponse">
+
+      <wsdl:part name="productionOrderCompleteReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipCompleteResponse">
+
+      <wsdl:part name="depositSlipCompleteReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateCustomerFromOrderByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:InvoiceParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutVoidByColumnResponse">
+
+      <wsdl:part name="inOutVoidByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderDeleteByIDResponse">
+
+      <wsdl:part name="orderDeleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userCreateResponse">
+
+      <wsdl:part name="userCreateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutVoidByIDResponse">
+
+      <wsdl:part name="inOutVoidByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveInOutByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCompleteByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateCustomerResponse">
+
+      <wsdl:part name="invoiceCreateCustomerReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productUpdateByValueResponse">
+
+      <wsdl:part name="productUpdateByValueReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productRetrieveByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerBalanceSumOrdersNotInvoicedResponse">
+
+      <wsdl:part name="bPartnerBalanceSumOrdersNotInvoicedReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryCompleteByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCreateCustomerRequest1">
+
+      <wsdl:part name="in0" type="tns1:OrderParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerDeleteRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryCreateResponse">
+
+      <wsdl:part name="inventoryCreateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productCreateResponse1">
+
+      <wsdl:part name="productCreateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="customServiceResponse">
+
+      <wsdl:part name="customServiceReturn" type="tns2:CustomServiceResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerLocationDeleteResponse">
+
+      <wsdl:part name="bPartnerLocationDeleteReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="recordQueryDirectRequest">
+
+      <wsdl:part name="in0" type="tns1:FilteredColumnsParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCreateVendorRequest">
+
+      <wsdl:part name="in0" type="tns1:OrderParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="billOfMaterialCreateResponse">
+
+      <wsdl:part name="billOfMaterialCreateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryAllocationsRequest1">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+      <wsdl:part name="in7" type="xsd:boolean"/>
+
+      <wsdl:part name="in8" type="xsd:string"/>
+
+      <wsdl:part name="in9" type="xsd:string"/>
+
+      <wsdl:part name="in10" type="xsd:string"/>
+
+      <wsdl:part name="in11" type="impl:ArrayOf_xsd_string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="customServiceRequest">
+
+      <wsdl:part name="in0" type="tns1:CustomServiceParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="billOfMaterialDeleteResponse">
+
+      <wsdl:part name="billOfMaterialDeleteReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userRetrieveByColumnResponse">
+
+      <wsdl:part name="userRetrieveByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="allocationVoidByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:AllocationParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productRetrieveByIDResponse">
+
+      <wsdl:part name="productRetrieveByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderVoidByColumnResponse">
+
+      <wsdl:part name="orderVoidByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="allocationCreateEarlyReceiptResponse">
+
+      <wsdl:part name="allocationCreateEarlyReceiptReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderDeleteByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveInvoiceByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateVendorFromOrderByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:InvoiceParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerLocationRetrieveRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerBalanceSumPaymentsResponse">
+
+      <wsdl:part name="bPartnerBalanceSumPaymentsReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveOrderByIDResponse">
+
+      <wsdl:part name="documentRetrieveOrderByIDReturn" type="tns2:DocumentResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryInOutsResponse1">
+
+      <wsdl:part name="documentQueryInOutsReturn" type="tns2:MultipleDocumentsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCompleteByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:OrderParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:boolean"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCompleteByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCreateCustomerResponse">
+
+      <wsdl:part name="orderCreateCustomerReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipCompleteRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceDeleteByIDResponse">
+
+      <wsdl:part name="invoiceDeleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderVoidByIDResponse">
+
+      <wsdl:part name="orderVoidByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerBalanceSumChecksRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="impl:ArrayOf_xsd_int"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:int"/>
+
+      <wsdl:part name="in5" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productRetrieveByValueRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceUpdateByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerBalanceSumOrdersNotInvoicedRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="impl:ArrayOf_xsd_int"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:int"/>
+
+      <wsdl:part name="in5" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerLocationDeleteRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerLocationUpdateResponse">
+
+      <wsdl:part name="bPartnerLocationUpdateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutDeleteByColumnResponse">
+
+      <wsdl:part name="inOutDeleteByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveInOutByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryInvoicesRequest1">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+      <wsdl:part name="in7" type="xsd:boolean"/>
+
+      <wsdl:part name="in8" type="xsd:string"/>
+
+      <wsdl:part name="in9" type="xsd:string"/>
+
+      <wsdl:part name="in10" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryOrdersRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+      <wsdl:part name="in7" type="xsd:boolean"/>
+
+      <wsdl:part name="in8" type="xsd:string"/>
+
+      <wsdl:part name="in9" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerRetrieveByTaxIDResponse">
+
+      <wsdl:part name="bPartnerRetrieveByTaxIDReturn" type="tns2:BPartnerResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryVoidByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderDeleteRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerBalanceSumChecksResponse">
+
+      <wsdl:part name="bPartnerBalanceSumChecksReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderVoidByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveOrderByColumnResponse">
+
+      <wsdl:part name="documentRetrieveOrderByColumnReturn" type="tns2:DocumentResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productCreateRequest1">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderVoidByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCreateFromOrderResponse">
+
+      <wsdl:part name="inOutCreateFromOrderReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerUpdateResponse">
+
+      <wsdl:part name="bPartnerUpdateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryDeleteByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryOrdersResponse">
+
+      <wsdl:part name="documentQueryOrdersReturn" type="tns2:MultipleDocumentsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveInvoiceByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryInvoicesResponse1">
+
+      <wsdl:part name="documentQueryInvoicesReturn" type="tns2:MultipleDocumentsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryInvoicesResponse">
+
+      <wsdl:part name="documentQueryInvoicesReturn" type="tns2:MultipleDocumentsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerLocationRetrieveResponse">
+
+      <wsdl:part name="bPartnerLocationRetrieveReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipVoidRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerCreateResponse">
+
+      <wsdl:part name="bPartnerCreateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productPriceCreateUpdateRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="storageQueryRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="impl:ArrayOf_xsd_int"/>
+
+      <wsdl:part name="in2" type="xsd:int"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:int"/>
+
+      <wsdl:part name="in5" type="xsd:string"/>
+
+      <wsdl:part name="in6" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCompleteByColumnResponse1">
+
+      <wsdl:part name="orderCompleteByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveInOutByIDResponse">
+
+      <wsdl:part name="documentRetrieveInOutByIDReturn" type="tns2:DocumentResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCreateCustomerRequest">
+
+      <wsdl:part name="in0" type="tns1:DocumentParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCreateCustomerResponse1">
+
+      <wsdl:part name="orderCreateCustomerReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="processCreditCardBatchCloseRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerRetrieveByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCompleteByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerBalanceSumInvoicesResponse">
+
+      <wsdl:part name="bPartnerBalanceSumInvoicesReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerRetrieveByIDResponse">
+
+      <wsdl:part name="bPartnerRetrieveByIDReturn" type="tns2:BPartnerResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveOrderByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="recordQueryDirectResponse">
+
+      <wsdl:part name="recordQueryDirectReturn" type="tns2:MultipleRecordsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userRetrieveByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productUpdateByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCompleteByIDResponse">
+
+      <wsdl:part name="inOutCompleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryCompleteByColumnResponse">
+
+      <wsdl:part name="inventoryCompleteByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateVendorResponse">
+
+      <wsdl:part name="invoiceCreateVendorReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCompleteByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:OrderParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:boolean"/>
+
+      <wsdl:part name="in3" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryInOutsRequest1">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+      <wsdl:part name="in7" type="xsd:boolean"/>
+
+      <wsdl:part name="in8" type="xsd:string"/>
+
+      <wsdl:part name="in9" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productUpdateByIDResponse">
+
+      <wsdl:part name="productUpdateByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerCreateRequest">
+
+      <wsdl:part name="in0" type="tns1:BPartnerParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="replicateResponse">
+
+      <wsdl:part name="replicateReturn" type="tns2:ReplicationResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCreateCustomerResponse">
+
+      <wsdl:part name="inOutCreateCustomerReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderDeleteByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryInOutsResponse">
+
+      <wsdl:part name="documentQueryInOutsReturn" type="tns2:MultipleDocumentsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="processFiscalPrinterCloseResponse">
+
+      <wsdl:part name="processFiscalPrinterCloseReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productCreateRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveAllocationByColumnResponse">
+
+      <wsdl:part name="documentRetrieveAllocationByColumnReturn" type="tns2:DocumentResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCreateVendorResponse">
+
+      <wsdl:part name="inOutCreateVendorReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryAllocationsRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+      <wsdl:part name="in7" type="xsd:boolean"/>
+
+      <wsdl:part name="in8" type="xsd:string"/>
+
+      <wsdl:part name="in9" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userRetrieveByIDResponse">
+
+      <wsdl:part name="userRetrieveByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCompleteByColumnResponse">
+
+      <wsdl:part name="invoiceCompleteByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateCustomerRequest">
+
+      <wsdl:part name="in0" type="tns1:InvoiceParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerBalanceSumInvoicesRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="impl:ArrayOf_xsd_int"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:int"/>
+
+      <wsdl:part name="in5" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderCreateRequest">
+
+      <wsdl:part name="in0" type="tns1:DocumentParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerRetrieveByValueResponse">
+
+      <wsdl:part name="bPartnerRetrieveByValueReturn" type="tns2:BPartnerResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryDeleteByColumnResponse">
+
+      <wsdl:part name="inventoryDeleteByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateCustomerFromOrderByIDResponse">
+
+      <wsdl:part name="invoiceCreateCustomerFromOrderByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryInvoicesRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+      <wsdl:part name="in7" type="xsd:boolean"/>
+
+      <wsdl:part name="in8" type="xsd:string"/>
+
+      <wsdl:part name="in9" type="xsd:string"/>
+
+      <wsdl:part name="in10" type="xsd:string"/>
+
+      <wsdl:part name="in11" type="impl:ArrayOf_xsd_string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="storageQueryResponse">
+
+      <wsdl:part name="storageQueryReturn" type="tns2:StorageResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderVoidResponse">
+
+      <wsdl:part name="productionOrderVoidReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutVoidByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipDeleteResponse">
+
+      <wsdl:part name="depositSlipDeleteReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productDeleteResponse">
+
+      <wsdl:part name="productDeleteReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateVendorFromOrderByIDResponse">
+
+      <wsdl:part name="invoiceCreateVendorFromOrderByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderVoidRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveAllocationByIDResponse">
+
+      <wsdl:part name="documentRetrieveAllocationByIDReturn" type="tns2:DocumentResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCompleteByColumnRequest1">
+
+      <wsdl:part name="in0" type="tns1:OrderParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:boolean"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceDeleteByColumnResponse">
+
+      <wsdl:part name="invoiceDeleteByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="allocationCreateReceiptResponse">
+
+      <wsdl:part name="allocationCreateReceiptReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productUpdateByValueRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryAllocationsResponse">
+
+      <wsdl:part name="documentQueryAllocationsReturn" type="tns2:MultipleDocumentsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="recordQueryRequest">
+
+      <wsdl:part name="in0" type="tns1:FilteredColumnsParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryVoidByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateVendorFromOrderByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:InvoiceParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerRetrieveByTaxIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCompleteByColumnResponse">
+
+      <wsdl:part name="orderCompleteByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipVoidResponse">
+
+      <wsdl:part name="depositSlipVoidReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceVoidByColumnResponse">
+
+      <wsdl:part name="invoiceVoidByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipDeleteRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="recordQueryResponse">
+
+      <wsdl:part name="recordQueryReturn" type="tns2:MultipleRecordsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userDeleteByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCreateVendorRequest">
+
+      <wsdl:part name="in0" type="tns1:DocumentParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productPriceRetrieveRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerDeleteResponse">
+
+      <wsdl:part name="bPartnerDeleteReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCreateFromOrderRequest">
+
+      <wsdl:part name="in0" type="tns1:DocumentParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCompleteByIDResponse">
+
+      <wsdl:part name="invoiceCompleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerLocationUpdateRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceDeleteByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryCreateRequest">
+
+      <wsdl:part name="in0" type="tns1:DocumentParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryDeleteByIDResponse">
+
+      <wsdl:part name="inventoryDeleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryOrdersRequest1">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+      <wsdl:part name="in7" type="xsd:boolean"/>
+
+      <wsdl:part name="in8" type="xsd:string"/>
+
+      <wsdl:part name="in9" type="xsd:string"/>
+
+      <wsdl:part name="in10" type="xsd:string"/>
+
+      <wsdl:part name="in11" type="impl:ArrayOf_xsd_string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryVoidByColumnResponse">
+
+      <wsdl:part name="inventoryVoidByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderUpdateByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userCreateRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutVoidByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userUpdateByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutDeleteByIDResponse">
+
+      <wsdl:part name="inOutDeleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryInOutsRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+      <wsdl:part name="in7" type="xsd:boolean"/>
+
+      <wsdl:part name="in8" type="xsd:string"/>
+
+      <wsdl:part name="in9" type="xsd:string"/>
+
+      <wsdl:part name="in10" type="xsd:string"/>
+
+      <wsdl:part name="in11" type="impl:ArrayOf_xsd_string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceVoidByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceVoidByIDResponse">
+
+      <wsdl:part name="invoiceVoidByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceVoidByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="billOfMaterialCreateRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryAllocationsResponse1">
+
+      <wsdl:part name="documentQueryAllocationsReturn" type="tns2:MultipleDocumentsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerLocationCreateRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateVendorRequest">
+
+      <wsdl:part name="in0" type="tns1:InvoiceParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userUpdateByIDResponse">
+
+      <wsdl:part name="userUpdateByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryDeleteByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutDeleteByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderDeleteResponse">
+
+      <wsdl:part name="productionOrderDeleteReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentQueryOrdersResponse1">
+
+      <wsdl:part name="documentQueryOrdersReturn" type="tns2:MultipleDocumentsResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="allocationVoidByColumnResponse">
+
+      <wsdl:part name="allocationVoidByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="processCreditCardBatchCloseResponse">
+
+      <wsdl:part name="processCreditCardBatchCloseReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderVoidByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="billOfMaterialDeleteRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderCompleteRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderDeleteByColumnResponse">
+
+      <wsdl:part name="orderDeleteByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerUpdateRequest">
+
+      <wsdl:part name="in0" type="tns1:BPartnerParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerBalanceSumPaymentsRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="impl:ArrayOf_xsd_int"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:int"/>
+
+      <wsdl:part name="in5" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productDeleteRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveInOutByColumnResponse">
+
+      <wsdl:part name="documentRetrieveInOutByColumnReturn" type="tns2:DocumentResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderUpdateByIDResponse">
+
+      <wsdl:part name="orderUpdateByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveOrderByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userRetrieveByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveInvoiceByIDResponse">
+
+      <wsdl:part name="documentRetrieveInvoiceByIDReturn" type="tns2:InvoiceResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCompleteByIDResponse">
+
+      <wsdl:part name="orderCompleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCreateVendorResponse">
+
+      <wsdl:part name="orderCreateVendorReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipCreateRequest">
+
+      <wsdl:part name="in0" type="tns1:DocumentParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="allocationVoidByIDResponse">
+
+      <wsdl:part name="allocationVoidByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryVoidByIDResponse">
+
+      <wsdl:part name="inventoryVoidByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderUpdateByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveInvoiceByColumnResponse">
+
+      <wsdl:part name="documentRetrieveInvoiceByColumnReturn" type="tns2:InvoiceResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productRetrieveByValueResponse">
+
+      <wsdl:part name="productRetrieveByValueReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipVoidByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCreateCustomerRequest">
+
+      <wsdl:part name="in0" type="tns1:OrderParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+      <wsdl:part name="in6" type="xsd:boolean"/>
+
+      <wsdl:part name="in7" type="xsd:boolean"/>
+
+      <wsdl:part name="in8" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="allocationCreateReceiptRequest">
+
+      <wsdl:part name="in0" type="tns1:AllocationParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateCustomerFromOrderByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:InvoiceParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="replicateRequest">
+
+      <wsdl:part name="in0" type="tns1:ReplicationParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryCompleteByIDResponse">
+
+      <wsdl:part name="inventoryCompleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveAllocationByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productCreateResponse">
+
+      <wsdl:part name="productCreateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderUpdateByColumnResponse">
+
+      <wsdl:part name="orderUpdateByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceUpdateByIDResponse">
+
+      <wsdl:part name="invoiceUpdateByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCompleteByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="userDeleteByIDResponse">
+
+      <wsdl:part name="userDeleteByIDReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="orderCompleteByIDRequest1">
+
+      <wsdl:part name="in0" type="tns1:OrderParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:boolean"/>
+
+      <wsdl:part name="in3" type="xsd:boolean"/>
+
+      <wsdl:part name="in4" type="xsd:boolean"/>
+
+      <wsdl:part name="in5" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productPriceDeleteResponse">
+
+      <wsdl:part name="productPriceDeleteReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderCreateResponse">
+
+      <wsdl:part name="productionOrderCreateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutDeleteByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateVendorFromOrderByColumnResponse">
+
+      <wsdl:part name="invoiceCreateVendorFromOrderByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerLocationCreateResponse">
+
+      <wsdl:part name="bPartnerLocationCreateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipCreateResponse">
+
+      <wsdl:part name="depositSlipCreateReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inOutCompleteByColumnResponse">
+
+      <wsdl:part name="inOutCompleteByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="allocationCreateEarlyReceiptRequest">
+
+      <wsdl:part name="in0" type="tns1:AllocationParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+      <wsdl:part name="in3" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="processFiscalPrinterCloseRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="depositSlipVoidByColumnResponse">
+
+      <wsdl:part name="depositSlipVoidByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bPartnerRetrieveByValueRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="documentRetrieveAllocationByColumnRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:string"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productPriceRetrieveResponse">
+
+      <wsdl:part name="productPriceRetrieveReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="allocationVoidByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:AllocationParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="inventoryCompleteByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceCreateCustomerFromOrderByColumnResponse">
+
+      <wsdl:part name="invoiceCreateCustomerFromOrderByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productionOrderVoidByColumnResponse">
+
+      <wsdl:part name="productionOrderVoidByColumnReturn" type="tns2:ResultBean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="invoiceDeleteByIDRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="productPriceDeleteRequest">
+
+      <wsdl:part name="in0" type="tns1:ParameterBean"/>
+
+      <wsdl:part name="in1" type="xsd:int"/>
+
+      <wsdl:part name="in2" type="xsd:int"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="LibertyaWS">
+
+      <wsdl:operation name="bPartnerCreate" parameterOrder="in0">
+
+         <wsdl:input message="impl:bPartnerCreateRequest" name="bPartnerCreateRequest"/>
+
+         <wsdl:output message="impl:bPartnerCreateResponse" name="bPartnerCreateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerRetrieveByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:bPartnerRetrieveByIDRequest" name="bPartnerRetrieveByIDRequest"/>
+
+         <wsdl:output message="impl:bPartnerRetrieveByIDResponse" name="bPartnerRetrieveByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerRetrieveByValue" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:bPartnerRetrieveByValueRequest" name="bPartnerRetrieveByValueRequest"/>
+
+         <wsdl:output message="impl:bPartnerRetrieveByValueResponse" name="bPartnerRetrieveByValueResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerRetrieveByTaxID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:bPartnerRetrieveByTaxIDRequest" name="bPartnerRetrieveByTaxIDRequest"/>
+
+         <wsdl:output message="impl:bPartnerRetrieveByTaxIDResponse" name="bPartnerRetrieveByTaxIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerUpdate" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:bPartnerUpdateRequest" name="bPartnerUpdateRequest"/>
+
+         <wsdl:output message="impl:bPartnerUpdateResponse" name="bPartnerUpdateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerDelete" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:bPartnerDeleteRequest" name="bPartnerDeleteRequest"/>
+
+         <wsdl:output message="impl:bPartnerDeleteResponse" name="bPartnerDeleteResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateCustomer" parameterOrder="in0 in1 in2 in3 in4">
+
+         <wsdl:input message="impl:invoiceCreateCustomerRequest" name="invoiceCreateCustomerRequest"/>
+
+         <wsdl:output message="impl:invoiceCreateCustomerResponse" name="invoiceCreateCustomerResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateCustomerFromOrderByID" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:invoiceCreateCustomerFromOrderByIDRequest" name="invoiceCreateCustomerFromOrderByIDRequest"/>
+
+         <wsdl:output message="impl:invoiceCreateCustomerFromOrderByIDResponse" name="invoiceCreateCustomerFromOrderByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateCustomerFromOrderByColumn" parameterOrder="in0 in1 in2 in3">
+
+         <wsdl:input message="impl:invoiceCreateCustomerFromOrderByColumnRequest" name="invoiceCreateCustomerFromOrderByColumnRequest"/>
+
+         <wsdl:output message="impl:invoiceCreateCustomerFromOrderByColumnResponse" name="invoiceCreateCustomerFromOrderByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateVendor" parameterOrder="in0 in1 in2 in3 in4">
+
+         <wsdl:input message="impl:invoiceCreateVendorRequest" name="invoiceCreateVendorRequest"/>
+
+         <wsdl:output message="impl:invoiceCreateVendorResponse" name="invoiceCreateVendorResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateVendorFromOrderByID" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:invoiceCreateVendorFromOrderByIDRequest" name="invoiceCreateVendorFromOrderByIDRequest"/>
+
+         <wsdl:output message="impl:invoiceCreateVendorFromOrderByIDResponse" name="invoiceCreateVendorFromOrderByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateVendorFromOrderByColumn" parameterOrder="in0 in1 in2 in3">
+
+         <wsdl:input message="impl:invoiceCreateVendorFromOrderByColumnRequest" name="invoiceCreateVendorFromOrderByColumnRequest"/>
+
+         <wsdl:output message="impl:invoiceCreateVendorFromOrderByColumnResponse" name="invoiceCreateVendorFromOrderByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceDeleteByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:invoiceDeleteByIDRequest" name="invoiceDeleteByIDRequest"/>
+
+         <wsdl:output message="impl:invoiceDeleteByIDResponse" name="invoiceDeleteByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceDeleteByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:invoiceDeleteByColumnRequest" name="invoiceDeleteByColumnRequest"/>
+
+         <wsdl:output message="impl:invoiceDeleteByColumnResponse" name="invoiceDeleteByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCompleteByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:invoiceCompleteByIDRequest" name="invoiceCompleteByIDRequest"/>
+
+         <wsdl:output message="impl:invoiceCompleteByIDResponse" name="invoiceCompleteByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCompleteByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:invoiceCompleteByColumnRequest" name="invoiceCompleteByColumnRequest"/>
+
+         <wsdl:output message="impl:invoiceCompleteByColumnResponse" name="invoiceCompleteByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceVoidByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:invoiceVoidByIDRequest" name="invoiceVoidByIDRequest"/>
+
+         <wsdl:output message="impl:invoiceVoidByIDResponse" name="invoiceVoidByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceVoidByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:invoiceVoidByColumnRequest" name="invoiceVoidByColumnRequest"/>
+
+         <wsdl:output message="impl:invoiceVoidByColumnResponse" name="invoiceVoidByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceUpdateByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:invoiceUpdateByIDRequest" name="invoiceUpdateByIDRequest"/>
+
+         <wsdl:output message="impl:invoiceUpdateByIDResponse" name="invoiceUpdateByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productCreate" parameterOrder="in0">
+
+         <wsdl:input message="impl:productCreateRequest" name="productCreateRequest"/>
+
+         <wsdl:output message="impl:productCreateResponse" name="productCreateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productCreate" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productCreateRequest1" name="productCreateRequest1"/>
+
+         <wsdl:output message="impl:productCreateResponse1" name="productCreateResponse1"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productRetrieveByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productRetrieveByIDRequest" name="productRetrieveByIDRequest"/>
+
+         <wsdl:output message="impl:productRetrieveByIDResponse" name="productRetrieveByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productRetrieveByValue" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productRetrieveByValueRequest" name="productRetrieveByValueRequest"/>
+
+         <wsdl:output message="impl:productRetrieveByValueResponse" name="productRetrieveByValueResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productUpdateByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productUpdateByIDRequest" name="productUpdateByIDRequest"/>
+
+         <wsdl:output message="impl:productUpdateByIDResponse" name="productUpdateByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productUpdateByValue" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productUpdateByValueRequest" name="productUpdateByValueRequest"/>
+
+         <wsdl:output message="impl:productUpdateByValueResponse" name="productUpdateByValueResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productDelete" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productDeleteRequest" name="productDeleteRequest"/>
+
+         <wsdl:output message="impl:productDeleteResponse" name="productDeleteResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveOrderByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:documentRetrieveOrderByIDRequest" name="documentRetrieveOrderByIDRequest"/>
+
+         <wsdl:output message="impl:documentRetrieveOrderByIDResponse" name="documentRetrieveOrderByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveOrderByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:documentRetrieveOrderByColumnRequest" name="documentRetrieveOrderByColumnRequest"/>
+
+         <wsdl:output message="impl:documentRetrieveOrderByColumnResponse" name="documentRetrieveOrderByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveInvoiceByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:documentRetrieveInvoiceByIDRequest" name="documentRetrieveInvoiceByIDRequest"/>
+
+         <wsdl:output message="impl:documentRetrieveInvoiceByIDResponse" name="documentRetrieveInvoiceByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveInvoiceByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:documentRetrieveInvoiceByColumnRequest" name="documentRetrieveInvoiceByColumnRequest"/>
+
+         <wsdl:output message="impl:documentRetrieveInvoiceByColumnResponse" name="documentRetrieveInvoiceByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveInOutByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:documentRetrieveInOutByIDRequest" name="documentRetrieveInOutByIDRequest"/>
+
+         <wsdl:output message="impl:documentRetrieveInOutByIDResponse" name="documentRetrieveInOutByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveInOutByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:documentRetrieveInOutByColumnRequest" name="documentRetrieveInOutByColumnRequest"/>
+
+         <wsdl:output message="impl:documentRetrieveInOutByColumnResponse" name="documentRetrieveInOutByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveAllocationByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:documentRetrieveAllocationByIDRequest" name="documentRetrieveAllocationByIDRequest"/>
+
+         <wsdl:output message="impl:documentRetrieveAllocationByIDResponse" name="documentRetrieveAllocationByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveAllocationByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:documentRetrieveAllocationByColumnRequest" name="documentRetrieveAllocationByColumnRequest"/>
+
+         <wsdl:output message="impl:documentRetrieveAllocationByColumnResponse" name="documentRetrieveAllocationByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryOrders" parameterOrder="in0 in1 in2 in3 in4 in5 in6 in7 in8 in9">
+
+         <wsdl:input message="impl:documentQueryOrdersRequest" name="documentQueryOrdersRequest"/>
+
+         <wsdl:output message="impl:documentQueryOrdersResponse" name="documentQueryOrdersResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryOrders" parameterOrder="in0 in1 in2 in3 in4 in5 in6 in7 in8 in9 in10 in11">
+
+         <wsdl:input message="impl:documentQueryOrdersRequest1" name="documentQueryOrdersRequest1"/>
+
+         <wsdl:output message="impl:documentQueryOrdersResponse1" name="documentQueryOrdersResponse1"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryInvoices" parameterOrder="in0 in1 in2 in3 in4 in5 in6 in7 in8 in9 in10 in11">
+
+         <wsdl:input message="impl:documentQueryInvoicesRequest" name="documentQueryInvoicesRequest"/>
+
+         <wsdl:output message="impl:documentQueryInvoicesResponse" name="documentQueryInvoicesResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryInvoices" parameterOrder="in0 in1 in2 in3 in4 in5 in6 in7 in8 in9 in10">
+
+         <wsdl:input message="impl:documentQueryInvoicesRequest1" name="documentQueryInvoicesRequest1"/>
+
+         <wsdl:output message="impl:documentQueryInvoicesResponse1" name="documentQueryInvoicesResponse1"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryInOuts" parameterOrder="in0 in1 in2 in3 in4 in5 in6 in7 in8 in9 in10 in11">
+
+         <wsdl:input message="impl:documentQueryInOutsRequest" name="documentQueryInOutsRequest"/>
+
+         <wsdl:output message="impl:documentQueryInOutsResponse" name="documentQueryInOutsResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryInOuts" parameterOrder="in0 in1 in2 in3 in4 in5 in6 in7 in8 in9">
+
+         <wsdl:input message="impl:documentQueryInOutsRequest1" name="documentQueryInOutsRequest1"/>
+
+         <wsdl:output message="impl:documentQueryInOutsResponse1" name="documentQueryInOutsResponse1"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryAllocations" parameterOrder="in0 in1 in2 in3 in4 in5 in6 in7 in8 in9">
+
+         <wsdl:input message="impl:documentQueryAllocationsRequest" name="documentQueryAllocationsRequest"/>
+
+         <wsdl:output message="impl:documentQueryAllocationsResponse" name="documentQueryAllocationsResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryAllocations" parameterOrder="in0 in1 in2 in3 in4 in5 in6 in7 in8 in9 in10 in11">
+
+         <wsdl:input message="impl:documentQueryAllocationsRequest1" name="documentQueryAllocationsRequest1"/>
+
+         <wsdl:output message="impl:documentQueryAllocationsResponse1" name="documentQueryAllocationsResponse1"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCreateCustomer" parameterOrder="in0 in1 in2 in3 in4 in5 in6 in7 in8">
+
+         <wsdl:input message="impl:orderCreateCustomerRequest" name="orderCreateCustomerRequest"/>
+
+         <wsdl:output message="impl:orderCreateCustomerResponse" name="orderCreateCustomerResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCreateCustomer" parameterOrder="in0 in1 in2 in3 in4 in5 in6">
+
+         <wsdl:input message="impl:orderCreateCustomerRequest1" name="orderCreateCustomerRequest1"/>
+
+         <wsdl:output message="impl:orderCreateCustomerResponse1" name="orderCreateCustomerResponse1"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCreateVendor" parameterOrder="in0 in1 in2 in3 in4 in5 in6">
+
+         <wsdl:input message="impl:orderCreateVendorRequest" name="orderCreateVendorRequest"/>
+
+         <wsdl:output message="impl:orderCreateVendorResponse" name="orderCreateVendorResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderDeleteByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:orderDeleteByIDRequest" name="orderDeleteByIDRequest"/>
+
+         <wsdl:output message="impl:orderDeleteByIDResponse" name="orderDeleteByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderDeleteByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:orderDeleteByColumnRequest" name="orderDeleteByColumnRequest"/>
+
+         <wsdl:output message="impl:orderDeleteByColumnResponse" name="orderDeleteByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCompleteByID" parameterOrder="in0 in1 in2 in3">
+
+         <wsdl:input message="impl:orderCompleteByIDRequest" name="orderCompleteByIDRequest"/>
+
+         <wsdl:output message="impl:orderCompleteByIDResponse" name="orderCompleteByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCompleteByID" parameterOrder="in0 in1 in2 in3 in4 in5">
+
+         <wsdl:input message="impl:orderCompleteByIDRequest1" name="orderCompleteByIDRequest1"/>
+
+         <wsdl:output message="impl:orderCompleteByIDResponse1" name="orderCompleteByIDResponse1"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCompleteByColumn" parameterOrder="in0 in1 in2 in3 in4 in5 in6">
+
+         <wsdl:input message="impl:orderCompleteByColumnRequest" name="orderCompleteByColumnRequest"/>
+
+         <wsdl:output message="impl:orderCompleteByColumnResponse" name="orderCompleteByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCompleteByColumn" parameterOrder="in0 in1 in2 in3 in4">
+
+         <wsdl:input message="impl:orderCompleteByColumnRequest1" name="orderCompleteByColumnRequest1"/>
+
+         <wsdl:output message="impl:orderCompleteByColumnResponse1" name="orderCompleteByColumnResponse1"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderVoidByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:orderVoidByIDRequest" name="orderVoidByIDRequest"/>
+
+         <wsdl:output message="impl:orderVoidByIDResponse" name="orderVoidByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderVoidByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:orderVoidByColumnRequest" name="orderVoidByColumnRequest"/>
+
+         <wsdl:output message="impl:orderVoidByColumnResponse" name="orderVoidByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderUpdateByID" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:orderUpdateByIDRequest" name="orderUpdateByIDRequest"/>
+
+         <wsdl:output message="impl:orderUpdateByIDResponse" name="orderUpdateByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderUpdateByColumn" parameterOrder="in0 in1 in2 in3">
+
+         <wsdl:input message="impl:orderUpdateByColumnRequest" name="orderUpdateByColumnRequest"/>
+
+         <wsdl:output message="impl:orderUpdateByColumnResponse" name="orderUpdateByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCreateCustomer" parameterOrder="in0 in1 in2 in3 in4">
+
+         <wsdl:input message="impl:inOutCreateCustomerRequest" name="inOutCreateCustomerRequest"/>
+
+         <wsdl:output message="impl:inOutCreateCustomerResponse" name="inOutCreateCustomerResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCreateVendor" parameterOrder="in0 in1 in2 in3 in4">
+
+         <wsdl:input message="impl:inOutCreateVendorRequest" name="inOutCreateVendorRequest"/>
+
+         <wsdl:output message="impl:inOutCreateVendorResponse" name="inOutCreateVendorResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCreateFromOrder" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:inOutCreateFromOrderRequest" name="inOutCreateFromOrderRequest"/>
+
+         <wsdl:output message="impl:inOutCreateFromOrderResponse" name="inOutCreateFromOrderResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutDeleteByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:inOutDeleteByIDRequest" name="inOutDeleteByIDRequest"/>
+
+         <wsdl:output message="impl:inOutDeleteByIDResponse" name="inOutDeleteByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutDeleteByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:inOutDeleteByColumnRequest" name="inOutDeleteByColumnRequest"/>
+
+         <wsdl:output message="impl:inOutDeleteByColumnResponse" name="inOutDeleteByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCompleteByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:inOutCompleteByIDRequest" name="inOutCompleteByIDRequest"/>
+
+         <wsdl:output message="impl:inOutCompleteByIDResponse" name="inOutCompleteByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCompleteByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:inOutCompleteByColumnRequest" name="inOutCompleteByColumnRequest"/>
+
+         <wsdl:output message="impl:inOutCompleteByColumnResponse" name="inOutCompleteByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutVoidByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:inOutVoidByIDRequest" name="inOutVoidByIDRequest"/>
+
+         <wsdl:output message="impl:inOutVoidByIDResponse" name="inOutVoidByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutVoidByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:inOutVoidByColumnRequest" name="inOutVoidByColumnRequest"/>
+
+         <wsdl:output message="impl:inOutVoidByColumnResponse" name="inOutVoidByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerBalanceSumOrdersNotInvoiced" parameterOrder="in0 in1 in2 in3 in4 in5">
+
+         <wsdl:input message="impl:bPartnerBalanceSumOrdersNotInvoicedRequest" name="bPartnerBalanceSumOrdersNotInvoicedRequest"/>
+
+         <wsdl:output message="impl:bPartnerBalanceSumOrdersNotInvoicedResponse" name="bPartnerBalanceSumOrdersNotInvoicedResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerBalanceSumInvoices" parameterOrder="in0 in1 in2 in3 in4 in5">
+
+         <wsdl:input message="impl:bPartnerBalanceSumInvoicesRequest" name="bPartnerBalanceSumInvoicesRequest"/>
+
+         <wsdl:output message="impl:bPartnerBalanceSumInvoicesResponse" name="bPartnerBalanceSumInvoicesResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerBalanceSumPayments" parameterOrder="in0 in1 in2 in3 in4 in5">
+
+         <wsdl:input message="impl:bPartnerBalanceSumPaymentsRequest" name="bPartnerBalanceSumPaymentsRequest"/>
+
+         <wsdl:output message="impl:bPartnerBalanceSumPaymentsResponse" name="bPartnerBalanceSumPaymentsResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerBalanceSumChecks" parameterOrder="in0 in1 in2 in3 in4 in5">
+
+         <wsdl:input message="impl:bPartnerBalanceSumChecksRequest" name="bPartnerBalanceSumChecksRequest"/>
+
+         <wsdl:output message="impl:bPartnerBalanceSumChecksResponse" name="bPartnerBalanceSumChecksResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="allocationCreateReceipt" parameterOrder="in0 in1 in2 in3">
+
+         <wsdl:input message="impl:allocationCreateReceiptRequest" name="allocationCreateReceiptRequest"/>
+
+         <wsdl:output message="impl:allocationCreateReceiptResponse" name="allocationCreateReceiptResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="allocationCreateEarlyReceipt" parameterOrder="in0 in1 in2 in3">
+
+         <wsdl:input message="impl:allocationCreateEarlyReceiptRequest" name="allocationCreateEarlyReceiptRequest"/>
+
+         <wsdl:output message="impl:allocationCreateEarlyReceiptResponse" name="allocationCreateEarlyReceiptResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="allocationVoidByID" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:allocationVoidByIDRequest" name="allocationVoidByIDRequest"/>
+
+         <wsdl:output message="impl:allocationVoidByIDResponse" name="allocationVoidByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="allocationVoidByColumn" parameterOrder="in0 in1 in2 in3">
+
+         <wsdl:input message="impl:allocationVoidByColumnRequest" name="allocationVoidByColumnRequest"/>
+
+         <wsdl:output message="impl:allocationVoidByColumnResponse" name="allocationVoidByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userCreate" parameterOrder="in0">
+
+         <wsdl:input message="impl:userCreateRequest" name="userCreateRequest"/>
+
+         <wsdl:output message="impl:userCreateResponse" name="userCreateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userRetrieveByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:userRetrieveByIDRequest" name="userRetrieveByIDRequest"/>
+
+         <wsdl:output message="impl:userRetrieveByIDResponse" name="userRetrieveByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userRetrieveByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:userRetrieveByColumnRequest" name="userRetrieveByColumnRequest"/>
+
+         <wsdl:output message="impl:userRetrieveByColumnResponse" name="userRetrieveByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userUpdateByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:userUpdateByIDRequest" name="userUpdateByIDRequest"/>
+
+         <wsdl:output message="impl:userUpdateByIDResponse" name="userUpdateByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userDeleteByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:userDeleteByIDRequest" name="userDeleteByIDRequest"/>
+
+         <wsdl:output message="impl:userDeleteByIDResponse" name="userDeleteByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="storageQuery" parameterOrder="in0 in1 in2 in3 in4 in5 in6">
+
+         <wsdl:input message="impl:storageQueryRequest" name="storageQueryRequest"/>
+
+         <wsdl:output message="impl:storageQueryResponse" name="storageQueryResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryCreate" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:inventoryCreateRequest" name="inventoryCreateRequest"/>
+
+         <wsdl:output message="impl:inventoryCreateResponse" name="inventoryCreateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryCompleteByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:inventoryCompleteByIDRequest" name="inventoryCompleteByIDRequest"/>
+
+         <wsdl:output message="impl:inventoryCompleteByIDResponse" name="inventoryCompleteByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryCompleteByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:inventoryCompleteByColumnRequest" name="inventoryCompleteByColumnRequest"/>
+
+         <wsdl:output message="impl:inventoryCompleteByColumnResponse" name="inventoryCompleteByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryDeleteByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:inventoryDeleteByIDRequest" name="inventoryDeleteByIDRequest"/>
+
+         <wsdl:output message="impl:inventoryDeleteByIDResponse" name="inventoryDeleteByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryDeleteByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:inventoryDeleteByColumnRequest" name="inventoryDeleteByColumnRequest"/>
+
+         <wsdl:output message="impl:inventoryDeleteByColumnResponse" name="inventoryDeleteByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryVoidByID" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:inventoryVoidByIDRequest" name="inventoryVoidByIDRequest"/>
+
+         <wsdl:output message="impl:inventoryVoidByIDResponse" name="inventoryVoidByIDResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryVoidByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:inventoryVoidByColumnRequest" name="inventoryVoidByColumnRequest"/>
+
+         <wsdl:output message="impl:inventoryVoidByColumnResponse" name="inventoryVoidByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerLocationCreate" parameterOrder="in0">
+
+         <wsdl:input message="impl:bPartnerLocationCreateRequest" name="bPartnerLocationCreateRequest"/>
+
+         <wsdl:output message="impl:bPartnerLocationCreateResponse" name="bPartnerLocationCreateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerLocationUpdate" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:bPartnerLocationUpdateRequest" name="bPartnerLocationUpdateRequest"/>
+
+         <wsdl:output message="impl:bPartnerLocationUpdateResponse" name="bPartnerLocationUpdateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerLocationDelete" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:bPartnerLocationDeleteRequest" name="bPartnerLocationDeleteRequest"/>
+
+         <wsdl:output message="impl:bPartnerLocationDeleteResponse" name="bPartnerLocationDeleteResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerLocationRetrieve" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:bPartnerLocationRetrieveRequest" name="bPartnerLocationRetrieveRequest"/>
+
+         <wsdl:output message="impl:bPartnerLocationRetrieveResponse" name="bPartnerLocationRetrieveResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productPriceCreateUpdate" parameterOrder="in0">
+
+         <wsdl:input message="impl:productPriceCreateUpdateRequest" name="productPriceCreateUpdateRequest"/>
+
+         <wsdl:output message="impl:productPriceCreateUpdateResponse" name="productPriceCreateUpdateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productPriceDelete" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:productPriceDeleteRequest" name="productPriceDeleteRequest"/>
+
+         <wsdl:output message="impl:productPriceDeleteResponse" name="productPriceDeleteResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productPriceRetrieve" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:productPriceRetrieveRequest" name="productPriceRetrieveRequest"/>
+
+         <wsdl:output message="impl:productPriceRetrieveResponse" name="productPriceRetrieveResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderCreate" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productionOrderCreateRequest" name="productionOrderCreateRequest"/>
+
+         <wsdl:output message="impl:productionOrderCreateResponse" name="productionOrderCreateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderDelete" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productionOrderDeleteRequest" name="productionOrderDeleteRequest"/>
+
+         <wsdl:output message="impl:productionOrderDeleteResponse" name="productionOrderDeleteResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderComplete" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productionOrderCompleteRequest" name="productionOrderCompleteRequest"/>
+
+         <wsdl:output message="impl:productionOrderCompleteResponse" name="productionOrderCompleteResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderVoid" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:productionOrderVoidRequest" name="productionOrderVoidRequest"/>
+
+         <wsdl:output message="impl:productionOrderVoidResponse" name="productionOrderVoidResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderVoidByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:productionOrderVoidByColumnRequest" name="productionOrderVoidByColumnRequest"/>
+
+         <wsdl:output message="impl:productionOrderVoidByColumnResponse" name="productionOrderVoidByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipCreate" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:depositSlipCreateRequest" name="depositSlipCreateRequest"/>
+
+         <wsdl:output message="impl:depositSlipCreateResponse" name="depositSlipCreateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipDelete" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:depositSlipDeleteRequest" name="depositSlipDeleteRequest"/>
+
+         <wsdl:output message="impl:depositSlipDeleteResponse" name="depositSlipDeleteResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipComplete" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:depositSlipCompleteRequest" name="depositSlipCompleteRequest"/>
+
+         <wsdl:output message="impl:depositSlipCompleteResponse" name="depositSlipCompleteResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipVoid" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:depositSlipVoidRequest" name="depositSlipVoidRequest"/>
+
+         <wsdl:output message="impl:depositSlipVoidResponse" name="depositSlipVoidResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipVoidByColumn" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:depositSlipVoidByColumnRequest" name="depositSlipVoidByColumnRequest"/>
+
+         <wsdl:output message="impl:depositSlipVoidByColumnResponse" name="depositSlipVoidByColumnResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="billOfMaterialCreate" parameterOrder="in0">
+
+         <wsdl:input message="impl:billOfMaterialCreateRequest" name="billOfMaterialCreateRequest"/>
+
+         <wsdl:output message="impl:billOfMaterialCreateResponse" name="billOfMaterialCreateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="billOfMaterialDelete" parameterOrder="in0 in1">
+
+         <wsdl:input message="impl:billOfMaterialDeleteRequest" name="billOfMaterialDeleteRequest"/>
+
+         <wsdl:output message="impl:billOfMaterialDeleteResponse" name="billOfMaterialDeleteResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="processFiscalPrinterClose" parameterOrder="in0">
+
+         <wsdl:input message="impl:processFiscalPrinterCloseRequest" name="processFiscalPrinterCloseRequest"/>
+
+         <wsdl:output message="impl:processFiscalPrinterCloseResponse" name="processFiscalPrinterCloseResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="processCreditCardBatchClose" parameterOrder="in0">
+
+         <wsdl:input message="impl:processCreditCardBatchCloseRequest" name="processCreditCardBatchCloseRequest"/>
+
+         <wsdl:output message="impl:processCreditCardBatchCloseResponse" name="processCreditCardBatchCloseResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="replicate" parameterOrder="in0">
+
+         <wsdl:input message="impl:replicateRequest" name="replicateRequest"/>
+
+         <wsdl:output message="impl:replicateResponse" name="replicateResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="recordQuery" parameterOrder="in0 in1 in2 in3">
+
+         <wsdl:input message="impl:recordQueryRequest" name="recordQueryRequest"/>
+
+         <wsdl:output message="impl:recordQueryResponse" name="recordQueryResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="recordQueryDirect" parameterOrder="in0 in1 in2">
+
+         <wsdl:input message="impl:recordQueryDirectRequest" name="recordQueryDirectRequest"/>
+
+         <wsdl:output message="impl:recordQueryDirectResponse" name="recordQueryDirectResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="customService" parameterOrder="in0">
+
+         <wsdl:input message="impl:customServiceRequest" name="customServiceRequest"/>
+
+         <wsdl:output message="impl:customServiceResponse" name="customServiceResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="LibertyaWSSoapBinding" type="impl:LibertyaWS">
+
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="bPartnerCreate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerCreateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerCreateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerRetrieveByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerRetrieveByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerRetrieveByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerRetrieveByValue">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerRetrieveByValueRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerRetrieveByValueResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerRetrieveByTaxID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerRetrieveByTaxIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerRetrieveByTaxIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerUpdate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerUpdateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerUpdateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerDelete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerDeleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerDeleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateCustomer">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceCreateCustomerRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceCreateCustomerResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateCustomerFromOrderByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceCreateCustomerFromOrderByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceCreateCustomerFromOrderByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateCustomerFromOrderByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceCreateCustomerFromOrderByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceCreateCustomerFromOrderByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateVendor">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceCreateVendorRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceCreateVendorResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateVendorFromOrderByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceCreateVendorFromOrderByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceCreateVendorFromOrderByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCreateVendorFromOrderByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceCreateVendorFromOrderByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceCreateVendorFromOrderByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceDeleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceDeleteByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceDeleteByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceDeleteByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceDeleteByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceDeleteByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCompleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceCompleteByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceCompleteByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceCompleteByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceCompleteByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceCompleteByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceVoidByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceVoidByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceVoidByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceVoidByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceVoidByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceVoidByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="invoiceUpdateByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="invoiceUpdateByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="invoiceUpdateByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productCreate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productCreateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productCreateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productCreate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productCreateRequest1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productCreateResponse1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productRetrieveByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productRetrieveByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productRetrieveByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productRetrieveByValue">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productRetrieveByValueRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productRetrieveByValueResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productUpdateByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productUpdateByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productUpdateByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productUpdateByValue">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productUpdateByValueRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productUpdateByValueResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productDelete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productDeleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productDeleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveOrderByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentRetrieveOrderByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentRetrieveOrderByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveOrderByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentRetrieveOrderByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentRetrieveOrderByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveInvoiceByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentRetrieveInvoiceByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentRetrieveInvoiceByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveInvoiceByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentRetrieveInvoiceByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentRetrieveInvoiceByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveInOutByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentRetrieveInOutByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentRetrieveInOutByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveInOutByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentRetrieveInOutByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentRetrieveInOutByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveAllocationByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentRetrieveAllocationByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentRetrieveAllocationByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentRetrieveAllocationByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentRetrieveAllocationByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentRetrieveAllocationByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryOrders">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentQueryOrdersRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentQueryOrdersResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryOrders">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentQueryOrdersRequest1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentQueryOrdersResponse1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryInvoices">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentQueryInvoicesRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentQueryInvoicesResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryInvoices">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentQueryInvoicesRequest1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentQueryInvoicesResponse1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryInOuts">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentQueryInOutsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentQueryInOutsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryInOuts">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentQueryInOutsRequest1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentQueryInOutsResponse1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryAllocations">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentQueryAllocationsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentQueryAllocationsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="documentQueryAllocations">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="documentQueryAllocationsRequest1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="documentQueryAllocationsResponse1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCreateCustomer">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderCreateCustomerRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderCreateCustomerResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCreateCustomer">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderCreateCustomerRequest1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderCreateCustomerResponse1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCreateVendor">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderCreateVendorRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderCreateVendorResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderDeleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderDeleteByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderDeleteByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderDeleteByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderDeleteByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderDeleteByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCompleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderCompleteByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderCompleteByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCompleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderCompleteByIDRequest1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderCompleteByIDResponse1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCompleteByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderCompleteByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderCompleteByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderCompleteByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderCompleteByColumnRequest1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderCompleteByColumnResponse1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderVoidByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderVoidByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderVoidByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderVoidByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderVoidByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderVoidByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderUpdateByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderUpdateByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderUpdateByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="orderUpdateByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="orderUpdateByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="orderUpdateByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCreateCustomer">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inOutCreateCustomerRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inOutCreateCustomerResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCreateVendor">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inOutCreateVendorRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inOutCreateVendorResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCreateFromOrder">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inOutCreateFromOrderRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inOutCreateFromOrderResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutDeleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inOutDeleteByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inOutDeleteByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutDeleteByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inOutDeleteByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inOutDeleteByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCompleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inOutCompleteByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inOutCompleteByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutCompleteByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inOutCompleteByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inOutCompleteByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutVoidByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inOutVoidByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inOutVoidByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inOutVoidByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inOutVoidByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inOutVoidByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerBalanceSumOrdersNotInvoiced">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerBalanceSumOrdersNotInvoicedRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerBalanceSumOrdersNotInvoicedResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerBalanceSumInvoices">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerBalanceSumInvoicesRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerBalanceSumInvoicesResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerBalanceSumPayments">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerBalanceSumPaymentsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerBalanceSumPaymentsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerBalanceSumChecks">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerBalanceSumChecksRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerBalanceSumChecksResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="allocationCreateReceipt">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="allocationCreateReceiptRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="allocationCreateReceiptResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="allocationCreateEarlyReceipt">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="allocationCreateEarlyReceiptRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="allocationCreateEarlyReceiptResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="allocationVoidByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="allocationVoidByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="allocationVoidByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="allocationVoidByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="allocationVoidByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="allocationVoidByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userCreate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="userCreateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="userCreateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userRetrieveByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="userRetrieveByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="userRetrieveByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userRetrieveByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="userRetrieveByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="userRetrieveByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userUpdateByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="userUpdateByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="userUpdateByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="userDeleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="userDeleteByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="userDeleteByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="storageQuery">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="storageQueryRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="storageQueryResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryCreate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inventoryCreateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inventoryCreateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryCompleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inventoryCompleteByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inventoryCompleteByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryCompleteByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inventoryCompleteByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inventoryCompleteByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryDeleteByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inventoryDeleteByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inventoryDeleteByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryDeleteByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inventoryDeleteByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inventoryDeleteByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryVoidByID">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inventoryVoidByIDRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inventoryVoidByIDResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="inventoryVoidByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="inventoryVoidByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="inventoryVoidByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerLocationCreate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerLocationCreateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerLocationCreateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerLocationUpdate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerLocationUpdateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerLocationUpdateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerLocationDelete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerLocationDeleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerLocationDeleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="bPartnerLocationRetrieve">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bPartnerLocationRetrieveRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bPartnerLocationRetrieveResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productPriceCreateUpdate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productPriceCreateUpdateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productPriceCreateUpdateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productPriceDelete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productPriceDeleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productPriceDeleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productPriceRetrieve">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productPriceRetrieveRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productPriceRetrieveResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderCreate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productionOrderCreateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productionOrderCreateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderDelete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productionOrderDeleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productionOrderDeleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderComplete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productionOrderCompleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productionOrderCompleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderVoid">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productionOrderVoidRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productionOrderVoidResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="productionOrderVoidByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="productionOrderVoidByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="productionOrderVoidByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipCreate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="depositSlipCreateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="depositSlipCreateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipDelete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="depositSlipDeleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="depositSlipDeleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipComplete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="depositSlipCompleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="depositSlipCompleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipVoid">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="depositSlipVoidRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="depositSlipVoidResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="depositSlipVoidByColumn">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="depositSlipVoidByColumnRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="depositSlipVoidByColumnResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="billOfMaterialCreate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="billOfMaterialCreateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="billOfMaterialCreateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="billOfMaterialDelete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="billOfMaterialDeleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="billOfMaterialDeleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="processFiscalPrinterClose">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="processFiscalPrinterCloseRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="processFiscalPrinterCloseResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="processCreditCardBatchClose">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="processCreditCardBatchCloseRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="processCreditCardBatchCloseResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="replicate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="replicateRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="replicateResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="recordQuery">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="recordQueryRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="recordQueryResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="recordQueryDirect">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="recordQueryDirectRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="recordQueryDirectResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="customService">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="customServiceRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="customServiceResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="org.libertya.ws" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="LibertyaWSService">
+
+      <wsdl:port binding="impl:LibertyaWSSoapBinding" name="LibertyaWS">
+
+         <wsdlsoap:address location="http://localhost:8080/axis/services/LibertyaWS"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>
