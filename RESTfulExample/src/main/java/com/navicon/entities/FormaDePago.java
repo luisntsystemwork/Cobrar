@@ -17,9 +17,11 @@ public enum FormaDePago {
         this.codigoNavicon = codigoNavicon;
         this.codigoLibertya = codigoLibertya;
     }
+    
+    
    
     
-    public static String getCodigoLibertyaByNavicon(String codigoNavicon)
+    /*public static String getCodigoLibertyaByNavicon(String codigoNavicon)
     {
     	for (FormaDePago f: FormaDePago.values()) {
     		if (f.codigoNavicon.equals(codigoNavicon))
@@ -27,8 +29,25 @@ public enum FormaDePago {
     	}
     	
     	return EFECTIVO.codigoLibertya;
-    }
+    }*/
 
-    
+    public String getCodigoNavicon() {
+		return codigoNavicon;
+	}
+
+
+	public String getCodigoLibertya() {
+		return codigoLibertya;
+	}
+
+
+	public static FormaDePago getFormaDePago(String codigoNavicon) {
+    	for (FormaDePago f: FormaDePago.values()) {
+    		if (f.codigoNavicon.equals(codigoNavicon))
+    			return f;
+    	}
+    	
+    	return EFECTIVO;
+    }
 	
 }

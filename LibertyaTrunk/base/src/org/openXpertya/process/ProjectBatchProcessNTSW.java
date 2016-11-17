@@ -12,11 +12,14 @@ import java.util.logging.Level;
 import org.openXpertya.apps.search.helper.OrderInvoiceHelper;
 import org.openXpertya.model.MOrder;
 import org.openXpertya.model.M_Table;
+import org.openXpertya.util.CLogger;
 import org.openXpertya.util.DB;
 import org.openXpertya.util.Env;
 
 
 public class ProjectBatchProcessNTSW extends SvrProcess {
+	
+	protected CLogger log = CLogger.getCLogger(ProjectBatchProcessNTSW.class);
 	
 	private int m_count = 0;
 
@@ -38,8 +41,7 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 			// public PO getPO(ResultSet rs, String trxName)
 			ordenesDeTrabajo.add((MOrder) table.getPO(rs, estado));
 		}
-    	
-		System.out.println("Se obtuvieron " + ordenesDeTrabajo.size());
+		log.log(Level.INFO, "Se obtuvieron " + ordenesDeTrabajo.size());
 		
 		return ordenesDeTrabajo;
 	}
@@ -76,8 +78,6 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
     	
 		Boolean isResponsableInscripto = isResponsableInscripto(cBPartnerID);
 		
-		// TODO: FALTA EL PUNTO DE VENTA.
-		
 		Integer docTypeID = 0;
     	try {
             String SQL = "SELECT c_doctype_id " 
@@ -93,8 +93,6 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
             }
             
             PreparedStatement pstmt = DB.prepareStatement( SQL );
-
-            // pstmt.setInt( 1,adClientID);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -121,7 +119,7 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 		
 		try {
 		
-			System.out.println("Inicio de ProjectBatchProcessNTSW");
+			log.log(Level.INFO, "Inicio de ProjectBatchProcessNTSW");
 			
 			List<MOrder> ordenesTrabajo = getOrdenesTrabajosSegunEstado(OrderInvoiceHelper.ESTADO_FACTURACION_PENDIENTE);
 			
@@ -145,18 +143,11 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 					helper.procesarOrdenTrabajo(mOrder, invoiceDocTypeTargetID, 
 								invoicePuntoDeVenta, invoiceTipoComprobante, true, dateInvoiced, dateAcct, mOrder.get_TrxName());
 					
-					/*MInvoice createInvoiceFromOrder = helper.createInvoiceFromOrder(mOrder, invoiceDocTypeTargetID, 
-								invoicePuntoDeVenta, invoiceTipoComprobante, true, dateInvoiced, dateAcct, mOrder.get_TrxName());
-					
-					System.out.println(createInvoiceFromOrder);*/
-					
-					System.out.println("Se genero la factura");
+					log.log(Level.INFO, "Se genero la factura");
 					
 				} catch (Throwable e1) {
 					
-					System.out.println("Error al gener al factura");
-					e1.printStackTrace();
-					
+					log.log(Level.SEVERE, "Error al gener al factura", e1.getCause());
 					/*
 					 * 
 					 * Decrementar el numero de secuencia, si aplica
@@ -164,10 +155,10 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 					 * Reabrir la orden de factura.
 					 * */
 					try {
-						System.out.println("Se ajusta la orden");
+						log.log(Level.INFO, "Se ajusta la orden");
 						helper.ajustarOrdenYFactura(mOrder.getC_Order_ID());
-					} catch (SQLException e2) {
-						System.out.println("Error al ajustar la orden");
+					} catch (Throwable e2) {
+						log.log(Level.SEVERE, "Error al ajustar la orden", e2.getCause());
 					}
 					
 					

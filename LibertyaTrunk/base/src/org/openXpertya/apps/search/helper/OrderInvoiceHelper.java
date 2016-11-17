@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.openXpertya.apps.search.exception.ModelException;
 import org.openXpertya.model.MBPartnerLocation;
@@ -39,6 +40,8 @@ import org.openXpertya.util.Trx;
 
 
 public class OrderInvoiceHelper {
+	
+	protected CLogger log = CLogger.getCLogger(OrderInvoiceHelper.class);
 	
 	private Integer adSequenceId = null;
 	private Integer currentNext = null;
@@ -212,7 +215,7 @@ public class OrderInvoiceHelper {
 		if (!DocumentEngine.processAndSave(anInOut, DocAction.ACTION_Complete, false))
 			throw new ModelException("Error al completar el remito:" + Msg.parseTranslation(Env.getCtx(), anInOut.getProcessMsg()));
 		
-		System.out.println("M_InOut_ID " + anInOut);
+		log.log(Level.INFO, "M_InOut_ID " + anInOut);
 	}
 	
 	private void createPedidosProveedorYRemitos(MOrder ordenTrabajo, String trxName) throws ModelException, SQLException {
@@ -232,15 +235,13 @@ public class OrderInvoiceHelper {
 		for(Integer idPartner : orderLinePorCuitProveedor.keySet() ) {
 			
 			List<MOrderLine> conceptos = orderLinePorCuitProveedor.get(idPartner);
-			
+			// Se crea una lista de precio por pedido
 			int idListaPrecio = getListaPrecio(ordenTrabajo.getAD_Client_ID(), ordenTrabajo.getAD_Org_ID(),  
 					ordenTrabajo.getDocumentNo(), ordenTrabajo.getC_Project_ID(), ordenTrabajo.getC_Currency_ID(), 
 					conceptos , Boolean.FALSE);
 			
 			MOrder anOrder = new MOrder(Env.getCtx(), 0, trxName);
 			
-			// TODO: VER SI SE CREA O NO UNA LISTA DE PRECIOS POR PEDIDOS Y SE LO ASIGNA AL MISMO (SERIA UNA LISTA CON TODOS LOS ARTICULOS QUE SE CREAN).
-			//anOrder.set_Value("M_PriceList_ID",         ordenTrabajo.getM_PriceList_ID());
 			anOrder.set_Value ("M_PriceList_ID", idListaPrecio);
 		
 			anOrder.set_Value("AD_Client_ID", ordenTrabajo.getAD_Client_ID());
@@ -260,6 +261,11 @@ public class OrderInvoiceHelper {
 			anOrder.set_Value("C_Currency_ID",          ordenTrabajo.getC_Currency_ID());
 			anOrder.set_Value("SalesRep_ID",            ordenTrabajo.getSalesRep_ID());
 			anOrder.set_Value("PaymentRule",            ordenTrabajo.getPaymentRule());
+			
+			if (ordenTrabajo.get_Value("C_PaymentTerm_ID") != null) {
+				anOrder.set_Value("C_PaymentTerm_ID", ordenTrabajo.get_Value("C_PaymentTerm_ID"));
+			}
+			
 			anOrder.set_Value("C_Project_ID",           ordenTrabajo.getC_Project_ID());
 			// MARCAR AL C_ORDER COMO Transaccion de venta
 			anOrder.set_Value("IsSOTrx", "N");
@@ -304,7 +310,7 @@ public class OrderInvoiceHelper {
 			if (!DocumentEngine.processAndSave(anOrder, DocAction.ACTION_Complete, false))
 				throw new ModelException("Error al completar el pedido:" + Msg.parseTranslation(Env.getCtx(), anOrder.getProcessMsg()));
 			
-			System.out.println("C_Order_ID " + anOrder);
+			log.log(Level.INFO, "C_Order_ID " + anOrder);
 		
 			this.createRemitosSalida(anOrder, trxName);
 		}
@@ -510,7 +516,7 @@ public class OrderInvoiceHelper {
 	{
 		try 
 		{
-			System.out.println("Orden a procesar: " + ordenTrabajo);
+			log.log(Level.INFO, "Orden a procesar: " + ordenTrabajo);
 			
 			// Instanciar la nueva factura
 			MInvoice anInvoice = new MInvoice(ordenTrabajo, invoiceDocTypeTargetID, ordenTrabajo.getDateOrdered());
@@ -562,7 +568,7 @@ public class OrderInvoiceHelper {
 	
 			actualizarEstadosFactura(ordenTrabajo, ESTADO_FACTURACION_FACTURADO, "EN CURSO", trxName);
 			
-			System.out.println("C_Invoice_ID " + anInvoice.getC_Invoice_ID());
+			log.log(Level.INFO, "C_Invoice_ID " + anInvoice.getC_Invoice_ID());
 			
 			/* === Commitear transaccion === */
 			/* El commit lo hace el metodo public void processOrdenTrabajo(MOrder mOrder, int invoiceDocTypeTargetID,
@@ -668,9 +674,8 @@ public class OrderInvoiceHelper {
 		
 		Connection con = DB.createConnection(false, Connection.TRANSACTION_READ_COMMITTED);
 		try {
-			// asignarNumeroFacturaX(cOrderID);
-		
-			decrementarSecuenciador(con);
+			// NO SERIA NECESARIO
+			// decrementarSecuenciador(con);
 		
 			asignarEstadoFacturacionYReabrir(con, cOrderID, "ERROR");
 		} catch (SQLException e) {

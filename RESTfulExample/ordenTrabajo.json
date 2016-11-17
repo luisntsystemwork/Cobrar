@@ -3,8 +3,8 @@
 	"cliente":"20222222223",
 	"codigoMoneda":"ARS",
 	"contactoCliente":"vendedor",
-	"formaDePago":"CRED",
-	"programaVencimientos":"30",
+	"formaDePago":"CREDITO",
+	"programaVencimientos":"30 Días",
 	"claveUnidadNegocio":"Standard",
 	"carpeta": {
 		"clave":"primer",
@@ -57,12 +57,12 @@
 			"precioFacturacion":"3000",
 			"precioMaximoCompra":"2000",
 			"precioInformado":"3000",
-			"claveConcepto":"test1",
+			"claveConcepto":"CAT",
 			"codigoIdentificacion":"23111111111"},
 		{"cantidad":"2",
 			"precioFacturacion":"3000",
 			"precioMaximoCompra":"2000",
 			"precioInformado":"3000",
-			"claveConcepto":"test1",
+			"claveConcepto":"AMS",
 			"codigoIdentificacion":"23111111111"}]
 }

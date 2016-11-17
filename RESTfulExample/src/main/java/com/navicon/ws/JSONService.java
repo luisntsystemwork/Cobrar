@@ -37,6 +37,7 @@ import com.navicon.entities.Filtro;
 import com.navicon.entities.FormaDePago;
 import com.navicon.entities.MensajesRespuesta;
 import com.navicon.entities.OrdenTrabajo;
+import com.navicon.entities.ProgramaVencimiento;
 import com.navicon.entities.Prueba;
 import com.navicon.util.StringUtils;
 import com.navicon.ws.reader.JerseyConfig;
@@ -172,8 +173,56 @@ public class JSONService {
 		return consultarCampanias();
 	}
 	
+	@POST
+	@Path("/getProgramaVencimientos")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<ProgramaVencimiento> getProgramaVencimientos() {
+		return consultarProgramaVencimientos();
+	}
 	
 	
+	
+	private List<ProgramaVencimiento> consultarProgramaVencimientos() {
+		List<ProgramaVencimiento> lista = new ArrayList<ProgramaVencimiento>();
+		try {
+			LibertyaWSServiceLocator locator = new LibertyaWSServiceLocator();
+			locator.setLibertyaWSEndpointAddress(urlLibertyaWS);
+		
+			LibertyaWS lyws = locator.getLibertyaWS();
+			
+			FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", CLIENT_ID, ORG_ID);
+			recParam.addColumnToFilter("Name");
+			
+			String where = " AD_Client_ID = " + CLIENT_ID + " AND AD_Org_ID = " + ORG_ID;
+			
+			MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "C_PaymentTerm",where , false);
+			if (recResult.isError()) 
+				return new ArrayList<ProgramaVencimiento>();
+				
+			if (recResult.getRecords().isEmpty()) {
+				where = " AD_Client_ID = " + CLIENT_ID;
+				recResult = lyws.recordQuery(recParam, "C_PaymentTerm", where , false);
+				if (recResult.getRecords().isEmpty() || recResult.isError()) 
+					return new ArrayList<ProgramaVencimiento>();
+			}
+			
+			
+			for (Map<String, String> ret : recResult.getRecords()) {
+				String name = ret.get("Name");
+				ProgramaVencimiento programaVencimiento = new ProgramaVencimiento();
+				programaVencimiento.setProgramaVencimientos(name);
+				lista.add(programaVencimiento);
+			}
+		
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		
+		return lista;
+	}
+
 	private List<Campania> consultarCampanias() {
 		List<Campania> lista = new ArrayList<Campania>();
 		try {
@@ -235,13 +284,7 @@ public class JSONService {
 			recParam.addColumnToFilter("IsEmployee");
 			recParam.addColumnToFilter("C_BP_Group_ID");
 			recParam.addColumnToFilter("C_Categoria_Iva_ID");
-			
-			/*recParam.addColumnToFilter("Address1");
-			recParam.addColumnToFilter("Postal");
-			recParam.addColumnToFilter("City");
-			recParam.addColumnToFilter("C_Country_ID");
-			recParam.addColumnToFilter("C_Region_ID");*/
-			
+						
 			String where = "name like '%" + nombre + "%'";
 			
 			MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "C_BPartner",where , false);
@@ -364,12 +407,6 @@ public class JSONService {
 	}
 	
 	private MensajesRespuesta procesarEntidadComercial(EntidadComercial entidadComercial) {
-		/*String retorno = validarEntidadComercial(entidadComercial);
-
-		if (!StringUtils.isEmpty(retorno)) {
-			return retorno;
-		}*/
-		
 		MensajesRespuesta mensajesRespuesta = validarEntidadComercial(entidadComercial);
 
 		if (mensajesRespuesta.hayMensajes()) {
@@ -691,10 +728,17 @@ public class JSONService {
 			// Se envia en los parametros del constructor
 			ordenDeTrabajo.addColumnToHeader("C_BPartner_Location_ID", getIdDireccionEntidadComercial(lyws, idEntidadComercial, CLIENT_ID, ORG_ID));
 			ordenDeTrabajo.addColumnToHeader("M_Warehouse_ID", getIdAlmacen(lyws, CLIENT_ID, ORG_ID));
-			ordenDeTrabajo.addColumnToHeader("M_PriceList_ID", getIdListaPrecionVentas(lyws, CLIENT_ID, ORG_ID));
+			ordenDeTrabajo.addColumnToHeader("M_PriceList_ID", getIdListaPrecioVentas(lyws, CLIENT_ID, ORG_ID));
 			ordenDeTrabajo.addColumnToHeader("C_Currency_ID", getIdMonedaARS(lyws, ordenTrabajoJson.getCodigoMoneda(), CLIENT_ID, ORG_ID));
 			ordenDeTrabajo.addColumnToHeader("SalesRep_ID", getComercial(lyws, ordenTrabajoJson.getContactoCliente(), CLIENT_ID, ORG_ID));
-			ordenDeTrabajo.addColumnToHeader("PaymentRule", FormaDePago.getCodigoLibertyaByNavicon(ordenTrabajoJson.getFormaDePago()));
+			
+			FormaDePago formaDePago = FormaDePago.getFormaDePago(ordenTrabajoJson.getFormaDePago());
+			ordenDeTrabajo.addColumnToHeader("PaymentRule", formaDePago.getCodigoLibertya());
+			
+			if (FormaDePago.A_CREDITO.equals(formaDePago)) {
+				ordenDeTrabajo.addColumnToHeader("C_PaymentTerm_ID", getIdPaymentTermId(lyws, ordenTrabajoJson.getProgramaVencimientos(), CLIENT_ID, ORG_ID));
+			}
+			
 			ordenDeTrabajo.addColumnToHeader("C_Project_ID", idCarpeta);
 			// MARCAR AL C_ORDER COMO Transaccion de venta
 			// Se debe marcar IsSOTrx='Y'
@@ -719,8 +763,8 @@ public class JSONService {
 				ordenDeTrabajo.addColumnToCurrentLine("PriceEntered", concepto.getPrecioFacturacion());	
 				
 				// columnas agregadas a c_orderline
-				ordenDeTrabajo.addColumnToHeader("precioMaximoCompra", concepto.getPrecioMaximoCompra());
-				ordenDeTrabajo.addColumnToHeader("precioInformado", concepto.getPrecioInformado());
+				ordenDeTrabajo.addColumnToCurrentLine("preciomaximocompra", concepto.getPrecioMaximoCompra());
+				ordenDeTrabajo.addColumnToCurrentLine("precioinformado", concepto.getPrecioInformado());
 				
 				ordenDeTrabajo.addColumnToCurrentLine("C_Tax_ID", getIdImpuesto(lyws, concepto.getClaveConcepto(), CLIENT_ID, ORG_ID));
 				
@@ -755,6 +799,23 @@ public class JSONService {
 		
 		return mensajesRespuesta;
 
+	}
+
+	private String getIdPaymentTermId(LibertyaWS lyws, String programaVencimientos, Integer clientId, Integer orgId) throws RemoteException {
+		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
+		recParam.addColumnToFilter("C_PaymentTerm_ID");
+		MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "C_PaymentTerm", "name = '" + programaVencimientos + "'" + " AND AD_Client_ID = " + clientId + " AND AD_Org_ID = " + orgId, false);
+		
+		if (recResult.getRecords().isEmpty()) {
+			recResult = lyws.recordQuery(recParam, "C_PaymentTerm", "name = '" + programaVencimientos + "'" + " AND AD_Client_ID = " + clientId, false);
+		
+			if (recResult.getRecords().isEmpty()) {
+				return "";
+			}
+		}
+		Map<String, String> ret = recResult.getRecords().get(0);
+		
+		return ret.get("C_PaymentTerm_ID");
 	}
 
 	private String getCampaniaPorValue(LibertyaWS lyws, String unidadNegocio, Integer clientId, Integer orgId) throws RemoteException {
@@ -830,7 +891,7 @@ public class JSONService {
 		return ret.get("C_Currency_ID");
 	}
 
-	private String getIdListaPrecionVentas(LibertyaWS lyws, Integer clientId, Integer orgId) throws RemoteException {
+	private String getIdListaPrecioVentas(LibertyaWS lyws, Integer clientId, Integer orgId) throws RemoteException {
 		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
 		recParam.addColumnToFilter("M_PriceList_ID");
 		MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "M_PriceList", "name = 'Ventas' and ad_client_id = " + clientId.toString(), false);
