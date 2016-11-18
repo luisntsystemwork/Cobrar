@@ -3,7 +3,7 @@
 	"cliente":"20222222223",
 	"codigoMoneda":"ARS",
 	"contactoCliente":"vendedor",
-	"formaDePago":"CREDITO",
+	"formaDePago":"EFECTIVO",
 	"programaVencimientos":"30 Días",
 	"claveUnidadNegocio":"Standard",
 	"carpeta": {

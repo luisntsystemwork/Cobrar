@@ -314,13 +314,13 @@ public class InfoOrder extends Info {
         new Info_Column( Msg.translate( Env.getCtx(),"Description" ),"o.Description",String.class ),
         new Info_Column( Msg.translate( Env.getCtx(),"POReference" ),"o.POReference",String.class ),
         ////
-        new Info_Column( Msg.translate( Env.getCtx(),"Estado_Facturacion" ),     "o.Estado_Facturacion",String.class )
+        new Info_Column( "Estado Facturacion" ,     "o.Estado_Facturacion",String.class )
        // new Info_Column( Msg.translate( Env.getCtx(),"Estado_Pedido_Proveedor" ),"o.Estado_Pedido_Proveedor",String.class )
     };
     
     private VLookup fEstadoFacturacion;
     
-    private CLabel lEstadoFacturacion = new CLabel( Msg.translate( Env.getCtx(),"Estado_Facturacion" ));
+    private CLabel lEstadoFacturacion = new CLabel( "Estado Facturacion" );
 
     /**
      * Descripción de Método
@@ -367,7 +367,7 @@ public class InfoOrder extends Info {
         fAmtTo.setBackground( CompierePLAF.getInfoBackground());
         fAmtTo.setToolTipText( Msg.translate( Env.getCtx(),"AmtTo" ));
         
-        MLookup m_estadoFacturacionNavicon = new MLookup( MLookupFactory.getLookup_List( Env.getLanguage( Env.getCtx()),1010280 ),0 );
+        MLookup m_estadoFacturacionNavicon = new MLookup( MLookupFactory.getLookup_List( Env.getLanguage( Env.getCtx()),1010281 ),0 );
 
         fEstadoFacturacion = new VLookup( "Estado_Facturacion",false,false,true,m_estadoFacturacionNavicon );
         lEstadoFacturacion.setLabelFor( fEstadoFacturacion );

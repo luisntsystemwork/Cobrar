@@ -771,6 +771,10 @@ public class OrderInvoiceHelper {
 			// lista de precios de venta
 			this.createInvoiceFromOrder(mOrder, invoiceDocTypeTargetID, invoicePuntoDeVenta, invoiceTipoComprobante, completeInvoice, dateInvoiced, dateAcct, trxName);
 			
+			// Completa el pedido original
+			if (!DocumentEngine.processAndSave(mOrder, DocAction.ACTION_Complete, false))
+				throw new ModelException("Error al completar el pedido:" + Msg.parseTranslation(Env.getCtx(), mOrder.getProcessMsg()));
+			
 			/* === Commitear transaccion === */
 			Trx.getTrx(trxName).commit();
 		} catch (Throwable t) {

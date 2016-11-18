@@ -41,7 +41,7 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 			// public PO getPO(ResultSet rs, String trxName)
 			ordenesDeTrabajo.add((MOrder) table.getPO(rs, estado));
 		}
-		log.log(Level.INFO, "Se obtuvieron " + ordenesDeTrabajo.size());
+		log.log(Level.SEVERE, "Se obtuvieron " + ordenesDeTrabajo.size());
 		
 		return ordenesDeTrabajo;
 	}
@@ -119,7 +119,7 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 		
 		try {
 		
-			log.log(Level.INFO, "Inicio de ProjectBatchProcessNTSW");
+			log.log(Level.SEVERE, "Inicio de ProjectBatchProcessNTSW");
 			
 			List<MOrder> ordenesTrabajo = getOrdenesTrabajosSegunEstado(OrderInvoiceHelper.ESTADO_FACTURACION_PENDIENTE);
 			
@@ -143,11 +143,11 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 					helper.procesarOrdenTrabajo(mOrder, invoiceDocTypeTargetID, 
 								invoicePuntoDeVenta, invoiceTipoComprobante, true, dateInvoiced, dateAcct, mOrder.get_TrxName());
 					
-					log.log(Level.INFO, "Se genero la factura");
+					log.log(Level.SEVERE, "Se genero la factura");
 					
 				} catch (Throwable e1) {
 					
-					log.log(Level.SEVERE, "Error al gener al factura", e1.getCause());
+					log.log(Level.SEVERE, "Error al gener al factura" + e1.getMessage(), e1.getCause());
 					/*
 					 * 
 					 * Decrementar el numero de secuencia, si aplica
@@ -155,7 +155,7 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 					 * Reabrir la orden de factura.
 					 * */
 					try {
-						log.log(Level.INFO, "Se ajusta la orden");
+						log.log(Level.SEVERE, "Se ajusta la orden");
 						helper.ajustarOrdenYFactura(mOrder.getC_Order_ID());
 					} catch (Throwable e2) {
 						log.log(Level.SEVERE, "Error al ajustar la orden", e2.getCause());
@@ -166,8 +166,7 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 	            
 	        }
 		} catch (Throwable t) {
-			System.out.println("Ocurrio una excepcion");
-			t.printStackTrace();
+			log.log(Level.SEVERE, "Ocurrio una excepcion", t.getCause());
 		} finally {
 			Env.setContext(Env.getCtx(), "#AD_Client_ID", original);
 			Env.setContext( Env.getCtx(),"$C_Currency_ID",originalCurrency);
