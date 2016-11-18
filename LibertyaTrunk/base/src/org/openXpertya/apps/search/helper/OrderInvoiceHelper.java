@@ -215,7 +215,7 @@ public class OrderInvoiceHelper {
 		if (!DocumentEngine.processAndSave(anInOut, DocAction.ACTION_Complete, false))
 			throw new ModelException("Error al completar el remito:" + Msg.parseTranslation(Env.getCtx(), anInOut.getProcessMsg()));
 		
-		log.log(Level.INFO, "M_InOut_ID " + anInOut);
+		log.log(Level.SEVERE, "M_InOut_ID " + anInOut);
 	}
 	
 	private void createPedidosProveedorYRemitos(MOrder ordenTrabajo, String trxName) throws ModelException, SQLException {
@@ -247,7 +247,7 @@ public class OrderInvoiceHelper {
 			anOrder.set_Value("AD_Client_ID", ordenTrabajo.getAD_Client_ID());
 			anOrder.set_Value("AD_Org_ID", ordenTrabajo.getAD_Org_ID());
 			anOrder.set_Value("C_DocTypeTarget_ID", getIdDocTypeTarget(ordenTrabajo.getAD_Client_ID()));
-			anOrder.set_Value("DateOrdered", getFechaFormateado(new Date(), "yyyy-MM-dd HH:mm:s")); // Fecha
+			anOrder.set_Value("DateOrdered", new java.sql.Timestamp((new Date()).getTime())); // Fecha
 		
 			// Se envia en los parametros del constructor
 			anOrder.set_Value("C_BPartner_Location_ID", getIdDireccionEntidadComercial(idPartner));
@@ -277,8 +277,8 @@ public class OrderInvoiceHelper {
 			
 			anOrder.set_Value("C_Campaign_ID", ordenTrabajo.get_Value("C_Campaign_ID"));
 		
-			anOrder.set_Value("Estado_Facturacion", "");
-			anOrder.set_Value("Estado_Pedido_Proveedor", "");
+			anOrder.set_Value("estado_facturacion", "");
+			anOrder.set_Value("estado_pedido_proveedor", "");
 			
 			if (!anOrder.save())
 				throw new ModelException("Error al persistir pedido:" + CLogger.retrieveErrorAsString());
@@ -310,7 +310,7 @@ public class OrderInvoiceHelper {
 			if (!DocumentEngine.processAndSave(anOrder, DocAction.ACTION_Complete, false))
 				throw new ModelException("Error al completar el pedido:" + Msg.parseTranslation(Env.getCtx(), anOrder.getProcessMsg()));
 			
-			log.log(Level.INFO, "C_Order_ID " + anOrder);
+			log.log(Level.SEVERE, "C_Order_ID " + anOrder);
 		
 			this.createRemitosSalida(anOrder, trxName);
 		}
@@ -516,7 +516,7 @@ public class OrderInvoiceHelper {
 	{
 		try 
 		{
-			log.log(Level.INFO, "Orden a procesar: " + ordenTrabajo);
+			log.log(Level.SEVERE, "Orden a procesar: " + ordenTrabajo);
 			
 			// Instanciar la nueva factura
 			MInvoice anInvoice = new MInvoice(ordenTrabajo, invoiceDocTypeTargetID, ordenTrabajo.getDateOrdered());
@@ -568,7 +568,7 @@ public class OrderInvoiceHelper {
 	
 			actualizarEstadosFactura(ordenTrabajo, ESTADO_FACTURACION_FACTURADO, "EN CURSO", trxName);
 			
-			log.log(Level.INFO, "C_Invoice_ID " + anInvoice.getC_Invoice_ID());
+			log.log(Level.SEVERE, "C_Invoice_ID " + anInvoice.getC_Invoice_ID());
 			
 			/* === Commitear transaccion === */
 			/* El commit lo hace el metodo public void processOrdenTrabajo(MOrder mOrder, int invoiceDocTypeTargetID,
