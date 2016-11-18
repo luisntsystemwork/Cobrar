@@ -24,10 +24,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.adempiere.webui.apps.AEnv;
 import org.adempiere.webui.component.Checkbox;
+import org.adempiere.webui.component.Combobox;
 import org.adempiere.webui.component.Datebox;
 import org.adempiere.webui.component.Grid;
 import org.adempiere.webui.component.GridFactory;
@@ -37,6 +39,7 @@ import org.adempiere.webui.component.Row;
 import org.adempiere.webui.component.Rows;
 import org.adempiere.webui.component.Textbox;
 import org.adempiere.webui.editor.WEditor;
+import org.adempiere.webui.editor.WLocatorEditor;
 import org.adempiere.webui.editor.WSearchEditor;
 import org.adempiere.webui.event.ValueChangeEvent;
 import org.adempiere.webui.event.ValueChangeListener;
@@ -52,8 +55,10 @@ import org.openXpertya.model.M_Table;
 import org.openXpertya.util.DB;
 import org.openXpertya.util.DisplayType;
 import org.openXpertya.util.Env;
+import org.openXpertya.util.Language;
 import org.openXpertya.util.Msg;
 import org.openXpertya.util.Util;
+import org.openXpertya.util.ValueNamePair;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
@@ -89,7 +94,7 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
     private Label lblOrderRef;
     private Label lblGrandTotal;
     
-    private WEditor fCashBook_ID;
+    private Combobox fEstadoFacturacionNavicon;
     private Textbox txtDocumentNo;
     private Textbox txtDescription;
     private Textbox txtOrderRef;
@@ -119,8 +124,7 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
         new ColumnInfo(Msg.translate(Env.getCtx(), "Description"), "o.Description", String.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "POReference"), "o.POReference", String.class),
         ////
-        new ColumnInfo( Msg.translate( Env.getCtx(),"Estado_Facturacion" ),"o.Estado_Facturacion",String.class ),
-        new ColumnInfo( Msg.translate( Env.getCtx(),"Estado_Pedido_Proveedor" ),"o.Estado_Pedido_Proveedor",String.class )
+        new ColumnInfo( "Estado Facturacion","o.Estado_Facturacion",String.class )
     };
     
     protected InfoOrderPanel(int WindowNo, String value,
@@ -310,7 +314,7 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
         lblDocumentNo = new Label(Util.cleanAmp(Msg.translate(Env.getCtx(), "DocumentNo")));
         lblDescription = new Label(Msg.translate(Env.getCtx(), "Description"));
         lblDateOrdered = new Label(Msg.translate(Env.getCtx(), "DateOrdered"));
-        lblOrderRef = new Label(Msg.translate(Env.getCtx(), "POReference"));
+        lblOrderRef = new Label("Estado Facturación");
         lblGrandTotal = new Label(Msg.translate(Env.getCtx(), "GrandTotal"));
         
         txtDocumentNo = new Textbox();
@@ -332,11 +336,41 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
                 Env.getCtx(), "C_BPartner_ID"), "", true, false, true);
         editorBPartner.addValueChangeListener(this);
         
+        MLookup m_estadoFacturacionNavicon = new MLookup( MLookupFactory.getLookup_List( Env.getLanguage( Env.getCtx()),1010281 ),0 );
+        /*fEstadoFacturacionNavicon = new WSearchEditor(
+ 				m_estadoFacturacionNavicon, 
+ 				"Estado Facturación", "", false, false, true);*/
+        /*lstLanguage = new Combobox();
+        lstLanguage.setAutocomplete(true);
+        lstLanguage.setAutodrop(true);
+        lstLanguage.setId("lstLanguage");
+        lstLanguage.addEventListener(Events.ON_SELECT, this);
+        lstLanguage.setWidth("220px");
+
+        // Update Language List
+        lstLanguage.getItems().clear();
+        String[] availableLanguages = Language.getNames();
+        for (String langName : availableLanguages) {
+    		Language language = Language.getLanguage(langName);
+			lstLanguage.appendItem(langName, language.getAD_Language());
+		}*/
+ 		fEstadoFacturacionNavicon = new Combobox();
+ 		fEstadoFacturacionNavicon.setAutocomplete(true);
+ 		fEstadoFacturacionNavicon.setAutodrop(true);
+ 		fEstadoFacturacionNavicon.setId("lstLanguage");
+ 		fEstadoFacturacionNavicon.addEventListener(Events.ON_SELECT, this);
+ 		fEstadoFacturacionNavicon.setWidth("220px");
+
+        // Update Language List
+ 		fEstadoFacturacionNavicon.getItems().clear();
+ 		
+ 		ArrayList availableLanguages = m_estadoFacturacionNavicon.getData(false, false, false, true);
+ 		for (Iterator iterator = availableLanguages.iterator(); iterator.hasNext();) {
+			ValueNamePair object = (ValueNamePair) iterator.next();
+			
+    		fEstadoFacturacionNavicon.appendItem(object.getName(), object.getValue());
+		}
         
- 		fCashBook_ID = new WSearchEditor(
- 				MLookupFactory.get (Env.getCtx(), p_WindowNo, 0, 5249, DisplayType.TableDir), 
- 				Msg.translate(Env.getCtx(), "C_CashBook_ID"), "", false, false, true);
- 		fCashBook_ID.addValueChangeListener(this);
         
     }
     
@@ -380,8 +414,8 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 		rows.appendChild(row);
 		//row.appendChild(lblOrderRef.rightAlign());
 		//row.appendChild(txtOrderRef);
-		row.appendChild(fCashBook_ID.getLabel().rightAlign());
-		row.appendChild(fCashBook_ID.getComponent());
+		row.appendChild(lblOrderRef.rightAlign());
+		row.appendChild(fEstadoFacturacionNavicon);
 		row.appendChild(lblGrandTotal.rightAlign());
 		hbox = new Hbox();
 		hbox.appendChild(amountFrom);
