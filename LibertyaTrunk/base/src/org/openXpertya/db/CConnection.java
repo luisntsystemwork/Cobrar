@@ -1205,7 +1205,7 @@ public class CConnection implements Serializable {
         // Prevent error trace
         CLogMgtLog4J.enable(false);
 
-        /*try {
+        try {
 
             StatusHome	statusHome	= (StatusHome) m_iContext.lookup(StatusHome.JNDI_NAME);
             Status	status	= statusHome.create();
@@ -1214,10 +1214,10 @@ public class CConnection implements Serializable {
             updateInfoFromServer(status);
 
             //
-            status.remove();*/
+            status.remove();
             m_okApps	= true;
 
-        /*} catch (CommunicationException ce)	// not a "real" error
+        } catch (CommunicationException ce)	// not a "real" error
         {
 
             // m_appsException = ce;
@@ -1231,7 +1231,7 @@ public class CConnection implements Serializable {
             String	connect	= (String) m_env.get(Context.PROVIDER_URL);
 
             log.warning(connect + "\n - " + e.toString() + "\n - " + m_env);
-        }*/
+        }
 
         CLogMgtLog4J.enable(true);
 

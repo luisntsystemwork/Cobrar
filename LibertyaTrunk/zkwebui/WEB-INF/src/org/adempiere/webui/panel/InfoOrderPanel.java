@@ -497,6 +497,9 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
         if (editorBPartner.getValue() != null)
             sql.append(" AND o.C_BPartner_ID=?");
         //
+        if( fEstadoFacturacionNavicon.getValue() != null ) {
+            sql.append( " AND UPPER(o.estado_facturacion) LIKE ?" );
+        }
         Date fromDate = null;
         Date toDate = null;
         try
@@ -588,6 +591,12 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
             log.fine("BPartner=" + bp);
         }
         //
+        if( fEstadoFacturacionNavicon.getValue() != null ) {
+        	String estadoFacturacion = ( String ) fEstadoFacturacionNavicon.getValue();
+
+            pstmt.setString( index++,estadoFacturacion);
+            log.fine( "estado_facturacion LIKE " + estadoFacturacion );
+        }
         
             Date fromD = null;
             Date toD = null;

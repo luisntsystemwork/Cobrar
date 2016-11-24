@@ -116,11 +116,11 @@ public class Doc_InOut extends Doc {
                     continue;
                 }
 
-                MProduct product = ioLine.getProduct();
-
+                /*MProduct product = ioLine.getProduct();
+                // TODO: VER BIEN.
                 if( (product == null) ||!product.isStocked()) {
                     continue;
-                }
+                }*/
 
                 int              Line_ID = rs.getInt( "M_InOutLine_ID" );
                 DocLine_Material docLine = new DocLine_Material( p_vo.DocumentType,getRecord_ID(),Line_ID,getTrxName());

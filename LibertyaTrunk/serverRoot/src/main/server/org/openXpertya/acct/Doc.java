@@ -1536,6 +1536,9 @@ public abstract class Doc {
         if( p_vo.DateDoc == null ) {
             error += " DateDoc";
         }
+        
+        Env.getCtx().put("nombreTabla", this.p_TableName);
+        Env.getCtx().put("IdRegistro", this.p_Record_ID);
 
         if( error.length() > 0 ) {
             log.log( Level.SEVERE,toString() + " - Mandatory info missing: " + error );

@@ -25,8 +25,11 @@ import java.util.logging.Level;
 import org.openXpertya.model.MAccount;
 import org.openXpertya.model.MAcctSchema;
 import org.openXpertya.model.MConversionRate;
+import org.openXpertya.model.MInOut;
+import org.openXpertya.model.MOrder;
 import org.openXpertya.model.MProduct;
 import org.openXpertya.model.MUOMConversion;
+import org.openXpertya.model.M_Table;
 import org.openXpertya.util.CLogger;
 import org.openXpertya.util.DB;
 import org.openXpertya.util.Env;
@@ -451,6 +454,56 @@ public class ProductInfo {
 
         return m_qty.multiply( cost );
     }    // getProductCosts
+    
+    private BigDecimal getPrecioListaPrecioPorIDRemito(Integer id)  {
+		M_Table table = M_Table.get(Env.getCtx(), "M_InOut");
+		
+		MInOut mInOut = (MInOut) table.getPO(id, "fd");
+		
+		if (mInOut == null) return null;
+		
+		Integer cOrderId = mInOut.getC_Order_ID();
+		table = M_Table.get(Env.getCtx(), "C_Order");
+		MOrder mOrder = (MOrder) table.getPO(cOrderId, "fd");
+		
+		if (mOrder == null) return null;
+		
+		Integer idPriceList = mOrder.getM_PriceList_ID();
+		
+		
+		BigDecimal precio = null;
+		try {
+			String SQL = "SELECT pp.pricelist "
+					+ "FROM M_ProductPrice pp "
+					+ "INNER JOIN M_PriceList_Version plv ON pp.m_pricelist_version_id = plv.m_pricelist_version_id "
+					+ "WHERE pp.m_product_id = ? "
+					+ "AND plv.M_PriceList_ID = ?";
+			
+            PreparedStatement pstmt = DB.prepareStatement( SQL );
+
+            pstmt.setInt( 1,this.m_M_Product_ID);
+            pstmt.setInt( 2,idPriceList);
+
+            ResultSet rs = pstmt.executeQuery();
+            
+            
+
+            if( rs.next()) {
+
+            	precio = rs.getBigDecimal(1);
+                
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch( SQLException e ) {
+
+            return null;
+        }
+
+        return precio;
+		
+	}
 
     /**
      * Descripción de Método
@@ -462,8 +515,21 @@ public class ProductInfo {
      * @return
      */
 
-    public BigDecimal getProductItemCost( MAcctSchema as,String costType ) {
-        BigDecimal   current = null;
+    public BigDecimal getProductItemCost( MAcctSchema as,String costType) {
+    	/*Env.getCtx().put("nombreTabla", this.p_TableName);
+        Env.getCtx().put("IdRegistro", this.p_Record_ID);*/
+    	
+    	String p_TableName = (String) Env.getCtx().get("nombreTabla");
+    	int p_Record_ID = (Integer) Env.getCtx().get("IdRegistro");
+    	
+    	if ("M_InOut".equals(p_TableName)) {
+    		
+    		BigDecimal precio = getPrecioListaPrecioPorIDRemito(p_Record_ID);
+    		
+    		return precio != null ? precio: Env.ZERO;
+    	}
+    	
+    	BigDecimal   current = null;
         BigDecimal   cost    = null;
         String       cm      = as.getCostingMethod();
         StringBuffer sql     = new StringBuffer( "SELECT CurrentCostPrice," );    // 1
