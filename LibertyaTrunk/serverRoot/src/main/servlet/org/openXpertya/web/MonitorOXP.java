@@ -19,6 +19,7 @@ package org.openXpertya.web;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -777,7 +778,12 @@ public class MonitorOXP extends HttpServlet {
         line = new tr();
 
         BaseDatosOXP db = CConnection.get().getDatabase();
-
+        try {
+			db.getDriver();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         info = db.getDescription();
         line.addElement( new th().addElement( info ));
         line.addElement( new td().addElement( system.getDBInstance()));

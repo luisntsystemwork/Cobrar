@@ -116,6 +116,7 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 	protected String doIt() throws Exception {
 		int     original = Env.getAD_Client_ID( Env.getCtx() );
 		int     originalCurrency = Env.getContextAsInt(Env.getCtx(), "$C_Currency_ID");
+		int     originalUserID = Env.getContextAsInt(Env.getCtx(), "#AD_User_ID");
 		
 		try {
 		
@@ -129,6 +130,8 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 	            try {
 	            	Env.setContext(Env.getCtx(), "#AD_Client_ID", mOrder.getAD_Client_ID());
 	            	Env.setContext( Env.getCtx(),"$C_Currency_ID",mOrder.getC_Currency_ID());
+	            	Env.setContext( Env.getCtx(),"#AD_User_ID", 1010717);
+	            	Env.setContext( Env.getCtx(),"$AD_User_ID", 1010717);
 					String invoiceTipoComprobante = "FC";
 					Date today = new Date();
 					Timestamp dateInvoiced = new Timestamp(today.getTime());
@@ -168,8 +171,9 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 		} catch (Throwable t) {
 			log.log(Level.SEVERE, "Ocurrio una excepcion", t.getCause());
 		} finally {
-			Env.setContext(Env.getCtx(), "#AD_Client_ID", original);
-			Env.setContext( Env.getCtx(),"$C_Currency_ID",originalCurrency);
+			Env.setContext( Env.getCtx(), "#AD_Client_ID", original);
+			Env.setContext( Env.getCtx(), "$C_Currency_ID",originalCurrency);
+			Env.setContext( Env.getCtx(), "$AD_User_ID",originalUserID);
 		}
         //
         return "#" + m_count;

@@ -562,9 +562,11 @@ public class OrderInvoiceHelper {
 					throw new ModelException("Error al persistir linea de factura:" + CLogger.retrieveErrorAsString());
 			}
 			
-			// Completar la factura si corresponde
-			if (completeInvoice && !DocumentEngine.processAndSave(anInvoice, DocAction.ACTION_Complete, false))
-				throw new ModelException("Error al completar la factura:" + Msg.parseTranslation(ordenTrabajo.getCtx(), anInvoice.getProcessMsg()));
+			// Completar la factura si corresponde, si arroja error se guarda igual la factura debido a los numeros
+			// generado para factura electronica.
+			DocumentEngine.processAndSave(anInvoice, DocAction.ACTION_Complete, false);
+			//if (completeInvoice && !DocumentEngine.processAndSave(anInvoice, DocAction.ACTION_Complete, false))
+			//	throw new ModelException("Error al completar la factura:" + Msg.parseTranslation(ordenTrabajo.getCtx(), anInvoice.getProcessMsg()));
 	
 			actualizarEstadosFactura(ordenTrabajo, ESTADO_FACTURACION_FACTURADO, "EN CURSO", trxName);
 			
@@ -771,9 +773,7 @@ public class OrderInvoiceHelper {
 			// lista de precios de venta
 			this.createInvoiceFromOrder(mOrder, invoiceDocTypeTargetID, invoicePuntoDeVenta, invoiceTipoComprobante, completeInvoice, dateInvoiced, dateAcct, trxName);
 			
-			// Completa el pedido original
-			if (!DocumentEngine.processAndSave(mOrder, DocAction.ACTION_Complete, false))
-				throw new ModelException("Error al completar el pedido:" + Msg.parseTranslation(Env.getCtx(), mOrder.getProcessMsg()));
+			// No Se Completa el pedido original ya que lo hizo el proceso JSON
 			
 			/* === Commitear transaccion === */
 			Trx.getTrx(trxName).commit();
