@@ -2507,3 +2507,639 @@ UPDATE c_cash c
 SET validateposjournal = (CASE WHEN (SELECT posjournalapplication FROM ad_clientinfo ci WHERE ci.ad_client_id = c.ad_client_id) = 'B' 
 								AND EXISTS (SELECT c_cashbook_id FROM c_cashbook cb WHERE cb.c_cashbook_id = c.c_cashbook_id AND cashbooktype = 'J') THEN 'Y' 
 						ELSE 'N' END);
+						
+--20161101-1605 Eliminaciones de metadatos que no se eliminaron vía copytochangelog
+delete from ad_field_trl
+where ad_componentobjectuid in ('CORE-AD_Field_Trl-1017995-es_AR','CORE-AD_Field_Trl-1017995-es_ES',
+				'CORE-AD_Field_Trl-1017995-es_MX','CORE-AD_Field_Trl-1017995-es_PY',
+				'CORE-AD_Field_Trl-1018046-es_AR','CORE-AD_Field_Trl-1018046-es_ES',
+				'CORE-AD_Field_Trl-1018046-es_MX','CORE-AD_Field_Trl-1018046-es_PY',
+				'CORE-AD_Field_Trl-1018019-es_AR','CORE-AD_Field_Trl-1018019-es_ES',
+				'CORE-AD_Field_Trl-1018019-es_MX','CORE-AD_Field_Trl-1018019-es_PY',
+				'CORE-AD_Field_Trl-1018024-es_AR','CORE-AD_Field_Trl-1018024-es_ES',
+				'CORE-AD_Field_Trl-1018024-es_MX','CORE-AD_Field_Trl-1018024-es_PY');
+
+delete from ad_field
+where ad_componentobjectuid in ('CORE-AD_Field-1018024','CORE-AD_Field-1017995', 'CORE-AD_Field-1018046',
+				'CORE-AD_Field-1018019','SSTE2CORE-AD_Field-1018390-20161025150911',
+				'SSTE2CORE-AD_Field-1018391-20161025150914');
+
+delete from ad_column_trl
+where ad_componentobjectuid in ('CORE-AD_Column_Trl-1017003-es_PY','CORE-AD_Column_Trl-1017003-es_ES',
+				'CORE-AD_Column_Trl-1017003-es_AR','CORE-AD_Column_Trl-1017003-es_MX');
+
+delete from ad_column
+where ad_componentobjectuid in ('CORE-AD_Column-1016989','SSTE2CORE-AD_Column-1017469-20161024200223',
+				'CORE-AD_Column-1017003','SSTE2CORE-AD_Column-1017314-20161025150429',
+				'SSTE2CORE-AD_Column-1017319-20161025150445','SSTE2CORE-AD_Column-1017322-20161025150455',
+				'SSTE2CORE-AD_Column-1017316-20161025150436');
+
+delete from ad_menu_trl
+where ad_componentobjectuid in ('CORE-AD_Menu_Trl-es_AR-1010568',
+				'CORE-AD_Menu_Trl-es_ES-1010568',
+				'CORE-AD_Menu_Trl-es_MX-1010568',
+				'CORE-AD_Menu_Trl-es_PY-1010568');
+
+delete from ad_menu
+where ad_componentobjectuid in ('CORE-AD_Menu-1010568','SSTE2CORE-AD_Menu-1010597-20161025150820');
+
+--20161102-1705 Modificación a la vista del informe detalles del pago
+DROP VIEW rv_payment;
+
+CREATE OR REPLACE VIEW rv_payment AS 
+ SELECT c_payment.c_payment_id, c_payment.ad_client_id, c_payment.ad_org_id, c_payment.isactive, c_payment.created, c_payment.createdby, c_payment.updated, c_payment.updatedby, c_payment.documentno, c_payment.datetrx, c_payment.isreceipt, c_payment.c_doctype_id, c_payment.trxtype, c_payment.c_bankaccount_id, c_payment.c_bpartner_id, c_payment.c_invoice_id, c_payment.c_bp_bankaccount_id, c_payment.c_paymentbatch_id, c_payment.tendertype, c_payment.creditcardtype, c_payment.creditcardnumber, c_payment.creditcardvv, c_payment.creditcardexpmm, c_payment.creditcardexpyy, c_payment.micr, c_payment.routingno, c_payment.accountno, c_payment.checkno, c_payment.a_name, c_payment.a_street, c_payment.a_city, c_payment.a_state, c_payment.a_zip, c_payment.a_ident_dl, c_payment.a_ident_ssn, c_payment.a_email, c_payment.voiceauthcode, c_payment.orig_trxid, c_payment.ponum, c_payment.c_currency_id, c_payment.c_conversiontype_id, 
+        CASE c_payment.isreceipt
+            WHEN 'Y'::bpchar THEN c_payment.payamt
+            ELSE c_payment.payamt * (- 1::numeric)
+        END AS payamt, 
+        CASE c_payment.isreceipt
+            WHEN 'Y'::bpchar THEN c_payment.discountamt
+            ELSE c_payment.discountamt * (- 1::numeric)
+        END AS discountamt, 
+        CASE c_payment.isreceipt
+            WHEN 'Y'::bpchar THEN c_payment.writeoffamt
+            ELSE c_payment.writeoffamt * (- 1::numeric)
+        END AS writeoffamt, 
+        CASE c_payment.isreceipt
+            WHEN 'Y'::bpchar THEN c_payment.taxamt
+            ELSE c_payment.taxamt * (- 1::numeric)
+        END AS taxamt, 
+        CASE c_payment.isreceipt
+            WHEN 'Y'::bpchar THEN c_payment.overunderamt
+            ELSE c_payment.overunderamt * (- 1::numeric)
+        END AS overunderamt, 
+        CASE c_payment.isreceipt
+            WHEN 'Y'::bpchar THEN 1.0
+            ELSE (-1.0)
+        END AS multiplierap, paymentallocated(c_payment.c_payment_id::numeric, c_payment.c_currency_id::numeric) AS allocatedamt, paymentavailable(c_payment.c_payment_id::numeric) AS availableamt, c_payment.isoverunderpayment, c_payment.isapproved, c_payment.r_pnref, c_payment.r_result, c_payment.r_respmsg, c_payment.r_authcode, c_payment.r_avsaddr, c_payment.r_avszip, c_payment.r_info, c_payment.processing, c_payment.oprocessing, c_payment.docstatus, c_payment.docaction, c_payment.isprepayment, c_payment.c_charge_id, c_payment.isreconciled, c_payment.isallocated, c_payment.isonline, c_payment.processed, c_payment.posted, c_payment.dateacct, b.name as bank
+   FROM c_payment
+   INNER JOIN C_BankAccount ba on ba.c_bankaccount_id = c_payment.c_bankaccount_id
+   INNER JOIN C_Bank b on b.c_bank_id = ba.c_bank_id ;
+
+ALTER TABLE rv_payment
+  OWNER TO libertya;
+
+--20161105-1910 Eliminación de entradas de menú que no se copiaron al changelog al realizar merge de requerimientos
+DELETE FROM AD_TreeNodeMM
+where ad_componentobjectuid IN ('SSTE2CORE-AD_TreeNodeMM-1010116-1010589-20161025151056',
+				'CORE-AD_TreeNodeMM-1010115-1010568',
+				'CORE-AD_TreeNodeMM-10-1010568',
+				'CORE-AD_TreeNodeMM-1010115-1010567',
+				'CORE-AD_TreeNodeMM-1010115-1010566',
+				'CORE-AD_TreeNodeMM-106-1010115',
+				'CORE-AD_TreeNodeMM-1010115-1010569',
+				'CORE-AD_TreeNodeMM-1010115-1010572');
+
+--20161108-1500 Permitir copia de registros
+UPDATE ad_system SET dummy = (SELECT addcolumnifnotexists('AD_Tab','allowcopyrecord','character(1) NOT NULL DEFAULT ''Y''::bpchar'));
+
+DROP VIEW ad_tab_v;
+DROP VIEW ad_tab_vt;
+
+CREATE OR REPLACE VIEW ad_tab_v AS 
+ SELECT t.ad_tab_id, t.ad_window_id, t.ad_table_id, t.name, t.description, t.help, t.seqno, t.issinglerow, t.hastree, t.isinfotab, tbl.replicationtype, tbl.tablename, tbl.accesslevel, tbl.issecurityenabled, tbl.isdeleteable, tbl.ishighvolume, tbl.isview, 'N' AS hasassociation, t.istranslationtab, t.isreadonly, t.ad_image_id, t.tablevel, t.whereclause, t.orderbyclause, t.commitwarning, t.readonlylogic, t.displaylogic, t.ad_column_id, t.ad_process_id, t.issorttab, t.isinsertrecord, t.isadvancedtab, t.ad_columnsortorder_id, t.ad_columnsortyesno_id, t.included_tab_id, t.isprocessmsgshowdialog, t.isalwaysupdateable, t.allowcopyrecord
+   FROM ad_tab t
+   JOIN ad_table tbl ON t.ad_table_id = tbl.ad_table_id
+  WHERE t.isactive = 'Y'::bpchar AND tbl.isactive = 'Y'::bpchar;
+
+ALTER TABLE ad_tab_v
+  OWNER TO libertya;
+
+
+CREATE OR REPLACE VIEW ad_tab_vt AS 
+ SELECT trl.ad_language, t.ad_tab_id, t.ad_window_id, t.ad_table_id, trl.name, trl.description, trl.help, t.seqno, t.issinglerow, t.hastree, t.isinfotab, tbl.replicationtype, tbl.tablename, tbl.accesslevel, tbl.issecurityenabled, tbl.isdeleteable, tbl.ishighvolume, tbl.isview, 'N' AS hasassociation, t.istranslationtab, t.isreadonly, t.ad_image_id, t.tablevel, t.whereclause, t.orderbyclause, trl.commitwarning, t.readonlylogic, t.displaylogic, t.ad_column_id, t.ad_process_id, t.issorttab, t.isinsertrecord, t.isadvancedtab, t.ad_columnsortorder_id, t.ad_columnsortyesno_id, t.included_tab_id, t.isprocessmsgshowdialog, t.isalwaysupdateable, t.allowcopyrecord
+   FROM ad_tab t
+   JOIN ad_table tbl ON t.ad_table_id = tbl.ad_table_id
+   JOIN ad_tab_trl trl ON t.ad_tab_id = trl.ad_tab_id
+  WHERE t.isactive = 'Y'::bpchar AND tbl.isactive = 'Y'::bpchar;
+
+ALTER TABLE ad_tab_vt
+  OWNER TO libertya;
+
+--20161114-1713 Redefinición de las cadenas de autorizaciones
+
+ALTER TABLE M_AuthorizationChain DROP CONSTRAINT cdoctype_mauthorizationchain;
+
+ALTER TABLE M_AuthorizationChain ALTER COLUMN C_DocType_ID DROP NOT NULL;
+
+ALTER TABLE M_AuthorizationChainLink ALTER COLUMN MinimumAmount DROP NOT NULL;
+
+UPDATE ad_system SET dummy = (SELECT addcolumnifnotexists('M_AuthorizationChainLink','ValidateDocumentAmount','character(1) NOT NULL default ''Y''::bpchar'));
+
+CREATE TABLE libertya.m_authorizationchaindocumenttype
+(
+  m_authorizationchaindocumenttype_id integer NOT NULL,
+  ad_client_id integer NOT NULL,
+  ad_org_id integer NOT NULL,
+  isactive character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone,
+  createdby integer NOT NULL,
+  updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone,
+  updatedby integer NOT NULL,
+  m_authorizationchain_id integer NOT NULL,
+  C_DocType_ID integer NOT NULL,
+ CONSTRAINT m_authorizationchaindocumenttype_key PRIMARY KEY (m_authorizationchaindocumenttype_id),
+ CONSTRAINT mauthorizationchain_mauthorizationchaindocumenttype FOREIGN KEY (m_authorizationchain_id)
+      REFERENCES libertya.m_authorizationchain (m_authorizationchain_id) MATCH SIMPLE
+)
+WITH (
+  OIDS=TRUE
+);
+ALTER TABLE libertya.m_authorizationchaindocumenttype
+  OWNER TO libertya;
+  
+--20161115-1903 Fixes a las vistas de exportaciones CITI
+CREATE OR REPLACE VIEW reginfo_ventas_alicuotas_v AS 
+ SELECT i.ad_client_id, i.ad_org_id, i.c_invoice_id, date_trunc('day'::text, i.dateacct) AS date, 
+	date_trunc('day'::text, i.dateacct) AS fechadecomprobante, ei.codigo AS tipodecomprobante, 
+	i.puntodeventa, i.numerocomprobante AS nrocomprobante, 
+	currencyconvert(it.taxbaseamt, i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impnetogravado, 
+	CASE WHEN it.taxamt = 0 AND t.rate <> 0 AND te.c_tax_id > 0 THEN te.wsfecode ELSE t.wsfecode END AS alicuotaiva, 
+	currencyconvert(it.taxamt, i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impuestoliquidado
+   FROM c_invoice i
+   JOIN c_doctype dt ON dt.c_doctype_id = i.c_doctype_id
+   LEFT JOIN e_electronicinvoiceref ei ON dt.doctypekey::text ~~* (ei.clave_busqueda::text || '%'::text) AND ei.tabla_ref::text = 'TCOM'::text
+   JOIN c_invoicetax it ON i.c_invoice_id = it.c_invoice_id
+   JOIN c_tax t ON t.c_tax_id = it.c_tax_id
+   LEFT JOIN (select * from c_tax where rate = 0 and isactive = 'Y' AND ispercepcion = 'N') as te on te.ad_client_id = i.ad_client_id
+  WHERE t.ispercepcion = 'N'::bpchar 
+  AND (i.docstatus = ANY (ARRAY['CL'::bpchar, 'CO'::bpchar, 'VO'::bpchar, 'RE'::bpchar])) 
+  AND i.issotrx = 'Y'::bpchar 
+  AND i.isactive = 'Y'::bpchar 
+  AND (dt.doctypekey::text <> ALL (ARRAY['RTR'::character varying::text, 'RTI'::character varying::text, 'RCR'::character varying::text, 'RCI'::character varying::text])) 
+  AND dt.isfiscaldocument = 'Y'::bpchar AND (dt.isfiscal IS NULL OR dt.isfiscal = 'N'::bpchar OR (dt.isfiscal = 'Y'::bpchar AND i.fiscalalreadyprinted = 'Y'::bpchar));
+
+ALTER TABLE reginfo_ventas_alicuotas_v
+  OWNER TO libertya;
+
+CREATE OR REPLACE VIEW reginfo_compras_alicuotas_v AS 
+ SELECT i.ad_client_id, i.ad_org_id, i.c_invoice_id, date_trunc('day'::text, i.dateinvoiced) AS date, 
+	date_trunc('day'::text, i.dateinvoiced) AS fechadecomprobante, 
+	gettipodecomprobante(dt.doctypekey, l.letra)::character varying(15) AS tipodecomprobante, 
+        CASE
+            WHEN gettipodecomprobante(dt.doctypekey, l.letra)::text = '66'::text THEN 0
+            ELSE i.puntodeventa
+        END AS puntodeventa, 
+        CASE
+            WHEN gettipodecomprobante(dt.doctypekey, l.letra)::text = '66'::text THEN 0
+            ELSE i.numerocomprobante
+        END AS nrocomprobante, bp.taxidtype AS codigodocvendedor, bp.taxid AS nroidentificacionvendedor, 
+        currencyconvert(it.taxbaseamt, i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impnetogravado, 
+	CASE WHEN it.taxamt = 0 AND t.rate <> 0 AND te.c_tax_id > 0 THEN te.wsfecode ELSE t.wsfecode END AS alicuotaiva, 
+	currencyconvert(it.taxamt, i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impuestoliquidado
+   FROM c_invoice i
+   JOIN c_doctype dt ON dt.c_doctype_id = i.c_doctype_id
+   LEFT JOIN c_letra_comprobante l ON l.c_letra_comprobante_id = i.c_letra_comprobante_id
+   JOIN c_bpartner bp ON bp.c_bpartner_id = i.c_bpartner_id
+   JOIN c_invoicetax it ON i.c_invoice_id = it.c_invoice_id
+   JOIN c_tax t ON t.c_tax_id = it.c_tax_id
+   LEFT JOIN (select * from c_tax where rate = 0 and isactive = 'Y' AND ispercepcion = 'N') as te on te.ad_client_id = i.ad_client_id
+  WHERE t.ispercepcion = 'N'::bpchar AND (i.docstatus = ANY (ARRAY['CL'::bpchar, 'CO'::bpchar, 'VO'::bpchar, 'RE'::bpchar])) AND i.issotrx = 'N'::bpchar AND i.isactive = 'Y'::bpchar AND (dt.doctypekey::text <> ALL (ARRAY['RTR'::character varying::text, 'RTI'::character varying::text, 'RCR'::character varying::text, 'RCI'::character varying::text])) AND dt.isfiscaldocument = 'Y'::bpchar AND (dt.isfiscal IS NULL OR dt.isfiscal = 'N'::bpchar OR dt.isfiscal = 'Y'::bpchar AND i.fiscalalreadyprinted = 'Y'::bpchar) AND (l.letra <> ALL (ARRAY['B'::bpchar, 'C'::bpchar]));
+
+ALTER TABLE reginfo_compras_alicuotas_v
+  OWNER TO libertya;
+
+--20161123-1642 Correcciones a las vistas de exportación CITI
+CREATE OR REPLACE FUNCTION getgrandtotal(
+    invoiceid integer,
+    netbased boolean)
+  RETURNS numeric AS
+$BODY$
+DECLARE
+	total	NUMERIC := 0;
+	r	record;
+BEGIN
+	if (invoiceID > 0)
+	then 
+		select into r i.c_invoice_id, i.grandtotal, sum((CASE WHEN tc.ismanual = 'N' THEN it.taxbaseamt ELSE 0 END) + it.taxamt) as grandtotal_netbased
+			from c_invoice i
+			inner join c_invoicetax it on it.c_invoice_id = i.c_invoice_id
+			inner join c_tax t on t.c_tax_id = it.c_tax_id
+			inner join c_taxcategory tc on tc.c_taxcategory_id = t.c_taxcategory_id
+			where i.c_invoice_id = invoiceID
+			group by i.c_invoice_id, i.grandtotal;
+		if(netbased)
+		then
+			total = r.grandtotal_netbased;
+		else
+			total = r.grandtotal;
+		end if;
+	end if;
+	return total; 
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION getgrandtotal(integer, boolean)
+  OWNER TO libertya;
+
+CREATE OR REPLACE FUNCTION getimporteoperacionexentas(p_c_invoice_id integer)
+  RETURNS numeric AS
+$BODY$ DECLARE     	v_Amount        	NUMERIC; 
+BEGIN     
+SELECT COALESCE(SUM(it.taxbaseamt), 0)     INTO v_Amount     
+FROM C_Invoicetax it     
+INNER JOIN C_Tax t ON (t.C_Tax_ID = it.C_Tax_ID)     
+WHERE (C_Invoice_ID = p_c_invoice_id) AND (isPercepcion = 'N') AND (t.rate = 0 OR (t.rate <> 0 AND it.taxamt = 0));        
+RETURN v_Amount; 
+END; $BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION getimporteoperacionexentas(integer)
+  OWNER TO libertya;
+
+CREATE OR REPLACE VIEW reginfo_ventas_cbte_v AS 
+SELECT ad_client_id, ad_org_id, c_invoice_id, date, fechadecomprobante, tipodecomprobante, puntodeventa, nrocomprobante, nrocomprobantehasta, 
+	CASE
+            WHEN taxidtype = '99'::bpchar AND grandtotal > 1000::numeric THEN '96'::bpchar
+            ELSE taxidtype
+        END::character(2) AS codigodoccomprador, 
+        gettaxid(taxid, taxidtype, c_categoria_iva_id, nroidentificcliente, grandtotal)::character varying(20) AS nroidentificacioncomprador, 
+	nombrecomprador, 
+        currencyconvert(grandtotal, c_currency_id, 118, fechadecomprobante::timestamp with time zone, NULL::integer, ad_client_id, ad_org_id)::numeric(20,2) AS imptotal,
+        impconceptosnoneto,
+        imppercepnocategorizados,
+        impopeexentas,
+        imppercepopagosdeimpunac,
+        imppercepiibb,
+        imppercepimpumuni,
+        impimpuinternos,
+        codmoneda,
+        tipodecambio,
+        cantalicuotasiva,
+        codigooperacion,
+        impotrostributos,
+        fechavencimientopago
+FROM (SELECT i.ad_client_id, i.ad_org_id, i.c_invoice_id, date_trunc('day'::text, i.dateacct) AS date, 
+	date_trunc('day'::text, i.dateacct) AS fechadecomprobante, ei.codigo AS tipodecomprobante, i.puntodeventa, i.numerocomprobante AS nrocomprobante, 
+	i.numerocomprobante AS nrocomprobantehasta, 
+        bp.name AS nombrecomprador, 
+        bp.taxidtype,
+        bp.taxid,
+        bp.c_categoria_iva_id, i.nroidentificcliente,
+        i.c_currency_id, 
+	0::numeric(20,2) AS impconceptosnoneto, 
+	0::numeric(20,2) AS imppercepnocategorizados, 
+	getgrandtotal(i.c_invoice_id, true) as grandtotal,
+	currencyconvert(getimporteoperacionexentas(i.c_invoice_id), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impopeexentas, 
+	currencyconvert(gettaxamountbyareatype(i.c_invoice_id, 'N'::bpchar), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS imppercepopagosdeimpunac, 
+	currencyconvert(gettaxamountbyperceptiontype(i.c_invoice_id, 'B'::bpchar), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS imppercepiibb, 
+	currencyconvert(gettaxamountbyareatype(i.c_invoice_id, 'M'::bpchar), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS imppercepimpumuni, 
+	currencyconvert(gettaxamountbyareatype(i.c_invoice_id, 'I'::bpchar), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impimpuinternos, 
+	cu.wsfecode AS codmoneda, 
+	currencyrate(i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(10,6) AS tipodecambio, 
+        CASE
+            WHEN getimporteoperacionexentas(i.c_invoice_id) > 0::numeric THEN getcantidadalicuotasiva(i.c_invoice_id) - 1::numeric
+            ELSE getcantidadalicuotasiva(i.c_invoice_id)
+        END AS cantalicuotasiva, 
+        getcodigooperacion(i.c_invoice_id)::character varying(1) AS codigooperacion, 
+        currencyconvert(getimporteotrostributos(i.c_invoice_id), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impotrostributos, 
+	NULL::timestamp without time zone AS fechavencimientopago
+   FROM c_invoice i
+   JOIN c_doctype dt ON dt.c_doctype_id = i.c_doctype_id
+   LEFT JOIN e_electronicinvoiceref ei ON dt.doctypekey::text ~~* (ei.clave_busqueda::text || '%'::text) AND ei.tabla_ref::text = 'TCOM'::text
+   JOIN c_bpartner bp ON bp.c_bpartner_id = i.c_bpartner_id
+   JOIN c_currency cu ON cu.c_currency_id = i.c_currency_id
+  WHERE (i.docstatus = ANY (ARRAY['CL'::bpchar, 'CO'::bpchar, 'VO'::bpchar, 'RE'::bpchar])) AND i.issotrx = 'Y'::bpchar AND i.isactive = 'Y'::bpchar AND (dt.doctypekey::text <> ALL (ARRAY['RTR'::character varying::text, 'RTI'::character varying::text, 'RCR'::character varying::text, 'RCI'::character varying::text])) AND dt.isfiscaldocument = 'Y'::bpchar AND (dt.isfiscal IS NULL OR dt.isfiscal = 'N'::bpchar OR (dt.isfiscal = 'Y'::bpchar AND i.fiscalalreadyprinted = 'Y'::bpchar))) as t;
+
+ALTER TABLE reginfo_ventas_cbte_v
+  OWNER TO libertya;
+
+
+CREATE OR REPLACE VIEW reginfo_compras_cbte_v AS 
+ SELECT i.ad_client_id, i.ad_org_id, i.c_invoice_id, date_trunc('day'::text, i.dateacct) AS date, date_trunc('day'::text, i.dateinvoiced) AS fechadecomprobante, gettipodecomprobante(dt.doctypekey, l.letra)::character varying(15) AS tipodecomprobante, 
+        CASE
+            WHEN gettipodecomprobante(dt.doctypekey, l.letra)::text = '66'::text THEN 0
+            ELSE i.puntodeventa
+        END AS puntodeventa, 
+        CASE
+            WHEN gettipodecomprobante(dt.doctypekey, l.letra)::text = '66'::text THEN 0
+            ELSE i.numerocomprobante
+        END AS nrocomprobante, 
+        CASE
+            WHEN gettipodecomprobante(dt.doctypekey, l.letra)::text = '66'::text THEN i.importclearance
+            ELSE NULL::character varying
+        END::character varying(30) AS despachoimportacion, bp.taxidtype AS codigodocvendedor, bp.taxid AS nroidentificacionvendedor, bp.name AS nombrevendedor, currencyconvert(getgrandtotal(i.c_invoice_id, true), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS imptotal, 0::numeric(20,2) AS impconceptosnoneto, 
+        CASE
+            WHEN (l.letra = ANY (ARRAY['B'::bpchar, 'C'::bpchar])) AND i.importclearance IS NULL THEN 0::numeric
+            ELSE currencyconvert(getimporteoperacionexentas(i.c_invoice_id), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)
+        END::numeric(20,2) AS impopeexentas, currencyconvert(gettaxamountbyperceptiontype(i.c_invoice_id, 'I'::bpchar), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS imppercepopagosvaloragregado, currencyconvert(gettaxamountbyareatype(i.c_invoice_id, 'N'::bpchar), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS imppercepopagosdeimpunac, currencyconvert(gettaxamountbyperceptiontype(i.c_invoice_id, 'B'::bpchar), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS imppercepiibb, currencyconvert(gettaxamountbyareatype(i.c_invoice_id, 'M'::bpchar), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS imppercepimpumuni, currencyconvert(gettaxamountbyareatype(i.c_invoice_id, 'I'::bpchar), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impimpuinternos, cu.wsfecode AS codmoneda, currencyrate(i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(10,6) AS tipodecambio, 
+        CASE
+            WHEN (l.letra = ANY (ARRAY['B'::bpchar, 'C'::bpchar])) AND gettipodecomprobante(dt.doctypekey, l.letra)::text <> '66'::text THEN 0::numeric
+            ELSE 
+            CASE
+                WHEN getimporteoperacionexentas(i.c_invoice_id) <> 0::numeric THEN getcantidadalicuotasiva(i.c_invoice_id) - 1::numeric
+                ELSE getcantidadalicuotasiva(i.c_invoice_id)
+            END
+        END AS cantalicuotasiva, getcodigooperacion(i.c_invoice_id)::character varying(1) AS codigooperacion, currencyconvert(getcreditofiscalcomputable(i.c_invoice_id), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impcreditofiscalcomputable, currencyconvert(getimporteotrostributos(i.c_invoice_id), i.c_currency_id, 118, i.dateacct::timestamp with time zone, NULL::integer, i.ad_client_id, i.ad_org_id)::numeric(20,2) AS impotrostributos, NULL::character varying(20) AS cuitemisorcorredor, NULL::character varying(60) AS denominacionemisorcorredor, 0::numeric(20,2) AS ivacomision
+   FROM c_invoice i
+   JOIN c_doctype dt ON dt.c_doctype_id = i.c_doctype_id
+   LEFT JOIN c_letra_comprobante l ON l.c_letra_comprobante_id = i.c_letra_comprobante_id
+   JOIN c_bpartner bp ON bp.c_bpartner_id = i.c_bpartner_id
+   JOIN c_currency cu ON cu.c_currency_id = i.c_currency_id
+  WHERE (i.docstatus = ANY (ARRAY['CL'::bpchar, 'CO'::bpchar, 'VO'::bpchar, 'RE'::bpchar])) AND i.issotrx = 'N'::bpchar AND i.isactive = 'Y'::bpchar AND (dt.doctypekey::text <> ALL (ARRAY['RTR'::character varying::text, 'RTI'::character varying::text, 'RCR'::character varying::text, 'RCI'::character varying::text])) AND dt.isfiscaldocument = 'Y'::bpchar AND (dt.isfiscal IS NULL OR dt.isfiscal = 'N'::bpchar OR dt.isfiscal = 'Y'::bpchar AND i.fiscalalreadyprinted = 'Y'::bpchar);
+
+ALTER TABLE reginfo_compras_cbte_v
+  OWNER TO libertya;
+  
+
+--20161129-1047 Incorporacinoes Sur Software
+CREATE TABLE libertya.i_padron_caba_regimen_general
+(
+  fecha_publicacion character varying(10),
+  fecha_desde character varying(10),
+  fecha_hasta character varying(10),
+  cuit character varying(11),
+  tipo_contr_insc character(1),
+  alta_baja character(1),
+  cbio_alicuota character(1),
+  percepcion character varying(6),
+  retencion character varying(6),
+  nro_grupo_ret integer,
+  nro_grupo_per integer,
+  name_entidad_comercial character varying(255)
+)
+WITH (
+  OIDS=TRUE
+);
+ALTER TABLE libertya.i_padron_caba_regimen_general
+  OWNER TO libertya;
+GRANT ALL ON TABLE libertya.i_padron_caba_regimen_general TO libertya;
+
+CREATE INDEX i_padron_caba_regimen_general_cuit
+  ON libertya.i_padron_caba_regimen_general
+  USING btree
+  (cuit);
+  
+ALTER TABLE c_bpartner
+	ADD COLUMN builtcabajurisdiction character(1) NOT NULL DEFAULT 'N';
+
+UPDATE ad_system SET dummy = (SELECT addcolumnifnotexists('AD_Org_Percepcion','UseCABAJurisdiction','character(1)'));
+
+--20161129-1100 Flag que determina líneas de caja generadas automáticamente
+UPDATE ad_system SET dummy = (SELECT addcolumnifnotexists('C_CashLine','automaticgenerated','character(1) NOT NULL DEFAULT ''N''::bpchar'));
+
+--20161130-1345 Merge de Revision 1679 - Carga de Liquidaciones de Tarjetas
+CREATE TABLE C_CreditCardSettlement(
+
+c_creditcardsettlement_id integer NOT NULL ,
+ad_client_id integer NOT NULL ,
+ad_org_id integer NOT NULL ,
+isactive character(1) NOT NULL DEFAULT 'Y'::bpchar ,
+created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+createdby integer NOT NULL ,
+updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+updatedby integer NOT NULL ,
+m_entidadfinanciera_id integer NOT NULL ,
+paymentdate timestamp without time zone ,
+payment character varying(256) ,
+amount numeric(24,2) ,
+netamount numeric(24,2) ,
+withholding numeric(24,2) ,
+perception numeric(24,2) ,
+expenses numeric(24,2) ,
+couponstotalamount numeric(24,2) ,
+docstatus character(2) NOT NULL ,
+isreconciled character(1) NOT NULL DEFAULT 'N'::bpchar ,
+posted character(1) ,
+docaction character(2) NOT NULL ,
+selectallcoupons character(1) ,
+unselectallcoupons character(1) ,
+c_currency_id integer ,
+settlementno character varying(24) ,
+ivaamount numeric(24,2) ,
+commissionamount numeric(24,2) ,
+reconcilecoupons character(1) ,
+CONSTRAINT creditcardsettlement_key PRIMARY KEY (c_creditcardsettlement_id) ,
+CONSTRAINT fkclient FOREIGN KEY (ad_client_id) REFERENCES ad_client (ad_client_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkcurrency FOREIGN KEY (c_currency_id) REFERENCES c_currency (c_currency_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkentidadfinanciera FOREIGN KEY (m_entidadfinanciera_id) REFERENCES m_entidadfinanciera (m_entidadfinanciera_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkorg FOREIGN KEY (ad_org_id) REFERENCES ad_org (ad_org_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  );
+ALTER TABLE C_CreditCardSettlement
+  OWNER TO libertya;
+
+CREATE TABLE C_ExpenseConcepts(
+
+c_expenseconcepts_id integer NOT NULL ,
+ad_client_id integer NOT NULL ,
+ad_org_id integer NOT NULL ,
+isactive character(1) NOT NULL DEFAULT 'Y'::bpchar ,
+created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+createdby integer NOT NULL ,
+updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+updatedby integer NOT NULL ,
+concepttype character(1) ,
+amount numeric(24,2) ,
+c_creditcardsettlement_id integer NOT NULL ,
+CONSTRAINT expenseconcepts_key PRIMARY KEY (c_expenseconcepts_id) ,
+CONSTRAINT fkcreditcardsettlement FOREIGN KEY (c_creditcardsettlement_id) REFERENCES c_creditcardsettlement (c_creditcardsettlement_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  );
+ALTER TABLE C_ExpenseConcepts
+  OWNER TO libertya;
+
+CREATE TABLE C_CreditCardCouponFilter(
+
+c_creditcardcouponfilter_id integer NOT NULL ,
+ad_client_id integer NOT NULL ,
+ad_org_id integer NOT NULL ,
+isactive character(1) NOT NULL DEFAULT 'Y'::bpchar ,
+created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+createdby integer NOT NULL ,
+updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+updatedby integer NOT NULL ,
+c_creditcardsettlement_id integer NOT NULL ,
+c_currency_id integer NOT NULL ,
+trxdatefrom timestamp without time zone ,
+trxdateto timestamp without time zone ,
+m_entidadfinanciera_id integer NOT NULL ,
+m_entidadfinancieraplan_id integer NOT NULL ,
+paymentbatch character varying(24) ,
+isprocessed character(1) NOT NULL DEFAULT 'N'::bpchar ,
+process character(1) ,
+CONSTRAINT creditcardcouponfilter_key PRIMARY KEY (c_creditcardcouponfilter_id) ,
+CONSTRAINT fkcreditcardsettlement FOREIGN KEY (c_creditcardsettlement_id) REFERENCES c_creditcardsettlement (c_creditcardsettlement_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkcurrency FOREIGN KEY (c_currency_id) REFERENCES c_currency (c_currency_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkentidadfinanciera FOREIGN KEY (m_entidadfinanciera_id) REFERENCES m_entidadfinanciera (m_entidadfinanciera_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkentidadfinancieraplan FOREIGN KEY (m_entidadfinancieraplan_id) REFERENCES m_entidadfinancieraplan (m_entidadfinancieraplan_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  );
+ALTER TABLE C_CreditCardCouponFilter
+  OWNER TO libertya;
+
+CREATE TABLE C_CouponsSettlements(
+
+c_couponssettlements_id integer NOT NULL ,
+ad_client_id integer NOT NULL ,
+ad_org_id integer NOT NULL ,
+isactive character(1) NOT NULL DEFAULT 'Y'::bpchar ,
+created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+createdby integer NOT NULL ,
+updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+updatedby integer NOT NULL ,
+include character(1) NOT NULL DEFAULT 'N'::bpchar ,
+m_entidadfinanciera_id integer NOT NULL ,
+m_entidadfinancieraplan_id integer NOT NULL ,
+trxdate timestamp without time zone ,
+amount numeric(24,2) ,
+couponno character varying(24) ,
+creditcardno character varying(24) ,
+allocationnumber numeric(18) NOT NULL ,
+paymentbatch character varying(24) ,
+c_creditcardsettlement_id integer NOT NULL ,
+c_currency_id integer NOT NULL ,
+c_creditcardcouponfilter_id integer NOT NULL ,
+c_payment_id integer NOT NULL ,
+CONSTRAINT couponssettlements_key PRIMARY KEY (c_couponssettlements_id) ,
+CONSTRAINT fkcreditcardcouponfilter FOREIGN KEY (c_creditcardcouponfilter_id) REFERENCES c_creditcardcouponfilter (c_creditcardcouponfilter_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkcreditcardsettlement FOREIGN KEY (c_creditcardsettlement_id) REFERENCES c_creditcardsettlement (c_creditcardsettlement_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkcurrency FOREIGN KEY (c_currency_id) REFERENCES c_currency (c_currency_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkentidadfinanciera FOREIGN KEY (m_entidadfinanciera_id) REFERENCES m_entidadfinanciera (m_entidadfinanciera_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkentidadfinancieraplan FOREIGN KEY (m_entidadfinancieraplan_id) REFERENCES m_entidadfinancieraplan (m_entidadfinancieraplan_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkpayment FOREIGN KEY (c_payment_id) REFERENCES c_payment (c_payment_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  );
+ALTER TABLE C_CouponsSettlements
+  OWNER TO libertya;
+
+CREATE TABLE C_WithholdingSettlement(
+
+c_withholdingsettlement_id integer NOT NULL ,
+ad_client_id integer NOT NULL ,
+ad_org_id integer NOT NULL ,
+isactive character(1) NOT NULL DEFAULT 'Y'::bpchar ,
+created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+createdby integer NOT NULL ,
+updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+updatedby integer NOT NULL ,
+c_retenciontype_id integer NOT NULL ,
+c_region_id integer ,
+amount numeric(24,2) ,
+c_creditcardsettlement_id integer NOT NULL ,
+CONSTRAINT withholdingsettlement_key PRIMARY KEY (c_withholdingsettlement_id) ,
+CONSTRAINT fkcreditcardsettlement FOREIGN KEY (c_creditcardsettlement_id) REFERENCES c_creditcardsettlement (c_creditcardsettlement_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkregion FOREIGN KEY (c_region_id) REFERENCES c_region (c_region_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkretenciontype FOREIGN KEY (c_retenciontype_id) REFERENCES c_retenciontype (c_retenciontype_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  );
+ALTER TABLE C_WithholdingSettlement
+  OWNER TO libertya;
+
+CREATE TABLE C_PerceptionsSettlement(
+
+c_perceptionssettlement_id integer NOT NULL ,
+ad_client_id integer NOT NULL ,
+ad_org_id integer NOT NULL ,
+isactive character(1) NOT NULL DEFAULT 'Y'::bpchar ,
+created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+createdby integer NOT NULL ,
+updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+updatedby integer NOT NULL ,
+c_taxcategory_id integer NOT NULL ,
+c_creditcardsettlement_id integer NOT NULL ,
+internalno character varying(24) NOT NULL ,
+amount numeric(24,2) ,
+CONSTRAINT perceptionssettlement_key PRIMARY KEY (c_perceptionssettlement_id) ,
+CONSTRAINT perceptionssettlementclient FOREIGN KEY (ad_client_id) REFERENCES ad_client (ad_client_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT perceptionssettlementcreditcardsettlement FOREIGN KEY (c_creditcardsettlement_id) REFERENCES c_creditcardsettlement (c_creditcardsettlement_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT perceptionssettlementorg FOREIGN KEY (ad_org_id) REFERENCES ad_org (ad_org_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT perceptionssettlementtaxcategory FOREIGN KEY (c_taxcategory_id) REFERENCES c_taxcategory (c_taxcategory_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  );
+ALTER TABLE C_PerceptionsSettlement
+  OWNER TO libertya;
+
+UPDATE ad_system SET dummy = (SELECT addcolumnifnotexists('C_Payment','AuditStatus','character(2)'));
+
+CREATE OR REPLACE VIEW c_paymentcoupon_v AS
+SELECT
+	p.c_payment_id,
+	p.ad_client_id,
+	p.ad_org_id,
+	p.created,
+	p.createdby,
+	p.updated,
+	p.updatedby,
+	efp.m_entidadfinanciera_id,
+	p.m_entidadfinancieraplan_id,
+	ccs.settlementno,
+	p.c_invoice_id,
+	'Y'::character(1) AS isactive,
+	p.creditcardnumber,
+	p.couponnumber,
+	p.c_bpartner_id,
+	p.duedate,
+	p.dateacct,
+	p.datetrx,
+	p.couponbatchnumber,
+	p.payamt,
+	p.c_currency_id,
+	p.docstatus,
+	p.isreconciled,
+	ccs.paymentdate AS settlementdate,
+	efp.cuotaspago AS totalallocations,
+	p.auditstatus
+FROM
+	libertya.c_payment p
+	JOIN libertya.m_entidadfinancieraplan efp
+		ON p.m_entidadfinancieraplan_id = efp.m_entidadfinancieraplan_id
+	LEFT JOIN libertya.c_couponssettlements cs
+		ON p.c_payment_id = cs.c_payment_id
+	LEFT JOIN libertya.c_creditcardsettlement ccs
+		ON cs.c_creditcardsettlement_id = ccs.c_creditcardsettlement_id
+WHERE
+	p.tendertype = 'C'::bpchar;
+ALTER TABLE c_paymentcoupon_v
+  OWNER TO libertya;
+
+CREATE TABLE C_IVASettlements(
+
+c_ivasettlements_id integer NOT NULL ,
+ad_client_id integer NOT NULL ,
+ad_org_id integer NOT NULL ,
+isactive character(1) NOT NULL DEFAULT 'Y'::bpchar ,
+created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+createdby integer NOT NULL ,
+updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+updatedby integer NOT NULL ,
+c_creditcardsettlement_id integer NOT NULL ,
+c_taxcategory_id integer NOT NULL ,
+amount numeric(24,2) ,
+CONSTRAINT ivasettlements_key PRIMARY KEY (c_ivasettlements_id) ,
+CONSTRAINT ivasettlementsclient FOREIGN KEY (ad_client_id) REFERENCES ad_client (ad_client_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT ivasettlementscreditcardsettlement FOREIGN KEY (c_creditcardsettlement_id) REFERENCES c_creditcardsettlement (c_creditcardsettlement_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT ivasettlementsorg FOREIGN KEY (ad_org_id) REFERENCES ad_org (ad_org_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT ivasettlementstaxcategory FOREIGN KEY (c_taxcategory_id) REFERENCES c_taxcategory (c_taxcategory_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  );
+ALTER TABLE C_IVASettlements
+  OWNER TO libertya;
+
+CREATE TABLE C_CardSettlementConcepts(
+
+c_cardsettlementconcepts_id integer NOT NULL ,
+ad_client_id integer NOT NULL ,
+ad_org_id integer NOT NULL ,
+isactive character(1) NOT NULL DEFAULT 'Y'::bpchar ,
+created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+createdby integer NOT NULL ,
+updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+updatedby integer NOT NULL ,
+m_product_id integer NOT NULL ,
+value character varying(40) NOT NULL ,
+name character varying(255) NOT NULL ,
+type character(2) NOT NULL ,
+CONSTRAINT cardsettlementconcepts_key PRIMARY KEY (c_cardsettlementconcepts_id) ,
+CONSTRAINT cardsettlementconceptsclient FOREIGN KEY (ad_client_id) REFERENCES ad_client (ad_client_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT cardsettlementconceptsorg FOREIGN KEY (ad_org_id) REFERENCES ad_org (ad_org_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT cardsettlementconceptsproduct FOREIGN KEY (m_product_id) REFERENCES m_product (m_product_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  );
+ALTER TABLE C_CardSettlementConcepts
+  OWNER TO libertya;
+
+CREATE TABLE C_CommissionConcepts(
+
+c_commissionconcepts_id integer NOT NULL ,
+ad_client_id integer NOT NULL ,
+ad_org_id integer NOT NULL ,
+isactive character(1) NOT NULL DEFAULT 'Y'::bpchar ,
+created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+createdby integer NOT NULL ,
+updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone ,
+updatedby integer NOT NULL ,
+concepttype character(1) ,
+amount numeric(24,2) ,
+c_creditcardsettlement_id integer NOT NULL ,
+CONSTRAINT commissionconcepts_key PRIMARY KEY (c_commissionconcepts_id) ,
+CONSTRAINT commissionconceptsclient FOREIGN KEY (ad_client_id) REFERENCES ad_client (ad_client_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT commissionconceptsorg FOREIGN KEY (ad_org_id) REFERENCES ad_org (ad_org_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  ,
+CONSTRAINT fkcreditcardsettlement FOREIGN KEY (c_creditcardsettlement_id) REFERENCES c_creditcardsettlement (c_creditcardsettlement_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION  );
+ALTER TABLE C_CommissionConcepts
+  OWNER TO libertya;

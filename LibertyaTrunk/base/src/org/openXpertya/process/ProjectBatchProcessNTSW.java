@@ -159,7 +159,7 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 					 * */
 					try {
 						log.log(Level.SEVERE, "Se ajusta la orden");
-						helper.ajustarOrdenYFactura(mOrder.getC_Order_ID());
+						helper.ajustarOrdenYFactura(mOrder.getC_Order_ID(), e1.getMessage());
 					} catch (Throwable e2) {
 						log.log(Level.SEVERE, "Error al ajustar la orden", e2.getCause());
 					}

@@ -1,0 +1,38 @@
+http://200.125.78.99/NaviconWS/ws/importacion/getMensajeRespuesta
+{
+"mensajes": [
+  "Esto es un primer mensaje de ejemplo",
+  "Esto es un segundo mensaje de ejemplo"
+],
+"hayErrores": false,
+"idOrden": "500005"
+}
+
+http://200.125.78.99/NaviconWS/ws/importacion/getFiltro
+{
+"valorBusqueda": "3"
+}
+
+http://[ip del servidor]/NaviconWS/ws/importacion/getCarpeta
+{
+"clave": "Codigo de la carpeta.",
+"nombre": "Nombre de la carpeta",
+"fechaInicio": "dd/MM/yyyy",
+"fechaFin": "dd/MM/yyyy"
+}
+
+http://[ip del servidor]/NaviconWS/ws/importacion/getConcepto
+{
+"codigoIdentificacion": "� Identificador único del proveedor al que debe pedirse el concepto, solo se debe informar si debe pedirse el concepto.",
+"cantidad": "Cantidad a Adquirir y facturar.",
+"precioFacturacion": "Precio al que se le debe facturar al cliente.",
+"precioMaximoCompra": "Precio sobre el cual se realizará la orden de compra al proveedor.",
+"precioInformado": "Precio a mostrar al proveedor.",
+"claveConcepto": "Clave de búsqueda del concepto."
+}
+
+http://[ip del servidor]/NaviconWS/ws/importacion/getOrdenTrabajo
+{"carpeta":{"clave":"Codigo de la carpeta.","nombre":"Nombre de la carpeta","fechaInicio":"dd/MM/yyyy","fechaFin":"dd/MM/yyyy"},"programaVencimientos":"30","entidadesComerciales":[{"codigoIVA":"1010065","codigoIdentificacion":"23111111111","codigoGrupoEC":"1010044","tipoIdentificacion":"80","clave":"nuevo","nombre":"Juan Perez","esproveedor":"N","esCliente":"Y","esEmpleado":"N","direccion":"Corrientes 880","cp":"1043","ciudad":"Capital Federal","codigoPais":"119","provincia":"1000082","cliente":null,"clientePotencial":"N","telefono":"6363-9833","estadoCredito":"Dejar vacío para que tome valor por defecto.","limitecredito":"0","cuitProveedor":null},{"codigoIVA":"1010065","codigoIdentificacion":"23111111111","codigoGrupoEC":"1010044","tipoIdentificacion":"80","clave":"nuevo","nombre":"Juan Perez","esproveedor":"N","esCliente":"Y","esEmpleado":"N","direccion":"Corrientes 880","cp":"1043","ciudad":"Capital Federal","codigoPais":"119","provincia":"1000082","cliente":null,"clientePotencial":"N","telefono":"6363-9833","estadoCredito":"Dejar vacío para que tome valor por defecto.","limitecredito":"0","cuitProveedor":null}],"fechaOrdenTrabajo":"dd/MM/yyyy","cliente":"IdentificadorFiscalCliente","codigoMoneda":"ARS","contactoCliente":"Nombre del contacto del cliente asignado, tal como fue creado en el sistema.","formaDePago":"CRED","claveUnidadNegocio":"Clave de búsqueda de la unidad de negocio","conceptos":[{"codigoIdentificacion":" Identificador único del proveedor al que debe pedirse el concepto, solo se debe informar si debe pedirse el concepto.","cantidad":"Cantidad a Adquirir y facturar.","precioFacturacion":"Precio al que se le debe facturar al cliente.","precioMaximoCompra":"Precio sobre el cual se realizará la orden de compra al proveedor.","precioInformado":"Precio a mostrar al proveedor.","claveConcepto":"Clave de búsqueda del concepto."},{"codigoIdentificacion":" Identificador único del proveedor al que debe pedirse el concepto, solo se debe informar si debe pedirse el concepto.","cantidad":"Cantidad a Adquirir y facturar.","precioFacturacion":"Precio al que se le debe facturar al cliente.","precioMaximoCompra":"Precio sobre el cual se realizará la orden de compra al proveedor.","precioInformado":"Precio a mostrar al proveedor.","claveConcepto":"Clave de búsqueda del concepto."}],"numeroOrdenTrabajo":"1","claveVendedor":"Nombre del comercial asignado, tal como fue creado en el sistema."}
+
+http://[ip del servidor]/NaviconWS/ws/importacion/getEntidadComercial
+{"codigoIVA":"1010065","codigoIdentificacion":"23111111111","codigoGrupoEC":"1010044","tipoIdentificacion":"80","clave":"nuevo","nombre":"Juan Perez","esproveedor":"N","esCliente":"Y","esEmpleado":"N","direccion":"Corrientes 880","cp":"1043","ciudad":"Capital Federal","codigoPais":"119","provincia":"1000082","cliente":null,"clientePotencial":"N","telefono":"6363-9833","estadoCredito":"Dejar vacío para que tome valor por defecto.","limitecredito":"0","cuitProveedor":null}

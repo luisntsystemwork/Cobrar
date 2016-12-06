@@ -50,6 +50,7 @@ public class OrderInvoiceHelper {
 	public static String ESTADO_FACTURACION_FACTURADO = "FACTURADO";
 	public static String ESTADO_FACTURACION_ERROR = "ERROR";
 	public static String ESTADO_FACTURACION_RECHAZADA = "RECHAZADA";
+	public static String ESTADO_ESPERA_DE_APROBACION = "ESPERA DE APROBACION";
 	
 	private String getDocumentNo( Object value ) {
         Integer C_DocType_ID = ( Integer )value;
@@ -562,11 +563,9 @@ public class OrderInvoiceHelper {
 					throw new ModelException("Error al persistir linea de factura:" + CLogger.retrieveErrorAsString());
 			}
 			
-			// Completar la factura si corresponde, si arroja error se guarda igual la factura debido a los numeros
-			// generado para factura electronica.
-			DocumentEngine.processAndSave(anInvoice, DocAction.ACTION_Complete, false);
-			//if (completeInvoice && !DocumentEngine.processAndSave(anInvoice, DocAction.ACTION_Complete, false))
-			//	throw new ModelException("Error al completar la factura:" + Msg.parseTranslation(ordenTrabajo.getCtx(), anInvoice.getProcessMsg()));
+			
+			if (completeInvoice && !DocumentEngine.processAndSave(anInvoice, DocAction.ACTION_Complete, false))
+				throw new ModelException("Error al completar la factura:" + Msg.parseTranslation(ordenTrabajo.getCtx(), anInvoice.getProcessMsg()));
 	
 			actualizarEstadosFactura(ordenTrabajo, ESTADO_FACTURACION_FACTURADO, "EN CURSO", trxName);
 			
@@ -672,14 +671,14 @@ public class OrderInvoiceHelper {
 	 * Asignar el estado "ERROR" a la orden de trabajo
 	 * Reabrir la orden de factura.
 	 * */
-	public void ajustarOrdenYFactura(Integer cOrderID) throws SQLException {
+	public void ajustarOrdenYFactura(Integer cOrderID, String descripcionError) throws SQLException {
 		
 		Connection con = DB.createConnection(false, Connection.TRANSACTION_READ_COMMITTED);
 		try {
 			// NO SERIA NECESARIO
 			// decrementarSecuenciador(con);
 		
-			asignarEstadoFacturacionYReabrir(con, cOrderID, "ERROR");
+			asignarEstadoFacturacionYReabrir(con, cOrderID, "ERROR", descripcionError);
 		} catch (SQLException e) {
 			
 			if (con != null) {
@@ -696,13 +695,14 @@ public class OrderInvoiceHelper {
 		
 	}
 	
-	private void asignarEstadoFacturacionYReabrir(Connection con, Integer cOrderID, String estadoFacturacion) throws SQLException {
+	private void asignarEstadoFacturacionYReabrir(Connection con, Integer cOrderID, String estadoFacturacion, String descripcionError) throws SQLException {
 		String sql = "UPDATE c_order "
 				+ "SET docstatus=?, "
 				+ "docaction=?, "
 				+ "processing=?, "
 				+ "processed=?, "
-				+ "estado_facturacion = ?"
+				+ "estado_facturacion = ?,"
+				+ "description = ?"
 				+ "WHERE c_order_id = ?";
 		
 		// PreparedStatement pstmt = new CPreparedStatement( ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE, sql, "Actualizacion" );
@@ -719,11 +719,33 @@ public class OrderInvoiceHelper {
         
         pstmt.setString( 5, estadoFacturacion);
         
-        pstmt.setInt( 6, cOrderID);
+        pstmt.setString(6,  descripcionError.toString().substring(0,
+                Math.min(255, descripcionError.toString().length())));
+        
+        pstmt.setInt( 7, cOrderID);
 
         pstmt.executeUpdate();
 
         pstmt.close();
+        
+        sql = "UPDATE c_orderline "
+				+ "SET processed=?"
+				+ "WHERE c_order_id = ?";
+		
+		// PreparedStatement pstmt = new CPreparedStatement( ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE, sql, "Actualizacion" );
+		
+		PreparedStatement pstmtLine = con.prepareStatement(sql);
+
+		pstmtLine.setString( 1, "N");
+        
+		pstmtLine.setString(2,  descripcionError.toString().substring(0,
+                Math.min(255, descripcionError.toString().length())));
+        
+		pstmtLine.setInt( 7, cOrderID);
+
+		pstmtLine.executeUpdate();
+
+		pstmtLine.close();
 	}
 
 	private void decrementarSecuenciador(Connection con) throws SQLException {

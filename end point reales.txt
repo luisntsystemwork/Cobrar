@@ -1,0 +1,101 @@
+// Retorna todas las categorias de iva de Libertya
+http://[ip del servidor]/NaviconWS/ws/importacion/getCategoriaIVA
+[{"nombre":"CONSUMIDOR FINAL","idCategoriaIVA":"1010065"},{"nombre":"RESPONSABLE INSCRIPTO","idCategoriaIVA":"1010066"},{"nombre":"RESPONSABLE NO INSCRIPTO","idCategoriaIVA":"1010067"},{"nombre":"EXENTO","idCategoriaIVA":"1010068"},{"nombre":"RESPONSABLE MONOTRIBUTO","idCategoriaIVA":"1010069"},{"nombre":"NO RESPONSABLE","idCategoriaIVA":"1010070"},{"nombre":"NO CATEGORIZADO","idCategoriaIVA":"1010071"},{"nombre":"RESPONSABLE NO INSCRIPTO BIENES DE USO","idCategoriaIVA":"1010072"},{"nombre":"RESPONSABLE INSCRIPTO FACTURA M","idCategoriaIVA":"1010073"},{"nombre":"RESPONSABLE M CON CBU INFORMADO","idCategoriaIVA":"1010074"},{"nombre":"COMERCIO EXTERIOR","idCategoriaIVA":"1010085"}]
+
+
+http://[ip del servidor]/NaviconWS/ws/importacion/filtrarEntidadComercial
+Request
+{
+"valorBusqueda": "CAM-CAS SRL"
+}
+Response
+[{"codigoIVA":"1010066","codigoIdentificacion":"30645354105","codigoGrupoEC":"1010106","tipoIdentificacion":"80","clave":"00001","nombre":"CAM-CAS SRL","esproveedor":"true","esCliente":"false","esEmpleado":"false","direccion":"LARREA 338=","cp":"1030","ciudad":"Buenos Aires","codigoPais":"119","provincia":"","cliente":"30645354105","clientePotencial":"N","telefono":"6363-9833","estadoCredito":"Dejar vacÃ­o para que tome valor por defecto.","limitecredito":"0","cuitProveedor":"30645354105"}]
+
+
+http://[ip del servidor]/NaviconWS/ws/importacion/getUnidadNegocios
+[{"claveUnidadNegocio":"Promoción Discos Duros","nombreUnidadNegocio":"Promoción Discos Duros"},{"claveUnidadNegocio":"Standard","nombreUnidadNegocio":"Standard"},{"claveUnidadNegocio":"Standard","nombreUnidadNegocio":"Standard"}]
+
+
+http://[ip del servidor]/NaviconWS/ws/importacion/getProgramaVencimientos
+[{"programaVencimientos":"Inmediato"},{"programaVencimientos":"30-60-90 Días"},{"programaVencimientos":"30 Días"},{"programaVencimientos":"30-60 Días"}]
+
+
+http://[ip del servidor]/NaviconWS/ws/importacion/guardarOrdenesTrabajo
+Request: {
+	"fechaOrdenTrabajo":"18/11/2016",
+	"cliente":"20222222223",
+	"codigoMoneda":"ARS",
+	"contactoCliente":"vendedor",
+	"formaDePago":"EFECTIVO",
+	"programaVencimientos":"30 Días",
+	"claveUnidadNegocio":"Standard",
+	"carpeta": {
+		"clave":"primer",
+		"nombre":"Primer Proyect",
+		"fechaInicio":"20/10/2016",
+		"fechaFin":"20/10/2017"},
+	"entidadesComerciales":[
+		{"codigoIVA":"1010065",
+			"codigoIdentificacion":"23111111111",
+			"codigoGrupoEC":"1010044",
+			"tipoIdentificacion":"80",
+			"clave":"JP",
+			"nombre":"Juan Perez",
+			"esproveedor":"N",
+			"esCliente":"Y",
+			"esEmpleado":"N",
+			"direccion":"Corrientes 880",
+			"cp":"1043",
+			"ciudad":"Capital Federal",
+			"codigoPais":"119",
+			"provincia":"1000082",
+			"comercial":"",
+			"nroIIBB":"",
+			"clientePotencial":"N",
+			"telefono":"6363-9833",
+			"estadoCredito":"",
+			"limitecredito":"0"},
+		{"codigoIVA":"1010065",
+			"codigoIdentificacion":"20222222223",
+			"codigoGrupoEC":"1010044",
+			"tipoIdentificacion":"80",
+			"clave":"Maria",
+			"nombre":"Maria Perez",
+			"esproveedor":"Y",
+			"esCliente":"N",
+			"esEmpleado":"N",
+			"direccion":"Corrientes 880",
+			"cp":"1043",
+			"ciudad":"Capital Federal",
+			"codigoPais":"119",
+			"provincia":"1000082",
+			"comercial":"",
+			"nroIIBB":"",
+			"clientePotencial":"N",
+			"telefono":"6363-9833",
+			"estadoCredito":"",
+			"limitecredito":"0"}],
+	"conceptos":[{
+			"cantidad":"2",
+			"precioFacturacion":"3000",
+			"precioMaximoCompra":"2000",
+			"precioInformado":"3000",
+			"claveConcepto":"CAT",
+			"codigoIdentificacion":"23111111111"},
+		{"cantidad":"2",
+			"precioFacturacion":"3000",
+			"precioMaximoCompra":"2000",
+			"precioInformado":"3000",
+			"claveConcepto":"AMS",
+			"codigoIdentificacion":"23111111111"}]
+}
+Response:
+{
+"mensajes": [
+  "Esto es un primer mensaje de ejemplo",
+  "Esto es un segundo mensaje de ejemplo"
+],
+"hayErrores": false,
+"idOrden": "500005"
+}
+

@@ -15,10 +15,17 @@ public class JerseyConfig extends Application {
 	public static Properties properties = new Properties();
 	static {
 		/*InputStream inputStream = JerseyConfig.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE);*/
-		String path = File.separator + "ServidorOXP";
+		String path = "";
+		String osName = System.getProperty("os.name");
+		if(osName.equals("Linux")){
+			path = "/ServidorOXP"; 
+		}
+		else{
+			path = "C:\\ServidorOXP"; 
+		}
 		if (System.getProperty("user.dir").indexOf("ServidorOXP") != -1) {
 
-            path = "C:\\ServidorOXP";        
+                   
 		}
 		
 		try {

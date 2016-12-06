@@ -194,27 +194,40 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 		System.out.println("Boton invoice");
 		
 		ArrayList<Integer> recordIds = this.getSelectedRowKeys();
-	
+		StringBuilder msgError = new StringBuilder();
+		Boolean ordenesEnProcesoSeleccionadas = Boolean.FALSE;
 	    for (int r = 0; r < recordIds.size(); r++) {
 	    	
-	    	
 	    	Integer	id	=  recordIds.get(r);
-	        
 	        
 	        try {
 				MOrder mOrder = getPO("C_Order", id, MOrder.class);
 				
 				OrderInvoiceHelper helper = new OrderInvoiceHelper();
 				
-				if (!helper.seDebeProcesar(mOrder))
+				if (!helper.seDebeProcesar(mOrder)) {
+					ordenesEnProcesoSeleccionadas = Boolean.TRUE;
 					continue;
-				
+				}
 				helper.habilitarOrdenParaBatch(mOrder);
 				
 			} catch (Throwable e1) {
 				
+				msgError.append("No se pudieron procesar las Ordenes de trabajo " + id + ", por favor intente nuevamente más tarde \n");
 			}
 	    }
+	    
+	    if (ordenesEnProcesoSeleccionadas)
+			msgError.append("Las ordenes de trabajo seleccionadas ya se encuentran procesadas o rechazadas. Por favor verifique los datos generados\n");
+        
+        StringBuilder builder = new StringBuilder();
+        builder.append("Las Ordenes de trabajo seleccionadas se están procesando, consulte nuevamente en unos instantes para verificar el resultado de la operación\n");
+        if (msgError.length() != 0)
+        	builder.append(msgError.toString());
+        
+        this.statusBar.setStatusLine(builder.toString(), true, true);
+        
+        this.statusBar.setStatusLine(builder.toString());
         
     }
 	
@@ -223,7 +236,7 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 		System.out.println("Boton rechazar");
 		
 		ArrayList<Integer> recordIds = this.getSelectedRowKeys();
-	
+		StringBuilder msgError = new StringBuilder();
 	    for (int r = 0; r < recordIds.size(); r++) {
 	    	
 	    	Integer	id	=  recordIds.get(r);
@@ -239,9 +252,17 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 				helper.rechazarOrdenTrabajo(mOrder);
 				
 			} catch (Throwable e1) {
-				
+				msgError.append("No se pudieron procesar las Ordenes de trabajo " + id + ", por favor intente nuevamente más tarde\n");
 			}
 	    }
+	    StringBuilder builder = new StringBuilder();
+        builder.append("Se han rechazado correctamente las ordenes de trabajo  seleccionadas.\n");
+        if (msgError.length() != 0)
+        	builder.append(msgError.toString());
+        
+        this.statusBar.setStatusLine(builder.toString(), true, true);
+        
+        this.statusBar.setStatusLine(builder.toString());
         
     }
 	    
@@ -497,7 +518,7 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
         if (editorBPartner.getValue() != null)
             sql.append(" AND o.C_BPartner_ID=?");
         //
-        if( fEstadoFacturacionNavicon.getValue() != null ) {
+        if( fEstadoFacturacionNavicon.getValue() != null && !fEstadoFacturacionNavicon.getValue().trim().isEmpty()) {
             sql.append( " AND UPPER(o.estado_facturacion) LIKE ?" );
         }
         Date fromDate = null;
@@ -591,7 +612,7 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
             log.fine("BPartner=" + bp);
         }
         //
-        if( fEstadoFacturacionNavicon.getValue() != null ) {
+        if( fEstadoFacturacionNavicon.getValue() != null && !fEstadoFacturacionNavicon.getValue().trim().isEmpty()) {
         	String estadoFacturacion = ( String ) fEstadoFacturacionNavicon.getValue();
 
             pstmt.setString( index++,estadoFacturacion);

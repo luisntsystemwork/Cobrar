@@ -2,7 +2,6 @@ package com.navicon.ws;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.xml.rpc.ServiceException;
 
 import org.libertya.ws.bean.parameter.BPartnerParameterBean;
@@ -38,7 +36,6 @@ import com.navicon.entities.FormaDePago;
 import com.navicon.entities.MensajesRespuesta;
 import com.navicon.entities.OrdenTrabajo;
 import com.navicon.entities.ProgramaVencimiento;
-import com.navicon.entities.Prueba;
 import com.navicon.util.StringUtils;
 import com.navicon.ws.reader.JerseyConfig;
 
@@ -58,7 +55,7 @@ public class JSONService {
 	private static Integer ORG_ID = 1010053;
 	//"http://192.168.0.35 /axis/services/LibertyaWS"
 	private static String urlLibertyaWS = JerseyConfig.properties.get("url").toString();
-	//private static String urlLibertyaWS = "http://192.168.0.35/axis/services/LibertyaWS";
+	//private static String urlLibertyaWS = "http://200.125.78.99/axis/services/LibertyaWS";
 	
 	@GET
 	@Path("/getMensajeRespuesta")
@@ -82,29 +79,16 @@ public class JSONService {
 
 	}
 
-	@GET
-	@Path("/get")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Prueba getPruebaGet() {
-
-		Prueba prueba = new Prueba();
-		prueba.setTitle("Enter Sandman");
-		prueba.setSinger("Metallica");
-		prueba.setDate(new Date());
-
-		return prueba;
-
-	}
-	
-	@GET
-	@Path("/getTextoResponse")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getTextoResponse() {
-
-		String result = "Track saved";
-		return Response.status(201).entity(result).build();
-
-	}
+//		
+//	@GET
+//	@Path("/getTextoResponse")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response getTextoResponse() {
+//
+//		String result = "Track saved";
+//		return Response.status(201).entity(result).build();
+//
+//	}
 	
 	@GET
 	@Path("/getCarpeta")
@@ -141,15 +125,15 @@ public class JSONService {
 		return new EntidadComercial();
 	}
 
-	@POST
-	@Path("/post")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createTrackInJSON(Prueba track) {
-
-		String result = "Track saved : " + track;
-		return Response.status(201).entity(result).build();
-
-	}
+//	@POST
+//	@Path("/post")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response createTrackInJSON(Prueba track) {
+//
+//		String result = "Track saved : " + track;
+//		return Response.status(201).entity(result).build();
+//
+//	}
 	
 	@GET
 	@Path("/getCategoriaIVA")
@@ -750,8 +734,8 @@ public class JSONService {
 			ordenDeTrabajo.addColumnToHeader("Description", "");
 			
 			ordenDeTrabajo.addColumnToHeader("C_Campaign_ID", getCampaniaPorValue(lyws, ordenTrabajoJson.getClaveUnidadNegocio(), CLIENT_ID, ORG_ID));
-			ordenDeTrabajo.addColumnToHeader("Estado_Facturacion", "PENDIENTE");
-			ordenDeTrabajo.addColumnToHeader("Estado_Pedido_Proveedor", "ESPERA");
+			ordenDeTrabajo.addColumnToHeader("Estado_Facturacion", "ESPERA DE APROBACION");
+			ordenDeTrabajo.addColumnToHeader("Estado_Pedido_Proveedor", "ESPERA DE APROBACION");
 			
 			for (int i = 0; i  < ordenTrabajoJson.getConceptos().size() ; i++)
 			{
@@ -786,7 +770,7 @@ public class JSONService {
 			}
 				
 			System.out.println(orderResult);
-			String idOrden = orderResult.getMainResult().get("C_Order_ID");
+			String idOrden = orderResult.getMainResult().get("Order_DocumentNo");
 			mensajesRespuesta.setIdOrden(idOrden);
 			System.out.println(" -------------- \n ");
 		}
@@ -944,6 +928,13 @@ public class JSONService {
 	private MensajesRespuesta validarCarpeta(Carpeta carpeta)
 	{
 		MensajesRespuesta mensajesRespuesta = new MensajesRespuesta();
+		
+		if  (carpeta == null) {
+			mensajesRespuesta.agregarMensaje("Debe cargar la carpeta");
+			mensajesRespuesta.setHayErrores(Boolean.TRUE);
+			return mensajesRespuesta;
+		}
+		
 		if (StringUtils.isEmpty(carpeta.getClave())) {
 			mensajesRespuesta.agregarMensaje("La clave de la carpeta esta vacia");
 			mensajesRespuesta.setHayErrores(Boolean.TRUE);
