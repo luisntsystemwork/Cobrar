@@ -566,7 +566,7 @@ public class JSONService {
 		}
 
 		try {
-			insertarOActualizarCarpeta(carpeta);
+			insertarOActualizarCarpeta(carpeta, mensajesRespuesta);
 		} catch (Exception e) {
 			mensajesRespuesta.agregarMensaje(e.getMessage());
 			mensajesRespuesta.setHayErrores(Boolean.TRUE);
@@ -586,7 +586,7 @@ public class JSONService {
 		return insertarOrdenTrabajo(ordenTrabajo);
 	}
 	
-	private String insertarOActualizarCarpeta(Carpeta carpeta) throws Exception {
+	private String insertarOActualizarCarpeta(Carpeta carpeta, MensajesRespuesta mensajesRespuesta) throws Exception {
 		
 		try {
 		
@@ -598,11 +598,11 @@ public class JSONService {
 			String idCarpeta = existeCarpeta(lyws, carpeta.getClave());
 			
 			if (StringUtils.isEmpty(idCarpeta)) {
-				return agregarCarpeta(lyws, carpeta);
+				return agregarCarpeta(lyws, carpeta, mensajesRespuesta);
 			}
 			else
 			{
-				actualizarCarpeta(lyws, idCarpeta, carpeta);
+				actualizarCarpeta(lyws, idCarpeta, carpeta, mensajesRespuesta);
 				return idCarpeta;
 			}
 		
@@ -612,7 +612,8 @@ public class JSONService {
 		
 	}
 	
-	private void actualizarCarpeta(LibertyaWS lyws, String idCarpeta, Carpeta carpeta) throws RemoteException {
+	private void actualizarCarpeta(LibertyaWS lyws, String idCarpeta, Carpeta carpeta, MensajesRespuesta mensajesRespuesta) throws RemoteException {
+		
 		ProjectParameterBean project = new ProjectParameterBean("AdminLibertya", "AdminLibertya", CLIENT_ID, ORG_ID);
 		project.addColumnToCProject("value", carpeta.getClave());
 		project.addColumnToCProject("name", carpeta.getNombre());
@@ -636,12 +637,17 @@ public class JSONService {
 		test22.addParameter("projectID", idCarpeta);
 		
 		CustomServiceResultBean customServiceResultBean = lyws.customService(test22);
+		if (customServiceResultBean.isError()) {
+			mensajesRespuesta.setHayErrores(Boolean.TRUE);
+			mensajesRespuesta.agregarMensaje(customServiceResultBean.getErrorMsg());
+		}
 		
 		System.out.println(customServiceResultBean);
 		
+		
 	}
 
-	private String agregarCarpeta(LibertyaWS lyws, Carpeta carpeta) throws RemoteException {
+	private String agregarCarpeta(LibertyaWS lyws, Carpeta carpeta, MensajesRespuesta mensajesRespuesta) throws RemoteException {
 		
 		ProjectParameterBean project = new ProjectParameterBean("AdminLibertya", "AdminLibertya", CLIENT_ID, ORG_ID);
 		project.addColumnToCProject("value", carpeta.getClave());
@@ -666,6 +672,11 @@ public class JSONService {
 		
 		CustomServiceResultBean customServiceResultBean = lyws.customService(test22);
 		
+		if (customServiceResultBean.isError()) {
+			mensajesRespuesta.setHayErrores(Boolean.TRUE);
+			mensajesRespuesta.agregarMensaje(customServiceResultBean.getErrorMsg());
+		}
+		
 		String idCarpeta = customServiceResultBean.getMainResult().get("C_Project_ID");
 		
 		System.out.println(customServiceResultBean);
@@ -689,11 +700,17 @@ public class JSONService {
 		MensajesRespuesta mensajesRespuesta = new MensajesRespuesta();
 		try {
 			// Inserta o actualiza la carpeta.
-			String idCarpeta = insertarOActualizarCarpeta(ordenTrabajoJson.getCarpeta());
+			String idCarpeta = insertarOActualizarCarpeta(ordenTrabajoJson.getCarpeta(), mensajesRespuesta);
+			
+			if (mensajesRespuesta.getHayErrores())
+				return mensajesRespuesta;
 			
 			for (EntidadComercial entidadComercial : ordenTrabajoJson.getEntidadesComerciales())
 			{
-				insertarOActualizarEntidadComercial(entidadComercial);
+				MensajesRespuesta mensajesRespuestaComercial = new MensajesRespuesta();
+				mensajesRespuestaComercial = insertarOActualizarEntidadComercial(entidadComercial);
+				if (mensajesRespuestaComercial.getHayErrores())
+					return mensajesRespuestaComercial;
 			}
 			
 			// Conexión al WS
