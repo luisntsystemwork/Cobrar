@@ -180,6 +180,7 @@ public class OrderInvoiceHelper {
 	}
 	
 	private void createRemitosSalida(MOrder anOrder, String trxName) throws ModelException {
+		log.log(Level.SEVERE, "Creacion del remito");
 		// Instanciar el nuevo remito
 		MInOut anInOut = new MInOut(anOrder, 0, anOrder.getDateOrdered());
 		// Copia general de campos de cabecera
@@ -216,12 +217,12 @@ public class OrderInvoiceHelper {
 		if (!DocumentEngine.processAndSave(anInOut, DocAction.ACTION_Complete, false))
 			throw new ModelException("Error al completar el remito:" + Msg.parseTranslation(Env.getCtx(), anInOut.getProcessMsg()));
 		
-		log.log(Level.SEVERE, "M_InOut_ID " + anInOut);
+		log.log(Level.SEVERE, "Remito creado " + anInOut);
 	}
 	
 	private void createPedidosProveedorYRemitos(MOrder ordenTrabajo, String trxName) throws ModelException, SQLException {
 		
-		Map<Integer, List<MOrderLine>> orderLinePorCuitProveedor = getOrderLinePorIDPartner(ordenTrabajo);
+		Map<Integer, List<MOrderLine>> orderLinePorCuitProveedor = getLineasPorEntidadComercial(ordenTrabajo);
 		
 		/*
 		 * I.	Si ninguna línea tiene código de proveedor:
@@ -245,10 +246,10 @@ public class OrderInvoiceHelper {
 			
 			anOrder.set_Value ("M_PriceList_ID", idListaPrecio);
 		
-			anOrder.set_Value("AD_Client_ID", ordenTrabajo.getAD_Client_ID());
-			anOrder.set_Value("AD_Org_ID", ordenTrabajo.getAD_Org_ID());
+			anOrder.set_Value("AD_Client_ID",       ordenTrabajo.getAD_Client_ID());
+			anOrder.set_Value("AD_Org_ID",          ordenTrabajo.getAD_Org_ID());
 			anOrder.set_Value("C_DocTypeTarget_ID", getIdDocTypeTarget(ordenTrabajo.getAD_Client_ID()));
-			anOrder.set_Value("DateOrdered", new java.sql.Timestamp((new Date()).getTime())); // Fecha
+			anOrder.set_Value("DateOrdered",        new java.sql.Timestamp((new Date()).getTime())); // Fecha
 		
 			// Se envia en los parametros del constructor
 			anOrder.set_Value("C_BPartner_Location_ID", getIdDireccionEntidadComercial(idPartner));
@@ -267,14 +268,14 @@ public class OrderInvoiceHelper {
 				anOrder.set_Value("C_PaymentTerm_ID", ordenTrabajo.get_Value("C_PaymentTerm_ID"));
 			}
 			
-			anOrder.set_Value("C_Project_ID",           ordenTrabajo.getC_Project_ID());
+			anOrder.set_Value("C_Project_ID",         ordenTrabajo.getC_Project_ID());
 			// MARCAR AL C_ORDER COMO Transaccion de venta
 			anOrder.set_Value("IsSOTrx", "N");
 			// La orden de trabajo esta activa
 			anOrder.set_Value("IsActive", "Y");
 		
 			//VER el campo C_PaymentTerm_ID
-			anOrder.set_Value("Description", ordenTrabajo.getDescription());
+			anOrder.set_Value("Description",   ordenTrabajo.getDescription());
 			
 			anOrder.set_Value("C_Campaign_ID", ordenTrabajo.get_Value("C_Campaign_ID"));
 		
@@ -308,10 +309,12 @@ public class OrderInvoiceHelper {
 					throw new ModelException("Error al persistir linea de pedido:" + CLogger.retrieveErrorAsString());
 				
 			}
-			if (!DocumentEngine.processAndSave(anOrder, DocAction.ACTION_Complete, false))
+			if (!DocumentEngine.processAndSave(anOrder, DocAction.ACTION_Complete, false)) {
+				log.log(Level.SEVERE, "Error al completar el pedido");
 				throw new ModelException("Error al completar el pedido:" + Msg.parseTranslation(Env.getCtx(), anOrder.getProcessMsg()));
+			}
 			
-			log.log(Level.SEVERE, "C_Order_ID " + anOrder);
+			log.log(Level.SEVERE, "Pedido de compra generado " + anOrder);
 		
 			this.createRemitosSalida(anOrder, trxName);
 		}
@@ -325,6 +328,7 @@ public class OrderInvoiceHelper {
 		mPriceList.setIsActive(true);
 		
 		String nombreListaPrecio = DocumentNo + "-" + C_Project_ID + "-" + (esVenta ? "Ventas" : "Compras") + "-" + Env.getDateTime("yy-MM-dd HH:mm:ss");
+		log.log(Level.SEVERE, "Nombre de la lista de precio creada" + nombreListaPrecio);
 		mPriceList.setName(nombreListaPrecio);
 		mPriceList.setDescription("''");
 		mPriceList.setIsTaxIncluded(false);
@@ -449,7 +453,7 @@ public class OrderInvoiceHelper {
 	 * @param ordenTrabajo
 	 * @return
 	 */
-	private Map<Integer, List<MOrderLine>> getOrderLinePorIDPartner(MOrder ordenTrabajo) {
+	private Map<Integer, List<MOrderLine>> getLineasPorEntidadComercial(MOrder ordenTrabajo) {
 		
 		Map<Integer, List<MOrderLine>> retorno = new HashMap<Integer, List<MOrderLine>>();
 		MOrderLine[] lineas = ordenTrabajo.getLines();
@@ -472,6 +476,8 @@ public class OrderInvoiceHelper {
 			 lista.add(mOrderLine);
 			 retorno.put(cBPartnerID, lista);
 		}
+		
+		log.log(Level.SEVERE, "Lineas ordenadas por Entidad " + retorno);
 		
 		return retorno;
 	}
@@ -512,12 +518,12 @@ public class OrderInvoiceHelper {
 	 * @param dateAcct redefinición del valor (o se copia el dateAcct del pedido en caso de recibir null)
 	 * @param trxName Nombre de la transaccion.
 	 */
-	private MInvoice createInvoiceFromOrder(MOrder ordenTrabajo, int invoiceDocTypeTargetID, int invoicePuntoDeVenta, String invoiceTipoComprobante, 
+	private MInvoice createFacturaDesdePedido(MOrder ordenTrabajo, int invoiceDocTypeTargetID, int invoicePuntoDeVenta, String invoiceTipoComprobante, 
 			boolean completeInvoice, Timestamp dateInvoiced, Timestamp dateAcct, String trxName) throws ModelException, Exception 
 	{
 		try 
 		{
-			log.log(Level.SEVERE, "Orden a procesar: " + ordenTrabajo);
+			log.log(Level.SEVERE, "Creacion de factura a partir de la orden: " + ordenTrabajo);
 			
 			// Instanciar la nueva factura
 			MInvoice anInvoice = new MInvoice(ordenTrabajo, invoiceDocTypeTargetID, ordenTrabajo.getDateOrdered());
@@ -564,12 +570,14 @@ public class OrderInvoiceHelper {
 			}
 			
 			
-			if (completeInvoice && !DocumentEngine.processAndSave(anInvoice, DocAction.ACTION_Complete, false))
+			if (completeInvoice && !DocumentEngine.processAndSave(anInvoice, DocAction.ACTION_Complete, false)) {
+				log.log(Level.SEVERE, "Error al completar la factura");
 				throw new ModelException("Error al completar la factura:" + Msg.parseTranslation(ordenTrabajo.getCtx(), anInvoice.getProcessMsg()));
+			}
 	
 			actualizarEstadosFactura(ordenTrabajo, ESTADO_FACTURACION_FACTURADO, "EN CURSO", trxName);
 			
-			log.log(Level.SEVERE, "C_Invoice_ID " + anInvoice.getC_Invoice_ID());
+			log.log(Level.SEVERE, "Factura creada: C_Invoice_ID " + anInvoice.getC_Invoice_ID());
 			
 			/* === Commitear transaccion === */
 			/* El commit lo hace el metodo public void processOrdenTrabajo(MOrder mOrder, int invoiceDocTypeTargetID,
@@ -603,6 +611,8 @@ public class OrderInvoiceHelper {
 	}
 
 	private void actualizarEstadosFactura(MOrder anOrder, String estadoFacturacion, String estado_pedido_proveedor, String trxName) throws SQLException {
+		
+		log.log(Level.SEVERE, "Actualizacion del estado de facturacion [id orden de trabajo, estadoFacturacion, estadoPedido]: [" + anOrder.getC_Order_ID() + "," + estadoFacturacion + "," + estado_pedido_proveedor + "]");
 		
 		String sql = "UPDATE c_order "
 				+ "SET estado_facturacion=?, "
@@ -793,7 +803,7 @@ public class OrderInvoiceHelper {
 			//lista de precios de compra
 			this.createPedidosProveedorYRemitos(mOrder, trxName);
 			// lista de precios de venta
-			this.createInvoiceFromOrder(mOrder, invoiceDocTypeTargetID, invoicePuntoDeVenta, invoiceTipoComprobante, completeInvoice, dateInvoiced, dateAcct, trxName);
+			this.createFacturaDesdePedido(mOrder, invoiceDocTypeTargetID, invoicePuntoDeVenta, invoiceTipoComprobante, completeInvoice, dateInvoiced, dateAcct, trxName);
 			
 			// No Se Completa el pedido original ya que lo hizo el proceso JSON
 			

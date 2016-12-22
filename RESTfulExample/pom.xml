@@ -51,6 +51,14 @@
 		    <scope>system</scope>
 		    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/LibertyaWS.jar</systemPath>
 		</dependency>
+		
+		<dependency>
+		    <groupId>OXP</groupId>
+		    <artifactId>com.libertya.ws.oxp</artifactId>
+		    <version>1.0</version>
+		    <scope>system</scope>
+		    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/OXP.jar</systemPath>
+		</dependency>
 
 	</dependencies>
 

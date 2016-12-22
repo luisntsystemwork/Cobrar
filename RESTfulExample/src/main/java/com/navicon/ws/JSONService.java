@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -22,6 +23,7 @@ import org.libertya.ws.bean.parameter.ProjectParameterBean;
 import org.libertya.ws.bean.result.CustomServiceResultBean;
 import org.libertya.ws.bean.result.MultipleRecordsResultBean;
 import org.libertya.ws.bean.result.ResultBean;
+import org.openXpertya.util.CLogger;
 
 import ws.libertya.org.LibertyaWS;
 import ws.libertya.org.LibertyaWSServiceLocator;
@@ -50,6 +52,8 @@ import com.navicon.ws.reader.JerseyConfig;
  */
 @Path("/importacion")
 public class JSONService {
+	
+	protected CLogger log = CLogger.getCLogger(JSONService.class);
 	
 	private static Integer CLIENT_ID = 1010016;
 	private static Integer ORG_ID = 1010053;
@@ -793,6 +797,7 @@ public class JSONService {
 		}
 		catch (Exception e)
 		{
+			log.log(Level.SEVERE, "Error" + e.getMessage(), e);
 			mensajesRespuesta.agregarMensaje(e.getMessage());
 			mensajesRespuesta.setHayErrores(Boolean.TRUE);
 			return mensajesRespuesta;
