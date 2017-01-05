@@ -1,0 +1,41 @@
+pysimplesoap.__version__ =  1.08.8
+CERTIFICADO: /home/libertya/pyafipws/NavCert.crt
+ 
+KEY: /home/libertya/pyafipws/navicon.key
+ 
+CUIT: 30593202387                             
+ 
+URL_WSFE: https://wswhomo.afip.gov.ar/wsfev1/service.asmx
+ 
+LOG:  Proxy Dict: {}
+Conectando a wsdl=https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL cache=/home/libertya/pyafipws/cache proxy={}
+
+Cert y Key: 
+/home/libertya/pyafipws/NavCert.crt /home/libertya/pyafipws/navicon.key wsfe None None
+Creando TRA...
+Frimando TRA...
+Conectando a WSAA...
+Llamando WSAA...
+Grabando TA en /home/libertya/pyafipws/cache/TA-e32958f0ac278b143b56225593f23a2a.xml...
+wsfev1.client.help: FECAESolicitar(Auth=*{u'Token': <type 'unicode'>, u'Sign': <type 'unicode'>, u'Cuit': <type 'long'>}*, FeCAEReq=*{u'FeCabReq': *{u'CantReg': <type 'int'>, u'PtoVta': <type 'int'>, u'CbteTipo': <type 'int'>}*, u'FeDetReq': [*{u'FECAEDetRequest': *{u'Concepto': <type 'int'>, u'DocTipo': <type 'int'>, u'DocNro': <type 'long'>, u'CbteDesde': <type 'long'>, u'CbteHasta': <type 'long'>, u'CbteFch': <type 'unicode'>, u'ImpTotal': <alias 'double' for '<type 'float'>'>, u'ImpTotConc': <alias 'double' for '<type 'float'>'>, u'ImpNeto': <alias 'double' for '<type 'float'>'>, u'ImpOpEx': <alias 'double' for '<type 'float'>'>, u'ImpTrib': <alias 'double' for '<type 'float'>'>, u'ImpIVA': <alias 'double' for '<type 'float'>'>, u'FchServDesde': <type 'unicode'>, u'FchServHasta': <type 'unicode'>, u'FchVtoPago': <type 'unicode'>, u'MonId': <type 'unicode'>, u'MonCotiz': <alias 'double' for '<type 'float'>'>, u'CbtesAsoc': [*{u'CbteAsoc': *{u'Tipo': <type 'int'>, u'PtoVta': <type 'int'>, u'Nro': <type 'long'>}*}*], u'Tributos': [*{u'Tributo': *{u'Id': <alias 'short' for '<type 'int'>'>, u'Desc': <type 'unicode'>, u'BaseImp': <alias 'double' for '<type 'float'>'>, u'Alic': <alias 'double' for '<type 'float'>'>, u'Importe': <alias 'double' for '<type 'float'>'>}*}*], u'Iva': [*{u'AlicIva': *{u'Id': <type 'int'>, u'BaseImp': <alias 'double' for '<type 'float'>'>, u'Importe': <alias 'double' for '<type 'float'>'>}*}*], u'Opcionales': [*{u'Opcional': *{u'Id': <type 'unicode'>, u'Valor': <type 'unicode'>}*}*]}*}*]}*)
+ -> **{u'FECAESolicitarResult': *{u'FeCabResp': *{u'Cuit': <type 'long'>, u'PtoVta': <type 'int'>, u'CbteTipo': <type 'int'>, u'FchProceso': <type 'unicode'>, u'CantReg': <type 'int'>, u'Resultado': <type 'unicode'>, u'Reproceso': <type 'unicode'>}*, u'FeDetResp': [*{u'FECAEDetResponse': *{u'Concepto': <type 'int'>, u'DocTipo': <type 'int'>, u'DocNro': <type 'long'>, u'CbteDesde': <type 'long'>, u'CbteHasta': <type 'long'>, u'CbteFch': <type 'unicode'>, u'Resultado': <type 'unicode'>, u'Observaciones': [*{u'Obs': *{u'Code': <type 'int'>, u'Msg': <type 'unicode'>}*}*], u'CAE': <type 'unicode'>, u'CAEFchVto': <type 'unicode'>}*}*], u'Events': [*{u'Evt': *{u'Code': <type 'int'>, u'Msg': <type 'unicode'>}*}*], u'Errors': [*{u'Err': *{u'Code': <type 'int'>, u'Msg': <type 'unicode'>}*}*]}*}**:
+
+Solicitud de Código de Autorización Electrónico (CAE)
+Headers: None
+ult_cbte_nro 244
+imp_total 2420.0
+imp_neto 2000.0
+imp_iva 420.0
+imp_otros_trib 0
+
+Resultado A
+Reproceso 
+CAE 66527444617369
+t0 1483009922.54
+t1 1483009923.0
+lapso 0.458592176437
+66527444617369 == 66527444617369
+2 == 2
+None != 10063
+salida: A:66527444617369:245:None:20161229 
+El archivo salida.txt se ha generado correctamente.

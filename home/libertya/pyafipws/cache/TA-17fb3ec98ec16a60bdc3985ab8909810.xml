@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<loginTicketResponse version="1">
+    <header>
+        <source>CN=wsaa, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>
+        <destination>C=ar, O=navicon sa, SERIALNUMBER=CUIT 30593202387, CN=navisys</destination>
+        <uniqueId>2937495655</uniqueId>
+        <generationTime>2016-11-30T16:44:16.465-03:00</generationTime>
+        <expirationTime>2016-12-01T04:44:16.465-03:00</expirationTime>
+    </header>
+    <credentials>
+        <token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgdW5pcXVlX2lkPSI0MjA2OTY5NDEzIiBzcmM9IkNOPXdzYWEsIE89QUZJUCwgQz1BUiwgU0VSSUFMTlVNQkVSPUNVSVQgMzM2OTM0NTAyMzkiIGdlbl90aW1lPSIxNDgwNTM0OTk2IiBleHBfdGltZT0iMTQ4MDU3ODI1NiIgZHN0PSJDTj13c2ZlLCBPPUFGSVAsIEM9QVIiLz4KICAgIDxvcGVyYXRpb24gdmFsdWU9ImdyYW50ZWQiIHR5cGU9ImxvZ2luIj4KICAgICAgICA8bG9naW4gdWlkPSJDPWFyLCBPPW5hdmljb24gc2EsIFNFUklBTE5VTUJFUj1DVUlUIDMwNTkzMjAyMzg3LCBDTj1uYXZpc3lzIiBzZXJ2aWNlPSJ3c2ZlIiByZWdtZXRob2Q9IjIyIiBlbnRpdHk9IjMzNjkzNDUwMjM5IiBhdXRobWV0aG9kPSJjbXMiPgogICAgICAgICAgICA8cmVsYXRpb25zPgogICAgICAgICAgICAgICAgPHJlbGF0aW9uIHJlbHR5cGU9IjQiIGtleT0iMzA1OTMyMDIzODciLz4KICAgICAgICAgICAgPC9yZWxhdGlvbnM+CiAgICAgICAgPC9sb2dpbj4KICAgIDwvb3BlcmF0aW9uPgo8L3Nzbz4KCg==</token>
+        <sign>UXiL9JDmBf7Vb3c2q1vt9/GpK2XyYMdP1fcKPBmK6FrXEEekm1Bdt/4cjmOZ5bQQa3aadIlYCLtbyi4HzvsmT8QLj5F7H9zA5Bg5P6giST1K+QDm0p2V5BBWbSqcOHjhlrACbqArKcbvIAWRNl8PAVpKQBx3jewsiOuW8kVGO3I=</sign>
+    </credentials>
+</loginTicketResponse>
+

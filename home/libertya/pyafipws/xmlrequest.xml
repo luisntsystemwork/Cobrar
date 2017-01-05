@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<soap:Header/>
+<soap:Body>
+    <FECAESolicitar xmlns="http://ar.gov.afip.dif.FEV1/">
+    <Auth><Token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgdW5pcXVlX2lkPSIyMDYyNzA1MDM5IiBzcmM9IkNOPXdzYWFob21vLCBPPUFGSVAsIEM9QVIsIFNFUklBTE5VTUJFUj1DVUlUIDMzNjkzNDUwMjM5IiBnZW5fdGltZT0iMTQ4MzAwOTg4MyIgZXhwX3RpbWU9IjE0ODMwNTMxNDMiIGRzdD0iQ049d3NmZSwgTz1BRklQLCBDPUFSIi8+CiAgICA8b3BlcmF0aW9uIHZhbHVlPSJncmFudGVkIiB0eXBlPSJsb2dpbiI+CiAgICAgICAgPGxvZ2luIHVpZD0iQz1hciwgTz1uYXZpY29uIHMuYS4sIFNFUklBTE5VTUJFUj1DVUlUIDMwNTkzMjAyMzg3LCBDTj1uYXZpY29uIHMuYS4iIHNlcnZpY2U9IndzZmUiIHJlZ21ldGhvZD0iMjIiIGVudGl0eT0iMzM2OTM0NTAyMzkiIGF1dGhtZXRob2Q9ImNtcyI+CiAgICAgICAgICAgIDxyZWxhdGlvbnM+CiAgICAgICAgICAgICAgICA8cmVsYXRpb24gcmVsdHlwZT0iNCIga2V5PSIzMDU5MzIwMjM4NyIvPgogICAgICAgICAgICA8L3JlbGF0aW9ucz4KICAgICAgICA8L2xvZ2luPgogICAgPC9vcGVyYXRpb24+Cjwvc3NvPgoK</Token><Sign>gnDBfMi+o8JMwidLCpSXJYETJSPc+uNNBCVBHtos0ZOtz/ENHcXusC3joPYm+OOeKcPt++di32v3Xf3hoHMjGPLfc9y6bM49mtEd9Q8pIpVJnXpGCgU77E+AmK4lS2bRjW2Y0fthbd5cRn2uXLELfjpPH27Qc63gXEcANGrkuao=</Sign><Cuit>30593202387</Cuit></Auth><FeCAEReq><FeCabReq><CantReg>1</CantReg><PtoVta>4
+</PtoVta><CbteTipo>01
+</CbteTipo></FeCabReq><FeDetReq><FECAEDetRequest><Concepto>2</Concepto><DocTipo>80
+</DocTipo><DocNro>30641405554
+</DocNro><CbteDesde>245</CbteDesde><CbteHasta>245</CbteHasta><CbteFch>20161229</CbteFch><ImpTotal>2420.0</ImpTotal><ImpTotConc>0.00</ImpTotConc><ImpNeto>2000.0</ImpNeto><ImpOpEx>0.00</ImpOpEx><ImpTrib>0
+</ImpTrib><ImpIVA>420.0</ImpIVA><FchServDesde>20161229</FchServDesde><FchServHasta>20161229</FchServHasta><FchVtoPago>20161229</FchVtoPago><MonId>PES</MonId><MonCotiz>1
+</MonCotiz><Iva><AlicIva><Id>5</Id><BaseImp>2000.00</BaseImp><Importe>420.00
+</Importe></AlicIva></Iva></FECAEDetRequest></FeDetReq></FeCAEReq></FECAESolicitar>
+</soap:Body>
+</soap:Envelope>
