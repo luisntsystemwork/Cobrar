@@ -5,27 +5,51 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntidadComercial {
 	
-	 private String clave = "nuevo";
-	 private String nombre = "Juan Perez";
-	 private String codigoIVA = "1010065";
-	 private String codigoIdentificacion ="23111111111";
-	 private String nroIIBB ="";
-	 private String codigoGrupoEC ="1010044";
-	 private String clientePotencial = "N";
-	 private String esCliente = "Y";
-	 private String esproveedor ="N";
-	 private String esEmpleado = "N";
-	 private String direccion ="Corrientes 880";
-	 private String ciudad ="Capital Federal";
-	 private String CP ="1043";
-	 private String provincia = "1000082"; // --id de provincia
-	 private String codigoPais = "119"; // --Argentina
-	 private String telefono ="6363-9833";
-	 private String estadoCredito ="Dejar vacío para que tome valor por defecto.";
-	 private String limitecredito ="0";
-	 private String tipoIdentificacion ="80"; // -cuit
+	 private String clave;
+	 private String nombre;
+	 private String codigoIVA;
+	 private String codigoIdentificacion;
+	 private String nroIIBB;
+	 private String codigoGrupoEC;
+	 private String clientePotencial;
+	 private String esCliente;
+	 private String esproveedor;
+	 private String esEmpleado;
+	 private String direccion;
+	 private String ciudad;
+	 private String CP;
+	 private String provincia; // --id de provincia
+	 private String codigoPais; // --Argentina
+	 private String telefono;
+	 private String estadoCredito;
+	 private String limitecredito;
+	 private String tipoIdentificacion; // -cuit
 	private String cliente;
 	private String cuitProveedor;
+	
+	public static EntidadComercial getMock() {
+		EntidadComercial entidad = new EntidadComercial();
+		entidad.setClave( "nuevo");
+		entidad.setNombre ( "Juan Perez");
+		entidad.setCodigoIVA ( "1010065");
+		entidad.setCodigoIdentificacion ("23111111111");
+		entidad.setCodigoGrupoEC ("1010044");
+		entidad.setClientePotencial ( "N");
+		entidad.setEsCliente ( "Y");
+		entidad.setEsproveedor ("N");
+		entidad.setEsEmpleado ( "N");
+		entidad.setDireccion ("Corrientes 880");
+		entidad.setCiudad ("Capital Federal");
+		entidad.setCP ("1043");
+		entidad.setProvincia ( "1000082"); // --id de provincia
+		entidad.setCodigoPais ( "119"); // --Argentina
+		entidad.setTelefono ("6363-9833");
+		entidad.setEstadoCredito ("Dejar vacío para que tome valor por defecto.");
+		entidad.setLimitecredito ("0");
+		entidad.setTipoIdentificacion ("80"); // -cuit
+		
+		return entidad;
+	}
 	
 	public String getClave() {
 		return clave;

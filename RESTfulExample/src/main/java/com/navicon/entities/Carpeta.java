@@ -14,10 +14,19 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Carpeta {
 
-	private String clave = "Codigo de la carpeta.";
-	private String nombre = "Nombre de la carpeta";
-	private String fechaInicio = "dd/MM/yyyy"; // dd/MM/aaaa
-	private String fechaFin = "dd/MM/yyyy"; // dd/MM/aaaa
+	private String clave;
+	private String nombre;
+	private String fechaInicio; // dd/MM/aaaa
+	private String fechaFin; // dd/MM/aaaa
+	
+	public static Carpeta getMock() {
+		Carpeta carpeta = new Carpeta();
+		carpeta.setClave("Codigo de la carpeta.");
+		carpeta.setNombre("Nombre de la carpeta");
+		carpeta.setFechaInicio("dd/MM/yyyy"); // dd/MM/aaaa
+		carpeta.setFechaFin( "dd/MM/yyyy"); // dd/MM/aaaa
+		return carpeta;
+	}
 	
 	public Carpeta() {
 	}

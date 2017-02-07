@@ -56,27 +56,45 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrdenTrabajo {
 	
-	private String numeroOrdenTrabajo = "1";
-     private String cliente = "IdentificadorFiscalCliente"; // <!--clave de busqueda del cliente? (el cliente se carga en crm o se carga primero en libertya?? lo tenemos que importar)-->
-     private String contactoCliente = "Nombre del contacto del cliente asignado, tal como fue creado en el sistema."; //<!--Opcional_: ver si se quiere registrar el nombre del contacto del cliente-->
+	private String numeroOrdenTrabajo;
+     private String cliente; // <!--clave de busqueda del cliente? (el cliente se carga en crm o se carga primero en libertya?? lo tenemos que importar)-->
+     private String contactoCliente; //<!--Opcional_: ver si se quiere registrar el nombre del contacto del cliente-->
     // Ver de pasar este argumento a tipo java.util.Date en lugar de String. Aunque lo estaria validando del lado del servidor.
-     private String fechaOrdenTrabajo = "dd/MM/yyyy"; // dd/mm/aaaa
-     private String claveVendedor = "Nombre del comercial asignado, tal como fue creado en el sistema."; // <!--Opcional_: ver si se quiere asociar la ot con un vendedor>!-->
-     private String codigoMoneda = "ARS"; //<!--moneda de facturación -->
-     private String formaDePago = "CRED"; // <!-- opcional? que se pone por defecto? -->
-     private String programaVencimientos = "30"; // <!--codigo de programa de vencimientos, opcional? que se pone por defecto? -->-->
-    private String claveUnidadNegocio = "Clave de búsqueda de la unidad de negocio";
+     private String fechaOrdenTrabajo; // dd/mm/aaaa
+     private String claveVendedor; // <!--Opcional_: ver si se quiere asociar la ot con un vendedor>!-->
+     private String codigoMoneda; //<!--moneda de facturación -->
+     private String formaDePago; // <!-- opcional? que se pone por defecto? -->
+     private String programaVencimientos; // <!--codigo de programa de vencimientos, opcional? que se pone por defecto? -->-->
+    private String claveUnidadNegocio;
     private List<Concepto> conceptos = new ArrayList<Concepto>(); // <!--nro de proyecto -->
     private Carpeta carpeta = new Carpeta();
     private List<EntidadComercial> entidadesComerciales = new ArrayList<EntidadComercial>();
     
     public OrdenTrabajo() {
-		this.conceptos.add(new Concepto());
-		this.conceptos.add(new Concepto());
-		
-		this.entidadesComerciales.add(new EntidadComercial());
-		this.entidadesComerciales.add(new EntidadComercial());
 	}
+    
+    public static OrdenTrabajo getMock() {
+    	OrdenTrabajo ordenTrabajo = new OrdenTrabajo();
+    	ordenTrabajo.setNumeroOrdenTrabajo( "1");
+    	ordenTrabajo.setCliente ( "IdentificadorFiscalCliente");
+    	ordenTrabajo.setContactoCliente ( "Nombre del contacto del cliente asignado, tal como fue creado en el sistema.");
+       // Ver de pasar este argumento a tipo java.util.Date en lugar de String. Aunque lo estaria validando del lado del servidor.
+    	ordenTrabajo.setFechaOrdenTrabajo ( "dd/MM/yyyy");
+    	ordenTrabajo.setClaveVendedor ( "Nombre del comercial asignado, tal como fue creado en el sistema.");
+    	ordenTrabajo.setCodigoMoneda ( "ARS");
+    	ordenTrabajo.setFormaDePago ( "CRED");
+    	ordenTrabajo.setProgramaVencimientos ( "30");
+    	ordenTrabajo.setClaveUnidadNegocio ( "Clave de búsqueda de la unidad de negocio");
+    	ordenTrabajo.setCarpeta(Carpeta.getMock());
+    	
+    	ordenTrabajo.conceptos.add(Concepto.getMock());
+    	ordenTrabajo.conceptos.add(Concepto.getMock());
+		
+		/*this.entidadesComerciales.add(EntidadComercial.getMock());
+		this.entidadesComerciales.add(EntidadComercial.getMock());*/
+    	
+    	return ordenTrabajo;
+    }
     
 	public Carpeta getCarpeta() {
 		return carpeta;

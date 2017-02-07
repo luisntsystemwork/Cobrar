@@ -748,10 +748,10 @@ public class OrderInvoiceHelper {
 
 		pstmtLine.setString( 1, "N");
         
-		pstmtLine.setString(2,  descripcionError.toString().substring(0,
-                Math.min(255, descripcionError.toString().length())));
+		/*pstmtLine.setString(2,  descripcionError.toString().substring(0,
+                Math.min(255, descripcionError.toString().length())));*/
         
-		pstmtLine.setInt( 7, cOrderID);
+		pstmtLine.setInt( 2, cOrderID);
 
 		pstmtLine.executeUpdate();
 

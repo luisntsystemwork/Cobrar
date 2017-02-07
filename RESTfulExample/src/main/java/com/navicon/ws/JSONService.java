@@ -2,6 +2,7 @@ package com.navicon.ws;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import com.navicon.entities.EntidadComercial;
 import com.navicon.entities.Filtro;
 import com.navicon.entities.FormaDePago;
 import com.navicon.entities.MensajesRespuesta;
+import com.navicon.entities.Moneda;
 import com.navicon.entities.OrdenTrabajo;
 import com.navicon.entities.ProgramaVencimiento;
 import com.navicon.util.StringUtils;
@@ -62,7 +64,7 @@ public class JSONService {
 	//private static String urlLibertyaWS = "http://200.125.78.99/axis/services/LibertyaWS";
 	
 	@GET
-	@Path("/getMensajeRespuesta")
+	@Path("/getMockMensajeRespuesta")
 	@Produces(MediaType.APPLICATION_JSON)
 	public MensajesRespuesta getMensajeRespuesta() {
 		MensajesRespuesta mensajesDemo = new MensajesRespuesta();
@@ -74,7 +76,7 @@ public class JSONService {
 	}
 	
 	@GET
-	@Path("/getFiltro")
+	@Path("/getMockFiltro")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Filtro getFiltro() {
 		Filtro filtro = new Filtro();
@@ -82,68 +84,238 @@ public class JSONService {
 		return filtro;
 
 	}
-
-//		
-//	@GET
-//	@Path("/getTextoResponse")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response getTextoResponse() {
-//
-//		String result = "Track saved";
-//		return Response.status(201).entity(result).build();
-//
-//	}
 	
 	@GET
-	@Path("/getCarpeta")
+	@Path("/getMockCarpeta")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Carpeta getCarpeta()
 	{
-		Carpeta carpeta = new Carpeta();
-		carpeta.setClave("Codigo de la carpeta.");
-		carpeta.setNombre("Nombre de la carpeta");
-		carpeta.setFechaInicio("dd/MM/yyyy"); // dd/MM/aaaa
-		carpeta.setFechaFin( "dd/MM/yyyy"); // dd/MM/aaaa
-		return new Carpeta();
+		return Carpeta.getMock();
 	}
 	
 	@GET
-	@Path("/getConcepto")
+	@Path("/getMockConcepto")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Concepto getConcepto()
 	{
-		return new Concepto();
+		return Concepto.getMock();
 	}
 
 	@GET
-	@Path("/getOrdenTrabajo")
+	@Path("/getMockOrdenTrabajo")
 	@Produces(MediaType.APPLICATION_JSON)
 	public OrdenTrabajo getOrdenTrabajo() {
-		return new OrdenTrabajo();
+		return OrdenTrabajo.getMock();
 	}
 	
 	@GET
-	@Path("/getEntidadComercial")
+	@Path("/getMockEntidadComercial")
 	@Produces(MediaType.APPLICATION_JSON)
 	public EntidadComercial getEntidadComercial() {
-		return new EntidadComercial();
+		return EntidadComercial.getMock();
 	}
-
-//	@POST
-//	@Path("/post")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response createTrackInJSON(Prueba track) {
-//
-//		String result = "Track saved : " + track;
-//		return Response.status(201).entity(result).build();
-//
-//	}
 	
 	@GET
 	@Path("/getCategoriaIVA")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<CategoriaIVA> getCategoriaIVA() {
 		return getIdNombreCategoriaIVA();
+	}
+	
+	@POST
+	@Path("/existeCodigoDeProveedor")
+	@Produces(MediaType.APPLICATION_JSON)
+	public MensajesRespuesta existeCodigoDeProveedor(Filtro filtro) {
+		return existeEntidadComercial(filtro.getValorBusqueda());
+	}
+	
+	@POST
+	@Path("/existeCliente")
+	@Produces(MediaType.APPLICATION_JSON)
+	public MensajesRespuesta existeCliente(Filtro filtro) {
+		return existeEntidadComercial(filtro.getValorBusqueda());
+	}
+	
+	private MensajesRespuesta existeEntidadComercial(String clave)  {
+		MensajesRespuesta mensajesRespuesta = new MensajesRespuesta();
+		try {
+			
+			LibertyaWSServiceLocator locator = new LibertyaWSServiceLocator();
+			locator.setLibertyaWSEndpointAddress(urlLibertyaWS);
+			
+			LibertyaWS lyws = locator.getLibertyaWS();
+			String id = getIDEntidadComercialByClave(lyws, clave, CLIENT_ID, ORG_ID);
+			
+			Boolean existe = id.length() != 0;
+			
+			if (existe) {
+				mensajesRespuesta.agregarMensaje("Existe el proveedor/cliente " + clave + " en Libertya");
+			} 
+			else {
+				mensajesRespuesta.agregarMensaje("No existe el proveedor/cliente " + clave + " en Libertya");
+			}
+		} catch (Throwable t) {
+			mensajesRespuesta.agregarMensaje("Error al realizar la consulta" + t.getMessage());
+		}
+		
+		return mensajesRespuesta;
+	}
+	
+	@POST
+	@Path("/filtrarConceptos")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Concepto> filtrarConceptos(Filtro filtro) {
+		List<Concepto> conceptos = new ArrayList<Concepto>();
+		
+		try {
+			LibertyaWSServiceLocator locator = new LibertyaWSServiceLocator();
+			locator.setLibertyaWSEndpointAddress(urlLibertyaWS);
+		
+			LibertyaWS lyws = locator.getLibertyaWS();
+			
+			FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", CLIENT_ID, ORG_ID);
+			recParam.addColumnToFilter("Value");
+			recParam.addColumnToFilter("Name");
+			String where = " isactive='Y' and ad_client_id = " + CLIENT_ID + " and value like '" + filtro.getValorBusqueda() + "%'";
+			
+			MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "M_Product",where , false);
+			if (recResult.isError()) {
+				return new ArrayList<Concepto>();
+			}
+			if (recResult.getRecords().isEmpty())
+				return new ArrayList<Concepto>();
+			
+			for (int i = 0; i < recResult.getRecords().size(); i++) {
+				Map<String, String> ret = recResult.getRecords().get(i);
+				
+				Concepto concepto = new Concepto(); 
+				concepto.setClaveConcepto(ret.get("Value"));
+				concepto.setDescripcion(ret.get("Name"));
+				
+				conceptos.add(concepto);
+			}
+		} catch (Throwable t) {
+			
+		}
+		
+		return conceptos;
+	}
+	
+	@GET
+	@Path("/getConceptos")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Concepto> getConceptos() {
+		List<Concepto> conceptos = new ArrayList<Concepto>();
+		
+		try {
+			LibertyaWSServiceLocator locator = new LibertyaWSServiceLocator();
+			locator.setLibertyaWSEndpointAddress(urlLibertyaWS);
+		
+			LibertyaWS lyws = locator.getLibertyaWS();
+			
+			FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", CLIENT_ID, ORG_ID);
+			recParam.addColumnToFilter("Value");
+			recParam.addColumnToFilter("Name");
+			String where = " isactive='Y' and ad_client_id = " + CLIENT_ID;
+			
+			MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "M_Product",where , false);
+			if (recResult.isError()) {
+				return new ArrayList<Concepto>();
+			}
+			if (recResult.getRecords().isEmpty())
+				return new ArrayList<Concepto>();
+			
+			for (int i = 0; i < recResult.getRecords().size(); i++) {
+				Map<String, String> ret = recResult.getRecords().get(i);
+				
+				Concepto concepto = new Concepto(); 
+				concepto.setClaveConcepto(ret.get("Value"));
+				concepto.setDescripcion(ret.get("Name"));
+				
+				conceptos.add(concepto);
+			}
+		} catch (Throwable t) {
+			
+		}
+		
+		return conceptos;
+	}
+	
+	@GET
+	@Path("/getMonedas")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Moneda> getMonedas() {
+		List<Moneda> monedas = new ArrayList<Moneda>();
+		
+		try {
+			LibertyaWSServiceLocator locator = new LibertyaWSServiceLocator();
+			locator.setLibertyaWSEndpointAddress(urlLibertyaWS);
+		
+			LibertyaWS lyws = locator.getLibertyaWS();
+			
+			FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", CLIENT_ID, ORG_ID);
+			recParam.addColumnToFilter("ISO_Code");
+			recParam.addColumnToFilter("Description");
+			String where = " isactive='Y'";
+			
+			MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "C_Currency",where , false);
+			if (recResult.isError()) {
+				return new ArrayList<Moneda>();
+			}
+			if (recResult.getRecords().isEmpty())
+				return new ArrayList<Moneda>();
+			
+			for (int i = 0; i < recResult.getRecords().size(); i++) {
+				Map<String, String> ret = recResult.getRecords().get(i);
+				
+				Moneda moneda = new Moneda(); 
+				moneda.setCodigoMoneda(ret.get("ISO_Code"));
+				moneda.setDescripcion(ret.get("Description"));
+				
+				monedas.add(moneda);
+			}
+		} catch (Throwable t) {
+			
+		}
+		
+		return monedas;
+	}
+	
+	@GET
+	@Path("/getVendedores")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getVendedores() {
+		List<String> vendedores = new ArrayList<String>();
+		
+		try {
+			LibertyaWSServiceLocator locator = new LibertyaWSServiceLocator();
+			locator.setLibertyaWSEndpointAddress(urlLibertyaWS);
+		
+			LibertyaWS lyws = locator.getLibertyaWS();
+			
+			FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", CLIENT_ID, ORG_ID);
+			recParam.addColumnToFilter("Name");
+			String where = " ad_client_id=" + CLIENT_ID;
+			
+			MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "ad_user",where , false);
+			if (recResult.isError()) {
+				return new ArrayList<String>();
+			}
+			if (recResult.getRecords().isEmpty())
+				return new ArrayList<String>();
+			
+			for (int i = 0; i < recResult.getRecords().size(); i++) {
+				Map<String, String> ret = recResult.getRecords().get(i);
+				
+				String vendedor = ret.get("Name");
+				
+				vendedores.add(vendedor);
+			}
+		} catch (Throwable t) {
+			
+		}
+		
+		return vendedores;
 	}
 	
 	@POST
@@ -154,21 +326,50 @@ public class JSONService {
 		return getEntidadesComerciales(nombre.getValorBusqueda());
 	}
 	
-	@POST
+	@GET
 	@Path("/getUnidadNegocios")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Campania> getCampanias() {
 		return consultarCampanias();
 	}
 	
-	@POST
+	@GET
 	@Path("/getProgramaVencimientos")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ProgramaVencimiento> getProgramaVencimientos() {
 		return consultarProgramaVencimientos();
 	}
 	
+	@GET
+	@Path("/getFormaDePago")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<FormaDePago> getFormaDePago() {
+		return Arrays.asList(FormaDePago.values());
+	}
 	
+	@POST
+	@Path("/guardarCarpeta")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public MensajesRespuesta guardarCarpeta(Carpeta carpeta) {
+		return procesarCarpeta(carpeta);
+	}
+
+	@POST
+	@Path("/guardarOrdenesTrabajo")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public MensajesRespuesta guardarOrdenTrabajo(OrdenTrabajo ordenTrabajo) {
+		return procesarOrdenTrabajo(ordenTrabajo);
+	}
+	
+	@POST
+	@Path("/guardarEntidadComercial")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public MensajesRespuesta guardarEntidadComercial(EntidadComercial entidadComercial) {
+		return procesarEntidadComercial(entidadComercial);
+	}
 	
 	private List<ProgramaVencimiento> consultarProgramaVencimientos() {
 		List<ProgramaVencimiento> lista = new ArrayList<ProgramaVencimiento>();
@@ -368,30 +569,6 @@ public class JSONService {
 		ret = recResult.getRecords().get(0);
 		
 		return ret;
-	}
-
-	@POST
-	@Path("/guardarCarpeta")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public MensajesRespuesta guardarCarpeta(Carpeta carpeta) {
-		return procesarCarpeta(carpeta);
-	}
-
-	@POST
-	@Path("/guardarOrdenesTrabajo")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public MensajesRespuesta guardarOrdenTrabajo(OrdenTrabajo ordenTrabajo) {
-		return procesarOrdenTrabajo(ordenTrabajo);
-	}
-	
-	@POST
-	@Path("/guardarEntidadComercial")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public MensajesRespuesta guardarEntidadComercial(EntidadComercial entidadComercial) {
-		return procesarEntidadComercial(entidadComercial);
 	}
 	
 	private MensajesRespuesta procesarEntidadComercial(EntidadComercial entidadComercial) {
@@ -708,14 +885,14 @@ public class JSONService {
 			
 			if (mensajesRespuesta.getHayErrores())
 				return mensajesRespuesta;
-			
+			/*Se ELIMINA YA QUE ESTE PROCESO NO DARA DE ALTA NI ACTUALIZARA ENTIDADES COMERCIALES
 			for (EntidadComercial entidadComercial : ordenTrabajoJson.getEntidadesComerciales())
 			{
 				MensajesRespuesta mensajesRespuestaComercial = new MensajesRespuesta();
 				mensajesRespuestaComercial = insertarOActualizarEntidadComercial(entidadComercial);
 				if (mensajesRespuestaComercial.getHayErrores())
 					return mensajesRespuestaComercial;
-			}
+			}*/
 			
 			// Conexión al WS
 			LibertyaWSServiceLocator locator = new LibertyaWSServiceLocator();
@@ -729,7 +906,11 @@ public class JSONService {
 			
 			ordenDeTrabajo.addColumnToHeader("c_doctypetarget_id", getIdDocTypeTarget(lyws, CLIENT_ID, ORG_ID));
 			ordenDeTrabajo.addColumnToHeader("dateordered", StringUtils.getFechaFormateado(ordenTrabajoJson.getFechaOrdenTrabajo(), "dd/MM/yyyy", "yyyy-MM-dd HH:mm:s")); // Fecha
-			String idEntidadComercial = getIDEntidadComercialByCuit(lyws, ordenTrabajoJson.getCliente(), CLIENT_ID, ORG_ID);
+			String idEntidadComercial = getIDEntidadComercialByClave(lyws, ordenTrabajoJson.getCliente(), CLIENT_ID, ORG_ID);
+			if (idEntidadComercial.isEmpty()) {
+				mensajesRespuesta.agregarMensaje("No existe la clave de empresa " + ordenTrabajoJson.getCliente() + " en Libertya");
+				return mensajesRespuesta;
+			}
 			// Se envia en los parametros del constructor
 			ordenDeTrabajo.addColumnToHeader("C_BPartner_Location_ID", getIdDireccionEntidadComercial(lyws, idEntidadComercial, CLIENT_ID, ORG_ID));
 			ordenDeTrabajo.addColumnToHeader("M_Warehouse_ID", getIdAlmacen(lyws, CLIENT_ID, ORG_ID));
@@ -775,9 +956,16 @@ public class JSONService {
 				
 				ordenDeTrabajo.addColumnToCurrentLine("M_Product_ID", getIdProducto(lyws, concepto.getClaveConcepto(), CLIENT_ID, ORG_ID));
 				
-				String idEntidadComercialProveedor = getIDEntidadComercialByCuit(lyws, concepto.getCodigoIdentificacion(), CLIENT_ID, ORG_ID);
-				if (!StringUtils.isEmpty(idEntidadComercialProveedor))
+				if (concepto.getCodigoDeProveedor() != null && !concepto.getCodigoDeProveedor().isEmpty()) {
+					// Fue enviado el codigo de proveedor y se evalua que exista en Libertya
+					String idEntidadComercialProveedor = getIDEntidadComercialByClave(lyws, concepto.getCodigoDeProveedor(), CLIENT_ID, ORG_ID);
+					
+					if (idEntidadComercialProveedor.isEmpty()) {
+						mensajesRespuesta.agregarMensaje("No existe la clave de empresa " + concepto.getCodigoDeProveedor() + " en Libertya");
+						return mensajesRespuesta;
+					}
 					ordenDeTrabajo.addColumnToCurrentLine("C_BPartner_ID", idEntidadComercialProveedor);
+				}
 			}
 
 			boolean completeOrder = true;
@@ -874,6 +1062,8 @@ public class JSONService {
 		
 		return ret.get("C_TaxCategory_ID");
 	}
+	
+	
 
 	private String getComercial(LibertyaWS lyws, String contactoCliente, Integer clientId, Integer orgId) throws RemoteException {
 		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
@@ -930,6 +1120,21 @@ public class JSONService {
 		Map<String, String> ret = recResult.getRecords().get(0);
 		
 		return ret.get("C_BPartner_Location_ID");
+	}
+	
+	private String getIDEntidadComercialByClave(LibertyaWS lyws, String value, Integer clientId, Integer orgId) throws RemoteException {
+		
+		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
+		recParam.addColumnToFilter("C_BPartner_ID");
+		String where = "value = '" + value + "'";
+		MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "C_BPartner",where , false);
+		if (recResult.getRecords().isEmpty())
+			return "";
+		
+		Map<String, String> ret = recResult.getRecords().get(0);
+		
+		return ret.get("C_BPartner_ID");
+		
 	}
 
 	private String getIDEntidadComercialByCuit(LibertyaWS lyws, String cuit, Integer clientId, Integer orgId) throws RemoteException {
@@ -1043,7 +1248,7 @@ public class JSONService {
 	private MensajesRespuesta validarEntidadComerciales(List<EntidadComercial> entidadesComerciales) {
 		MensajesRespuesta mensajesRespuestaConceptos = new MensajesRespuesta();
 		if (entidadesComerciales == null || entidadesComerciales.isEmpty())
-			return null;
+			return mensajesRespuestaConceptos;
 		for (EntidadComercial entidadComercial : entidadesComerciales) {
 			mensajesRespuestaConceptos.agregarTodosLosMensajes( validarEntidadComercial(entidadComercial));
 		}
