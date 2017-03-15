@@ -320,29 +320,30 @@ public class OrderInvoiceHelper {
 		}
 	}
 	
+	private MPriceList getIdPriceList(Boolean esVenta, int AD_Client_ID, String getTrxName) throws SQLException {
+		M_Table table = M_Table.get(Env.getCtx(), "M_PriceList");
+		
+		String sql = "SELECT * FROM M_PriceList where name = "+ (esVenta ? "'Ventas'" : "'Costo'") + " and ad_client_id = " + AD_Client_ID ;
+		
+		PreparedStatement ps = DB.prepareStatement(sql, getTrxName);
+		ResultSet rs = ps.executeQuery();
+
+		List<MPriceList> ordenesDeTrabajo = new ArrayList<MPriceList>();
+		while (rs.next()) {
+			ordenesDeTrabajo.add((MPriceList) table.getPO(rs, getTrxName));
+		}
+		
+		return !ordenesDeTrabajo.isEmpty() ? ordenesDeTrabajo.get(0) : null;
+	}
+	
 	private int getListaPrecio(int AD_Client_ID, int AD_Org_ID, String DocumentNo, int C_Project_ID, int C_Currency_ID, List<MOrderLine> mOrderLines,
 			Boolean esVenta) throws SQLException {
+		
 		String getTrxName = "trxName";
-		MPriceList mPriceList = new MPriceList(Env.getCtx(), 0, getTrxName);
 		
-		mPriceList.setIsActive(true);
-		
+		MPriceList mPriceList = getIdPriceList(esVenta, AD_Client_ID, getTrxName);
+
 		String nombreListaPrecio = DocumentNo + "-" + C_Project_ID + "-" + (esVenta ? "Ventas" : "Compras") + "-" + Env.getDateTime("yy-MM-dd HH:mm:ss");
-		log.log(Level.SEVERE, "Nombre de la lista de precio creada" + nombreListaPrecio);
-		mPriceList.setName(nombreListaPrecio);
-		mPriceList.setDescription("''");
-		mPriceList.setIsTaxIncluded(false);
-		
-		mPriceList.setIsSOPriceList(esVenta);
-		mPriceList.setIsDefault(true);
-		mPriceList.setC_Currency_ID(118);
-		mPriceList.setEnforcePriceLimit(false);
-		mPriceList.setPricePrecision(new BigDecimal("2.000000"));
-		
-		mPriceList.setIsPerceptionsIncluded(false);
-		
-		if (!mPriceList.save())
-			throw new SQLException(CLogger.retrieveErrorAsString());
 		
 		MPriceListVersion mPriceListVersion = new MPriceListVersion(mPriceList);
 		

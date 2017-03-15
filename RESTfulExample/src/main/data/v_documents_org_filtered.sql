@@ -1,9 +1,20 @@
+--20160628-1435 Mejoras a la funcionalidad de cuentas corrientes
+CREATE TYPE v_documents_org_type_condition_navi AS (documenttable text, document_id int, ad_client_id int, ad_org_id int, 
+					isactive char(1), created timestamp, createdby integer, updated timestamp, 
+					updatedby int, c_bpartner_id int, c_doctype_id integer, signo_issotrx int, 
+					doctypename varchar(60), doctypeprintname varchar(60), documentno varchar(60), 
+					issotrx bpchar, docstatus character(2), datetrx timestamp, dateacct timestamp, 
+					c_currency_id int, c_conversiontype_id int, amount numeric, 
+					c_invoicepayschedule_id integer, duedate timestamp, truedatetrx timestamp, 
+					socreditstatus char(1), c_order_id integer);
+
+DROP FUNCTION v_documents_org_filtered(integer, boolean, character);
 
 CREATE OR REPLACE FUNCTION v_documents_org_filtered(
     bpartner integer,
     summaryonly boolean,
     condition character)
-  RETURNS SETOF v_documents_org_type_condition AS
+  RETURNS SETOF v_documents_org_type_condition_navi AS
 $BODY$
 declare
     consulta varchar;
@@ -16,7 +27,7 @@ declare
     whereclause2 varchar;
     whereclause3 varchar;
     advancedcondition varchar;
-    adocument v_documents_org_type_condition;
+    adocument v_documents_org_type_condition_navi;
    
 BEGIN
     -- recuperar informacion minima indispensable si summaryonly es true.  en caso de ser false, debe joinearse/ordenarse, etc.
@@ -155,18 +166,18 @@ ALTER FUNCTION v_documents_org_filtered(integer, boolean, character)
   OWNER TO libertya;
 
   
---DROP de función v_documents_org_filtered(integer, boolean, character) y tipo v_documents_org_type_condition 
+--DROP de función v_documents_org_filtered(integer, boolean, character) y tipo v_documents_org_type_condition_navi 
 DROP FUNCTION v_documents_org_filtered(integer, boolean, character);
---DROP TYPE v_documents_org_type_condition;
--- Tipo v_documents_org_type_condition
---CREATE TYPE v_documents_org_type_condition AS (documenttable text, document_id int, ad_client_id int, ad_org_id int, 
---					isactive char(1), created timestamp, createdby integer, updated timestamp, 
---					updatedby int, c_bpartner_id int, c_doctype_id integer, signo_issotrx int, 
---					doctypename varchar(60), doctypeprintname varchar(60), documentno varchar(60), 
---					issotrx bpchar, docstatus character(2), datetrx timestamp, dateacct timestamp, 
---					c_currency_id int, c_conversiontype_id int, amount numeric, 
---					c_invoicepayschedule_id integer, duedate timestamp, truedatetrx timestamp, 
---					socreditstatus char(1), c_order_id integer, c_allocationhdr_id integer);
+DROP TYPE v_documents_org_type_condition_navi;
+-- Tipo v_documents_org_type_condition_navi
+CREATE TYPE v_documents_org_type_condition_navi AS (documenttable text, document_id int, ad_client_id int, ad_org_id int, 
+					isactive char(1), created timestamp, createdby integer, updated timestamp, 
+					updatedby int, c_bpartner_id int, c_doctype_id integer, signo_issotrx int, 
+					doctypename varchar(60), doctypeprintname varchar(60), documentno varchar(60), 
+					issotrx bpchar, docstatus character(2), datetrx timestamp, dateacct timestamp, 
+					c_currency_id int, c_conversiontype_id int, amount numeric, 
+					c_invoicepayschedule_id integer, duedate timestamp, truedatetrx timestamp, 
+					socreditstatus char(1), c_order_id integer, c_allocationhdr_id integer);
 
 --Función v_documents_org_filtered(integer, boolean, character, timestamp without time zone)
 CREATE OR REPLACE FUNCTION v_documents_org_filtered(
@@ -174,7 +185,7 @@ CREATE OR REPLACE FUNCTION v_documents_org_filtered(
     summaryonly boolean,
     condition character,
     dateto timestamp without time zone)
-  RETURNS SETOF v_documents_org_type_condition AS
+  RETURNS SETOF v_documents_org_type_condition_navi AS
 $BODY$
 declare
     consulta varchar;
@@ -194,7 +205,7 @@ declare
     selectAllocationReferencePayment varchar;
     selectAllocationReferenceCashline varchar;
     selectAllocationReferenceCredit varchar;
-    adocument v_documents_org_type_condition;
+    adocument v_documents_org_type_condition_navi;
    
 BEGIN
     whereclauseDateTo = ' ( 1 = 1 ) ';
@@ -369,7 +380,7 @@ CREATE OR REPLACE FUNCTION v_documents_org_filtered(
     bpartner integer,
     summaryonly boolean,
     condition character)
-  RETURNS SETOF v_documents_org_type_condition AS
+  RETURNS SETOF v_documents_org_type_condition_navi AS
 $BODY$
 BEGIN
 	return query select * from v_documents_org_filtered(bpartner, summaryonly, condition, null::timestamp);
