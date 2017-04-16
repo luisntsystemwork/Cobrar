@@ -57,7 +57,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class OrdenTrabajo {
 	
 	private String numeroOrdenTrabajo;
-     private String cliente; // <!--clave de busqueda del cliente? (el cliente se carga en crm o se carga primero en libertya?? lo tenemos que importar)-->
+     private String claveCliente; // <!--clave de busqueda del cliente? (el cliente se carga en crm o se carga primero en libertya?? lo tenemos que importar)-->
      private String contactoCliente; //<!--Opcional_: ver si se quiere registrar el nombre del contacto del cliente-->
     // Ver de pasar este argumento a tipo java.util.Date en lugar de String. Aunque lo estaria validando del lado del servidor.
      private String fechaOrdenTrabajo; // dd/mm/aaaa
@@ -76,7 +76,7 @@ public class OrdenTrabajo {
     public static OrdenTrabajo getMock() {
     	OrdenTrabajo ordenTrabajo = new OrdenTrabajo();
     	ordenTrabajo.setNumeroOrdenTrabajo( "1");
-    	ordenTrabajo.setCliente ( "IdentificadorFiscalCliente");
+    	ordenTrabajo.setClaveCliente ( "IdentificadorFiscalCliente");
     	ordenTrabajo.setContactoCliente ( "Nombre del contacto del cliente asignado, tal como fue creado en el sistema.");
        // Ver de pasar este argumento a tipo java.util.Date en lugar de String. Aunque lo estaria validando del lado del servidor.
     	ordenTrabajo.setFechaOrdenTrabajo ( "dd/MM/yyyy");
@@ -110,12 +110,19 @@ public class OrdenTrabajo {
 	public void setNumeroOrdenTrabajo(String numeroOrdenTrabajo) {
 		this.numeroOrdenTrabajo = numeroOrdenTrabajo;
 	}
-	public String getCliente() {
-		return cliente;
+	/**
+	 * @return the claveCliente
+	 */
+	public String getClaveCliente() {
+		return claveCliente;
 	}
-	public void setCliente(String cliente) {
-		this.cliente = cliente;
+	/**
+	 * @param claveCliente the claveCliente to set
+	 */
+	public void setClaveCliente(String claveCliente) {
+		this.claveCliente = claveCliente;
 	}
+
 	public String getContactoCliente() {
 		return contactoCliente;
 	}
@@ -177,7 +184,7 @@ public class OrdenTrabajo {
 	@Override
 	public String toString() {
 		return "OrdenTrabajo [numeroOrdenTrabajo=" + numeroOrdenTrabajo
-				+ ", cliente=" + cliente + ", contactoCliente="
+				+ ", claveCliente=" + claveCliente + ", contactoCliente="
 				+ contactoCliente + ", fechaOrdenTrabajo=" + fechaOrdenTrabajo
 				+ ", claveVendedor=" + claveVendedor + ", codigoMoneda="
 				+ codigoMoneda + ", formaDePago=" + formaDePago

@@ -222,7 +222,7 @@ public class OrderInvoiceHelper {
 	
 	private void createPedidosProveedorYRemitos(MOrder ordenTrabajo, String trxName) throws ModelException, SQLException {
 		
-		Map<Integer, List<MOrderLine>> orderLinePorCuitProveedor = getLineasPorEntidadComercial(ordenTrabajo);
+		Map<String, List<MOrderLine>> orderLinePorCuitProveedor = getLineasPorEntidadComercial(ordenTrabajo);
 		
 		/*
 		 * I.	Si ninguna línea tiene código de proveedor:
@@ -234,9 +234,9 @@ public class OrderInvoiceHelper {
 			actualizarEstadosFactura(ordenTrabajo, ESTADO_FACTURACION_FACTURADO, "FINALIZADO", trxName);
 			
 		
-		for(Integer idPartner : orderLinePorCuitProveedor.keySet() ) {
+		for(String proveedorId : orderLinePorCuitProveedor.keySet() ) {
 			
-			List<MOrderLine> conceptos = orderLinePorCuitProveedor.get(idPartner);
+			List<MOrderLine> conceptos = orderLinePorCuitProveedor.get(proveedorId);
 			// Se crea una lista de precio por pedido
 			int idListaPrecio = getListaPrecio(ordenTrabajo.getAD_Client_ID(), ordenTrabajo.getAD_Org_ID(),  
 					ordenTrabajo.getDocumentNo(), ordenTrabajo.getC_Project_ID(), ordenTrabajo.getC_Currency_ID(), 
@@ -252,8 +252,8 @@ public class OrderInvoiceHelper {
 			anOrder.set_Value("DateOrdered",        new java.sql.Timestamp((new Date()).getTime())); // Fecha
 		
 			// Se envia en los parametros del constructor
-			anOrder.set_Value("C_BPartner_Location_ID", getIdDireccionEntidadComercial(idPartner));
-			anOrder.set_Value("C_BPartner_ID",          idPartner);
+			anOrder.set_Value("C_BPartner_Location_ID", getIdDireccionEntidadComercial(proveedorId));
+			anOrder.set_Value("C_BPartner_ID",          Integer.valueOf(proveedorId));
 			anOrder.set_Value("M_Warehouse_ID",         ordenTrabajo.getM_Warehouse_ID());
 			
 			anOrder.setC_Currency_ID(ordenTrabajo.getC_Currency_ID());
@@ -323,7 +323,7 @@ public class OrderInvoiceHelper {
 	private MPriceList getIdPriceList(Boolean esVenta, int AD_Client_ID, String getTrxName) throws SQLException {
 		M_Table table = M_Table.get(Env.getCtx(), "M_PriceList");
 		
-		String sql = "SELECT * FROM M_PriceList where name = "+ (esVenta ? "'Ventas'" : "'Costo'") + " and ad_client_id = " + AD_Client_ID ;
+		String sql = "SELECT * FROM M_PriceList where name = "+ (esVenta ? "'Ventas'" : "'Compras Inicial'") + " and ad_client_id = " + AD_Client_ID ;
 		
 		PreparedStatement ps = DB.prepareStatement(sql, getTrxName);
 		ResultSet rs = ps.executeQuery();
@@ -343,38 +343,38 @@ public class OrderInvoiceHelper {
 		
 		MPriceList mPriceList = getIdPriceList(esVenta, AD_Client_ID, getTrxName);
 
-		String nombreListaPrecio = DocumentNo + "-" + C_Project_ID + "-" + (esVenta ? "Ventas" : "Compras") + "-" + Env.getDateTime("yy-MM-dd HH:mm:ss");
-		
-		MPriceListVersion mPriceListVersion = new MPriceListVersion(mPriceList);
-		
-		mPriceListVersion.setIsActive(true);
-		mPriceListVersion.setName(nombreListaPrecio);
-		mPriceListVersion.setDescription("");
-		
-		mPriceListVersion.setM_DiscountSchema_ID(1010101);
-		Date date = new Date();
-		mPriceListVersion.setValidFrom(new Timestamp(date.getTime()));
-		mPriceListVersion.setProcCreate("N");
-		
-		if (!mPriceListVersion.save())
-			throw new SQLException(CLogger.retrieveErrorAsString());
-		
-		for (int i = 0; i < mOrderLines.size(); i++) {
-			MOrderLine mOrderLine = mOrderLines.get(i);
-			String precio = esVenta ? mOrderLine.get_ValueAsString("PriceEntered") : mOrderLine.get_ValueAsString("preciomaximocompra");
-			int M_Product_ID = mOrderLine.getM_Product_ID();
-			BigDecimal PriceList = new BigDecimal(precio);
-			BigDecimal PriceStd =  new BigDecimal(precio);
-			BigDecimal PriceLimit = new BigDecimal(precio);
-			MProductPrice mProductPrice = new MProductPrice(mPriceListVersion, M_Product_ID, PriceList, PriceStd, PriceLimit);
-			mProductPrice.setIsActive(true);
-			
-			if (!mProductPrice.save())
-				throw new SQLException(CLogger.retrieveErrorAsString());
-		}
-		
-		/* === Commitear transaccion === */
-		Trx.getTrx(getTrxName).commit();
+//		String nombreListaPrecio = DocumentNo + "-" + C_Project_ID + "-" + (esVenta ? "Ventas" : "Compras") + "-" + Env.getDateTime("yy-MM-dd HH:mm:ss");
+//		
+//		MPriceListVersion mPriceListVersion = new MPriceListVersion(mPriceList);
+//		
+//		mPriceListVersion.setIsActive(true);
+//		mPriceListVersion.setName(nombreListaPrecio);
+//		mPriceListVersion.setDescription("");
+//		
+//		mPriceListVersion.setM_DiscountSchema_ID(1010101);
+//		Date date = new Date();
+//		mPriceListVersion.setValidFrom(new Timestamp(date.getTime()));
+//		mPriceListVersion.setProcCreate("N");
+//		
+//		if (!mPriceListVersion.save())
+//			throw new SQLException(CLogger.retrieveErrorAsString());
+//		
+//		for (int i = 0; i < mOrderLines.size(); i++) {
+//			MOrderLine mOrderLine = mOrderLines.get(i);
+//			String precio = esVenta ? mOrderLine.get_ValueAsString("PriceEntered") : mOrderLine.get_ValueAsString("preciomaximocompra");
+//			int M_Product_ID = mOrderLine.getM_Product_ID();
+//			BigDecimal PriceList = new BigDecimal(precio);
+//			BigDecimal PriceStd =  new BigDecimal(precio);
+//			BigDecimal PriceLimit = new BigDecimal(precio);
+//			MProductPrice mProductPrice = new MProductPrice(mPriceListVersion, M_Product_ID, PriceList, PriceStd, PriceLimit);
+//			mProductPrice.setIsActive(true);
+//			
+//			if (!mProductPrice.save())
+//				throw new SQLException(CLogger.retrieveErrorAsString());
+//		}
+//		
+//		/* === Commitear transaccion === */
+//		Trx.getTrx(getTrxName).commit();
 		
 		return mPriceList.getM_PriceList_ID();
 	}
@@ -416,7 +416,7 @@ public class OrderInvoiceHelper {
         return typeID;
 	}
 	
-	private Integer getIdDireccionEntidadComercial(Integer c_bpartner_id) throws SQLException {
+	private Integer getIdDireccionEntidadComercial(String proveedorId) throws SQLException {
 		
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
@@ -429,7 +429,7 @@ public class OrderInvoiceHelper {
 	            
 			pstmt = DB.prepareStatement( SQL );
 	
-			pstmt.setInt( 1, c_bpartner_id);
+			pstmt.setInt( 1, Integer.valueOf(proveedorId));
 	
 			rs = pstmt.executeQuery();
 			
@@ -454,28 +454,28 @@ public class OrderInvoiceHelper {
 	 * @param ordenTrabajo
 	 * @return
 	 */
-	private Map<Integer, List<MOrderLine>> getLineasPorEntidadComercial(MOrder ordenTrabajo) {
+	private Map<String, List<MOrderLine>> getLineasPorEntidadComercial(MOrder ordenTrabajo) {
 		
-		Map<Integer, List<MOrderLine>> retorno = new HashMap<Integer, List<MOrderLine>>();
+		Map<String, List<MOrderLine>> retorno = new HashMap<String, List<MOrderLine>>();
 		MOrderLine[] lineas = ordenTrabajo.getLines();
 		if (lineas == null || lineas.length == 0) {
 			return retorno;
 		}
 	
 		for (MOrderLine mOrderLine : lineas) {
-			 Integer cBPartnerID = mOrderLine.getC_BPartner_ID();
+			 String proveedorId = mOrderLine.get_ValueAsString("proveedor_id");
 			 // Pueden existir lineas sin entidad comercial, esto es porque son lineas de contratacion de servicios.
-			 if (cBPartnerID == null)
+			 if (proveedorId == null)
 				 continue;
 			 
-			 List<MOrderLine> lista = retorno.get(cBPartnerID);
+			 List<MOrderLine> lista = retorno.get(proveedorId);
 			 
 			 if (lista == null) {
 				 lista = new ArrayList<MOrderLine>();
 			 }
 			 
 			 lista.add(mOrderLine);
-			 retorno.put(cBPartnerID, lista);
+			 retorno.put(proveedorId, lista);
 		}
 		
 		log.log(Level.SEVERE, "Lineas ordenadas por Entidad " + retorno);

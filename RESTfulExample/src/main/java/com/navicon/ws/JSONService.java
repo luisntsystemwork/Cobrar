@@ -20,7 +20,6 @@ import org.libertya.ws.bean.parameter.BPartnerParameterBean;
 import org.libertya.ws.bean.parameter.CustomServiceParameterBean;
 import org.libertya.ws.bean.parameter.FilteredColumnsParameterBean;
 import org.libertya.ws.bean.parameter.OrderParameterBean;
-import org.libertya.ws.bean.parameter.ProjectParameterBean;
 import org.libertya.ws.bean.result.CustomServiceResultBean;
 import org.libertya.ws.bean.result.MultipleRecordsResultBean;
 import org.libertya.ws.bean.result.ResultBean;
@@ -795,12 +794,6 @@ public class JSONService {
 	
 	private void actualizarCarpeta(LibertyaWS lyws, String idCarpeta, Carpeta carpeta, MensajesRespuesta mensajesRespuesta) throws RemoteException {
 		
-		ProjectParameterBean project = new ProjectParameterBean("AdminLibertya", "AdminLibertya", CLIENT_ID, ORG_ID);
-		project.addColumnToCProject("value", carpeta.getClave());
-		project.addColumnToCProject("name", carpeta.getNombre());
-		project.addColumnToCProject("datecontract", carpeta.getFechaInicio());
-		project.addColumnToCProject("datefinish", carpeta.getFechaFin());
-		
 		CustomServiceParameterBean test22 = new CustomServiceParameterBean("AdminLibertya", "AdminLibertya", 1010016, 0);
 		// Nombre de la clase a invocar
 		test22.setClassName("org.libertya.ws.service.ProjectUpdateService");
@@ -829,12 +822,6 @@ public class JSONService {
 	}
 
 	private String agregarCarpeta(LibertyaWS lyws, Carpeta carpeta, MensajesRespuesta mensajesRespuesta) throws RemoteException {
-		
-		ProjectParameterBean project = new ProjectParameterBean("AdminLibertya", "AdminLibertya", CLIENT_ID, ORG_ID);
-		project.addColumnToCProject("value", carpeta.getClave());
-		project.addColumnToCProject("name", carpeta.getNombre());
-		project.addColumnToCProject("datecontract", carpeta.getFechaInicio());
-		project.addColumnToCProject("datefinish", carpeta.getFechaFin());
 		
 		CustomServiceParameterBean test22 = new CustomServiceParameterBean("AdminLibertya", "AdminLibertya", 1010016, 0);
 		// Nombre de la clase a invocar
@@ -906,9 +893,9 @@ public class JSONService {
 			
 			ordenDeTrabajo.addColumnToHeader("c_doctypetarget_id", getIdDocTypeTarget(lyws, CLIENT_ID, ORG_ID));
 			ordenDeTrabajo.addColumnToHeader("dateordered", StringUtils.getFechaFormateado(ordenTrabajoJson.getFechaOrdenTrabajo(), "dd/MM/yyyy", "yyyy-MM-dd HH:mm:s")); // Fecha
-			String idEntidadComercial = getIDEntidadComercialByClave(lyws, ordenTrabajoJson.getCliente(), CLIENT_ID, ORG_ID);
+			String idEntidadComercial = getIDEntidadComercialByClave(lyws, ordenTrabajoJson.getClaveCliente(), CLIENT_ID, ORG_ID);
 			if (idEntidadComercial.isEmpty()) {
-				mensajesRespuesta.agregarMensaje("No existe la clave de empresa " + ordenTrabajoJson.getCliente() + " en Libertya");
+				mensajesRespuesta.agregarMensaje("No existe la clave de empresa " + ordenTrabajoJson.getClaveCliente() + " en Libertya");
 				return mensajesRespuesta;
 			}
 			// Se envia en los parametros del constructor
@@ -941,6 +928,18 @@ public class JSONService {
 			
 			for (int i = 0; i  < ordenTrabajoJson.getConceptos().size() ; i++)
 			{
+				Concepto concepto = ordenTrabajoJson.getConceptos().get(i);
+				
+				concepto.setIdConceptoLibertya( getIdProducto(lyws, concepto.getClaveConcepto(), CLIENT_ID, ORG_ID));
+			}
+			
+			mensajesRespuesta = crearVersionesListaPrecios(lyws, ordenTrabajoJson.getCarpeta().getNombre(), ordenTrabajoJson.getConceptos());
+			if (mensajesRespuesta.getHayErrores()) {
+				return mensajesRespuesta;
+			}
+			
+			for (int i = 0; i  < ordenTrabajoJson.getConceptos().size() ; i++)
+			{
 			
 				Concepto concepto = ordenTrabajoJson.getConceptos().get(i);
 				ordenDeTrabajo.newDocumentLine();
@@ -954,17 +953,17 @@ public class JSONService {
 				
 				ordenDeTrabajo.addColumnToCurrentLine("C_Tax_ID", getIdImpuesto(lyws, concepto.getClaveConcepto(), CLIENT_ID, ORG_ID));
 				
-				ordenDeTrabajo.addColumnToCurrentLine("M_Product_ID", getIdProducto(lyws, concepto.getClaveConcepto(), CLIENT_ID, ORG_ID));
+				ordenDeTrabajo.addColumnToCurrentLine("M_Product_ID", concepto.getIdConceptoLibertya());
 				
-				if (concepto.getCodigoDeProveedor() != null && !concepto.getCodigoDeProveedor().isEmpty()) {
+				if (concepto.getClaveProveedor() != null && !concepto.getClaveProveedor().isEmpty()) {
 					// Fue enviado el codigo de proveedor y se evalua que exista en Libertya
-					String idEntidadComercialProveedor = getIDEntidadComercialByClave(lyws, concepto.getCodigoDeProveedor(), CLIENT_ID, ORG_ID);
+					String idEntidadComercialProveedor = getIDEntidadComercialByClave(lyws, concepto.getClaveProveedor(), CLIENT_ID, ORG_ID);
 					
 					if (idEntidadComercialProveedor.isEmpty()) {
-						mensajesRespuesta.agregarMensaje("No existe la clave de empresa " + concepto.getCodigoDeProveedor() + " en Libertya");
+						mensajesRespuesta.agregarMensaje("No existe la clave de empresa " + concepto.getClaveProveedor() + " en Libertya");
 						return mensajesRespuesta;
 					}
-					ordenDeTrabajo.addColumnToCurrentLine("C_BPartner_ID", idEntidadComercialProveedor);
+					ordenDeTrabajo.addColumnToCurrentLine("proveedor_id", idEntidadComercialProveedor);
 				}
 			}
 
@@ -993,6 +992,47 @@ public class JSONService {
 		
 		return mensajesRespuesta;
 
+	}
+
+	private MensajesRespuesta crearVersionesListaPrecios(LibertyaWS lyws, String nombreCarpeta, List<Concepto> conceptos) throws RemoteException {
+		
+		MensajesRespuesta mensajesRespuesta = new MensajesRespuesta();
+		
+		CustomServiceParameterBean parametros = new CustomServiceParameterBean("AdminLibertya", "AdminLibertya", 1010016, 0);
+		// Nombre de la clase a invocar
+		parametros.setClassName("org.libertya.ws.service.PriceListCreate");
+		
+		// Especificacion de parametros
+		parametros.addParameter("userName", "AdminLibertya");
+		parametros.addParameter("password", "AdminLibertya");
+		parametros.addParameter("AD_Client_ID", CLIENT_ID.toString());
+		parametros.addParameter("ad_org_id", ORG_ID.toString());
+		
+		parametros.addParameter("nombreCarpeta", nombreCarpeta);
+		for (int i = 0; i < conceptos.size(); i++) {
+			Concepto concepto = conceptos.get(i);
+			
+			String key = "PriceEntered" + StringUtils.leftPad(i+"", 2, "0");
+			parametros.addParameter(key, concepto.getPrecioFacturacion());
+			
+			key   = "preciomaximocompra" + StringUtils.leftPad(i+"", 2, "0");
+			parametros.addParameter(key, concepto.getPrecioMaximoCompra());
+			
+			key = "M_Product_ID" + StringUtils.leftPad(i+"", 2, "0");
+			parametros.addParameter(key, concepto.getIdConceptoLibertya());
+			
+		}
+		
+		CustomServiceResultBean customServiceResultBean = lyws.customService(parametros);
+		
+		if (customServiceResultBean.isError()) {
+			mensajesRespuesta.setHayErrores(Boolean.TRUE);
+			mensajesRespuesta.agregarMensaje(customServiceResultBean.getErrorMsg());
+		}
+		
+		System.out.println(customServiceResultBean);
+		
+		return mensajesRespuesta;
 	}
 
 	private String getIdPaymentTermId(LibertyaWS lyws, String programaVencimientos, Integer clientId, Integer orgId) throws RemoteException {

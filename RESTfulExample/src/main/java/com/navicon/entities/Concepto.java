@@ -20,9 +20,10 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 public class Concepto {
 	
 	private String claveConcepto; //</ClaveConcepto>
+	private String idConceptoLibertya;
     private String cantidad; // </Cantidad>
 	private String precioFacturacion; //</PrecioFacturacion>
-	private String codigoDeProveedor; //</CuitProveedor>
+	private String claveProveedor; //</CuitProveedor>
     private String precioMaximoCompra; //</PrecioMaximoCompra><!--precio limite -->
 	private String precioInformado; ///PrecioInformado>
 	private String descripcion;
@@ -33,7 +34,7 @@ public class Concepto {
 		concepto.setClaveConcepto( "Clave de búsqueda del concepto.");
 		concepto.setCantidad ( "Cantidad a Adquirir y facturar.");
 		concepto.setPrecioFacturacion ( "Precio al que se le debe facturar al cliente.");
-		concepto.setCodigoDeProveedor ( " Identificador único del proveedor al que debe pedirse el concepto, solo se debe informar si debe pedirse el concepto.");
+		concepto.setClaveProveedor ( " Identificador único del proveedor al que debe pedirse el concepto, solo se debe informar si debe pedirse el concepto.");
 		concepto.setPrecioMaximoCompra ( "Precio sobre el cual se realizará la orden de compra al proveedor.");
 		concepto.setPrecioInformado ( "Precio a mostrar al proveedor.");
 		
@@ -59,16 +60,16 @@ public class Concepto {
 		this.precioFacturacion = precioFacturacion;
 	}
 	/**
-	 * @return the codigoDeProveedor
+	 * @return the claveProveedor
 	 */
-	public String getCodigoDeProveedor() {
-		return codigoDeProveedor;
+	public String getClaveProveedor() {
+		return claveProveedor;
 	}
 	/**
-	 * @param codigoDeProveedor the codigoDeProveedor to set
+	 * @param claveProveedor the claveProveedor to set
 	 */
-	public void setCodigoDeProveedor(String codigoDeProveedor) {
-		this.codigoDeProveedor = codigoDeProveedor;
+	public void setClaveProveedor(String claveProveedor) {
+		this.claveProveedor = claveProveedor;
 	}
 	public String getPrecioMaximoCompra() {
 		return precioMaximoCompra;
@@ -94,12 +95,30 @@ public class Concepto {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+	
+	/**
+	 * @return the idConceptoLibertya
+	 */
+	public String getIdConceptoLibertya() {
+		return idConceptoLibertya;
+	}
+
+	/**
+	 * @param idConceptoLibertya the idConceptoLibertya to set
+	 */
+	public void setIdConceptoLibertya(String idConceptoLibertya) {
+		this.idConceptoLibertya = idConceptoLibertya;
+	}
+
 	@Override
 	public String toString() {
-		return "Carpeta [claveConcepto=" + claveConcepto + ", cantidad="
-				+ cantidad + ", precioFacturacion=" + precioFacturacion
-				+ ", codigoDeProveedor=" + codigoDeProveedor + ", precioMaximoCompra="
-				+ precioMaximoCompra + ", precioInformado=" + precioInformado
+		return "Carpeta [claveConcepto=" + claveConcepto + ", "
+				+ "cantidad=" + cantidad 
+				+ ", precioFacturacion=" + precioFacturacion
+				+ ", claveProveedor=" + claveProveedor 
+				+ ", precioMaximoCompra=" + precioMaximoCompra 
+				+ ", precioInformado=" + precioInformado 
+				+ ", idConceptoLibertya=" + idConceptoLibertya
 				+ "]";
 	}
 

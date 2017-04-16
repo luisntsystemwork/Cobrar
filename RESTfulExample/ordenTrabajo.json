@@ -26,3 +26,6 @@
 			"claveConcepto":"AMS",
 			"codigoDeProveedor": "07765"}]
 }
+
+
+{"fechaOrdenTrabajo":"01/04/2017","claveCliente":"00428","codigoMoneda":"ARS","contactoCliente":"","formaDePago":"EFECTIVO","programaVencimientos":"","claveUnidadNegocio":"IMO","carpeta":{"clave":"BL-0011","nombre":"BL-011","fechaInicio":"01/04/2017","fechaFin":"01/04/2017"},"conceptos":[{"cantidad":121,"precioFacturacion":12100,"precioMaximoCompra":6050,"precioInformado":10890,"claveConcepto":"FLETE TERRESTRE-INTERNAC","claveProveedor":"00428"},{"cantidad":1,"precioFacturacion":100,"precioMaximoCompra":50,"precioInformado":90,"claveConcepto":"MANEJODOC-LCLORIENTE","claveProveedor":"00428"},{"cantidad":1,"precioFacturacion":100,"precioMaximoCompra":50,"precioInformado":90,"claveConcepto":"MANTCONTENEDOR-ORIENTE","claveProveedor":"02178"}]}
