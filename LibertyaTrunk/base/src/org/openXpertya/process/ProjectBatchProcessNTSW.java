@@ -136,7 +136,7 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 					Date today = new Date();
 					Timestamp dateInvoiced = new Timestamp(today.getTime());
 					Timestamp dateAcct = new Timestamp(today.getTime());
-					int invoicePuntoDeVenta = 1;
+					int invoicePuntoDeVenta = 4;
 					int invoiceDocTypeTargetID =  getInvoiceDocTypeTargetID(invoicePuntoDeVenta, mOrder.getC_BPartner_ID(), mOrder.getAD_Client_ID(), mOrder.getAD_Org_ID()) ;
 					
 					// EN UNA UNICA TRANSACCION SE DEBERA:
