@@ -324,6 +324,10 @@ public class InfoOrder extends Info {
     private VLookup fEstadoFacturacion;
     
     private CLabel lEstadoFacturacion = new CLabel( "Estado Facturacion" );
+    
+    private CLabel lCarpeta = new CLabel( "Carpeta" );
+    
+    private VLookup fCarpeta;
 
     /**
      * Descripción de Método
@@ -377,6 +381,15 @@ public class InfoOrder extends Info {
         fEstadoFacturacion.setBackground( CompierePLAF.getInfoBackground());
         // Valor por defecto.
         fEstadoFacturacion.addActionListener( this );
+        
+        MLookupInfo mLookupInfo =  MLookupFactory.getLookup_TableDirWithCondition(Env.getCtx(), Env.getLanguage(Env.getCtx()),0,"C_Project", "C_Project_ID", "isActive", "Y");
+        MLookup mCarpeta = new MLookup( mLookupInfo,0 );
+
+        fCarpeta = new VLookup( "C_Project_ID",false,false,true,mCarpeta );
+        lCarpeta.setLabelFor( fCarpeta );
+        fCarpeta.setBackground( CompierePLAF.getInfoBackground());
+        // Valor por defecto.
+        fCarpeta.addActionListener( this );
 
         //
 
@@ -412,6 +425,9 @@ public class InfoOrder extends Info {
 
         // parameterPanel.add(lOrg_ID, null);
         // parameterPanel.add(fOrg_ID, null);
+        
+        parameterPanel.add( lCarpeta,new ALayoutConstraint( 3,0 ));
+        parameterPanel.add( fCarpeta,null );
 
     }    // statInit
 
@@ -585,6 +601,10 @@ public class InfoOrder extends Info {
         if( fEstadoFacturacion.getValue() != null ) {
             sql.append( " AND UPPER(o.estado_facturacion) LIKE ?" );
         }
+        
+        if( fCarpeta.getValue() != null ) {
+            sql.append( " AND o.c_project_id = ?" );
+        }
 
         //
 
@@ -661,6 +681,13 @@ public class InfoOrder extends Info {
 
             pstmt.setString( index++,estadoFacturacion);
             log.fine( "estado_facturacion LIKE " + estadoFacturacion );
+        }
+        
+        if( fCarpeta.getValue() != null ) {
+        	Integer carpeta = ( Integer ) fCarpeta.getValue();
+
+            pstmt.setInt( index++,carpeta);
+            log.fine( "c_project_id =  " + carpeta );
         }
 
         //

@@ -753,6 +753,164 @@ public class MLookupFactory {
         return retValue;
     }
     
+    static public MLookupInfo getLookup_TableDirWithCondition(Properties ctx, Language language, int WindowNo, String TableName, String ColumnName, String columnCondition, String valueCondition) {
+    	String key = "TableDir_"+language.getAD_Language()+"_"+ ColumnName;
+        int	ZoomWindow	= 0;
+        int	ZoomWindowPO	= 0;
+        MLookupInfo retValue = null;
+        
+        // get display column names
+        String	sql0	= "SELECT c.ColumnName,c.IsTranslated,c.AD_Reference_ID," + 
+        	"c.AD_Reference_Value_ID,t.AD_Window_ID,t.PO_Window_ID " + 
+        	"FROM AD_Table t" + 
+        	" INNER JOIN AD_Column c ON (t.AD_Table_ID=c.AD_Table_ID) " + 
+        	"WHERE TableName=?" + 
+        	" AND c.IsIdentifier='Y' " + 
+        	"ORDER BY c.SeqNo";
+
+        //
+        String	KeyColumn	= ColumnName;
+
+        //
+        ArrayList	list		= new ArrayList();
+        boolean		isTranslated	= false;
+
+        //
+        try {
+
+            PreparedStatement	pstmt	= DB.prepareStatement(sql0);
+
+            pstmt.setString(1, TableName);
+            //JOptionPane.showMessageDialog( null,"En MlookupInfo.getLookup con la consulta = "+sql0+" y con TableName ="+TableName,"..Fin", JOptionPane.INFORMATION_MESSAGE );
+
+            ResultSet	rs	= pstmt.executeQuery();
+
+            while (rs.next()) {
+
+                LookupDisplayColumn	ldc	= new LookupDisplayColumn(rs.getString(1), "Y".equals(rs.getString(2)), rs.getInt(3), rs.getInt(4));
+
+                list.add(ldc);
+
+                 s_log.fine("getLookup_TableDir****: " + ColumnName + " - " + ldc);
+                //
+                if (!isTranslated && ldc.IsTranslated) {
+                    isTranslated	= true;
+                }
+
+                ZoomWindow	= rs.getInt(5);
+                ZoomWindowPO	= rs.getInt(6);
+            }
+
+            rs.close();
+            pstmt.close();
+
+        } catch (SQLException e) {
+
+            s_log.log(Level.SEVERE, "getLookup_TableDir", e);
+
+            return null;
+        }
+
+        // Do we have columns ?
+        if (list.size() == 0) {
+
+            s_log.log(Level.SEVERE, "No Identifier records found...: " + ColumnName);
+
+            return null;
+        }
+
+        StringBuffer	realSQL	= new StringBuffer("SELECT ");
+
+        realSQL.append(TableName).append(".").append(KeyColumn).append(",NULL,");
+
+        StringBuffer	displayColumn	= new StringBuffer();
+        int		size		= list.size();
+
+        // Get Display Column
+        for (int i = 0; i < size; i++) {
+
+            if (i > 0) {
+                displayColumn.append(" ||'_'|| ");
+            }
+
+            LookupDisplayColumn	ldc	= (LookupDisplayColumn) list.get(i);
+
+            // translated
+            if (ldc.IsTranslated &&!Env.isBaseLanguage(language, TableName)) {
+
+                displayColumn.append(TableName).append("_Trl.").append(ldc.ColumnName);
+
+                // date
+
+            } else if (DisplayType.isDate(ldc.DisplayType)) {
+            	displayColumn.append(DB.TO_DATEFORMAT(TableName + "." + ldc.ColumnName, ldc.DisplayType, language.getAD_Language()));
+            }
+
+            // TableDir
+            else if (((ldc.DisplayType == DisplayType.TableDir) || (ldc.DisplayType == DisplayType.Search)) && ldc.ColumnName.endsWith("_ID")) {
+
+                String	embeddedSQL	= getLookup_TableDirEmbed(language, ldc.ColumnName, TableName);
+
+                if (embeddedSQL != null) {
+                    displayColumn.append("(").append(embeddedSQL).append(")");
+                }
+            }
+            
+            // Table
+            else if ((ldc.DisplayType == DisplayType.Table) && (ldc.AD_Reference_ID != 0)) {
+
+                String	embeddedSQL	= getLookup_TableEmbed(language, ldc.ColumnName, TableName, ldc.AD_Reference_ID);
+
+                if (embeddedSQL != null) {
+                    displayColumn.append("(").append(embeddedSQL).append(")");
+                }
+            }
+
+            // number
+            else if (DisplayType.isNumeric(ldc.DisplayType)) {
+            	displayColumn.append(DB.TO_CHAR(TableName + "." + ldc.ColumnName, ldc.DisplayType, language.getAD_Language()));
+            }
+            else if (DisplayType.isDate(ldc.DisplayType)) {
+            	displayColumn.append(DB.TO_DATEFORMAT(TableName + "." + ldc.ColumnName, ldc.DisplayType, language.getAD_Language()));
+            }
+            // TODO Faltaría el tipo de dato lista, para que te traiga el nombre
+			// de la lista y no el value
+            // String
+            else {
+                displayColumn.append(TableName).append(".").append(ldc.ColumnName);
+            }
+        }
+
+        realSQL.append(displayColumn.toString());
+        realSQL.append(",").append(TableName).append(".IsActive");
+
+        // Translation
+        if (isTranslated &&!Env.isBaseLanguage(language, TableName)) {
+            realSQL.append(" FROM ").append(TableName).append(" INNER JOIN ").append(TableName).append("_TRL ON (").append(TableName).append(".").append(KeyColumn).append("=").append(TableName).append("_Trl.").append(KeyColumn).append(" AND ").append(TableName).append("_Trl.AD_Language='").append(language.getAD_Language()).append("')");
+        } else		// no translation
+        {
+            realSQL.append(" FROM ").append(TableName);
+        }
+        
+        realSQL.append(" WHERE ").append(TableName).append(".").append(columnCondition).append("=").append("'").append(valueCondition).append("'");
+
+        // Order by Display
+        realSQL.append(" ORDER BY 3");
+
+        MQuery	zoomQuery	= null;		// corrected in VLookup
+
+        if (CLogMgt.isLevelFinest()) {
+            s_log.fine("ColumnName=" + ColumnName + " - " + realSQL);
+        }
+
+        retValue	= new MLookupInfo(realSQL.toString(), TableName, TableName + "." + KeyColumn, ZoomWindow, ZoomWindowPO, zoomQuery);
+
+        //Ader: Caching tambien en TableDir (20 - Jul - 10)
+        s_cacheRefTable.put(key, retValue.cloneIt());
+         
+        return retValue;
+    }
+    
     /**
      *  Get embedded SQL for TableDir Lookup (no translation)
      *
