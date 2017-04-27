@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.logging.Level;
 
 import javax.swing.ListSelectionModel;
@@ -48,12 +49,14 @@ import org.openXpertya.grid.ed.VNumber;
 import org.openXpertya.minigrid.IDColumn;
 import org.openXpertya.model.MLookup;
 import org.openXpertya.model.MLookupFactory;
+import org.openXpertya.model.MLookupInfo;
 import org.openXpertya.model.MOrder;
 import org.openXpertya.model.MQuery;
 import org.openXpertya.model.M_Table;
 import org.openXpertya.util.DB;
 import org.openXpertya.util.DisplayType;
 import org.openXpertya.util.Env;
+import org.openXpertya.util.Language;
 import org.openXpertya.util.Msg;
 import org.openXpertya.util.Util;
 
