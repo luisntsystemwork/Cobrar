@@ -44,6 +44,7 @@ import org.adempiere.webui.editor.WSearchEditor;
 import org.adempiere.webui.event.ValueChangeEvent;
 import org.adempiere.webui.event.ValueChangeListener;
 import org.adempiere.webui.event.WTableModelEvent;
+import org.openXpertya.apps.search.Info_Column;
 import org.openXpertya.apps.search.helper.OrderInvoiceHelper;
 import org.openXpertya.minigrid.ColumnInfo;
 import org.openXpertya.minigrid.IDColumn;
@@ -114,6 +115,7 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
     /**  Array of Column Info    */
     private static final ColumnInfo[] s_invoiceLayout = {
         new ColumnInfo(" ", "o.C_Order_ID", IDColumn.class),
+        new ColumnInfo("Carpeta", "(SELECT Name FROM C_Project PJ WHERE PJ.C_Project_ID=o.C_Project_ID)", String.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "C_BPartner_ID"), "(SELECT Name FROM C_BPartner bp WHERE bp.C_BPartner_ID=o.C_BPartner_ID)", String.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "DateOrdered"), "o.DateOrdered", Timestamp.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "DocumentNo"), "o.DocumentNo", String.class),

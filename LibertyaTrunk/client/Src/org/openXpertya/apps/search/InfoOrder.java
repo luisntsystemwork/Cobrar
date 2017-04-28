@@ -307,6 +307,7 @@ public class InfoOrder extends Info {
 
     private static final Info_Column[] s_invoiceLayout = {
         new Info_Column( " ","o.C_Order_ID",IDColumn.class ),
+        new Info_Column( "Carpeta", "(SELECT Name FROM C_Project PJ WHERE PJ.C_Project_ID=o.C_Project_ID)",String.class ),
         new Info_Column( Msg.translate( Env.getCtx(),"C_BPartner_ID" ), "(SELECT Name FROM C_BPartner bp WHERE bp.C_BPartner_ID=o.C_BPartner_ID)",String.class ),
         new Info_Column( Msg.translate( Env.getCtx(),"DateOrdered" ),   "o.DateOrdered",Timestamp.class ),
         new Info_Column( Msg.translate( Env.getCtx(),"DocumentNo" ),    "o.DocumentNo",String.class ),
