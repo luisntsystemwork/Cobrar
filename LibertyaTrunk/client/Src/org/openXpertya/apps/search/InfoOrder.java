@@ -383,7 +383,7 @@ public class InfoOrder extends Info {
         // Valor por defecto.
         fEstadoFacturacion.addActionListener( this );
         
-        MLookupInfo mLookupInfo =  MLookupFactory.getLookup_TableDirWithCondition(Env.getCtx(), Env.getLanguage(Env.getCtx()),0,"C_Project", "C_Project_ID", "isActive", "Y");
+        MLookupInfo mLookupInfo =  MLookupFactory.getLookup_TableDirWithCondition(Env.getCtx(), Env.getLanguage(Env.getCtx()),0,"C_Project", "C_Project_ID", "Name", "isActive", "Y");
         MLookup mCarpeta = new MLookup( mLookupInfo,0 );
 
         fCarpeta = new VLookup( "C_Project_ID",false,false,true,mCarpeta );
