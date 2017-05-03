@@ -50,12 +50,14 @@ import org.openXpertya.minigrid.ColumnInfo;
 import org.openXpertya.minigrid.IDColumn;
 import org.openXpertya.model.MLookup;
 import org.openXpertya.model.MLookupFactory;
+import org.openXpertya.model.MLookupInfo;
 import org.openXpertya.model.MOrder;
 import org.openXpertya.model.MQuery;
 import org.openXpertya.model.M_Table;
 import org.openXpertya.util.DB;
 import org.openXpertya.util.DisplayType;
 import org.openXpertya.util.Env;
+import org.openXpertya.util.KeyNamePair;
 import org.openXpertya.util.Language;
 import org.openXpertya.util.Msg;
 import org.openXpertya.util.Util;
@@ -92,10 +94,12 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 	private Label lblDocumentNo;
     private Label lblDescription;
     private Label lblDateOrdered;
-    private Label lblOrderRef;
+    private Label lblEstadoFacturacion;
+    private Label lblCarpeta;
     private Label lblGrandTotal;
     
     private Combobox fEstadoFacturacionNavicon;
+    private Combobox fCarpeta;
     private Textbox txtDocumentNo;
     private Textbox txtDescription;
     private Textbox txtOrderRef;
@@ -337,7 +341,8 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
         lblDocumentNo = new Label(Util.cleanAmp(Msg.translate(Env.getCtx(), "DocumentNo")));
         lblDescription = new Label(Msg.translate(Env.getCtx(), "Description"));
         lblDateOrdered = new Label(Msg.translate(Env.getCtx(), "DateOrdered"));
-        lblOrderRef = new Label("Estado Facturación");
+        lblEstadoFacturacion = new Label("Estado Facturación");
+        lblCarpeta = new Label("Carpeta");
         lblGrandTotal = new Label(Msg.translate(Env.getCtx(), "GrandTotal"));
         
         txtDocumentNo = new Textbox();
@@ -393,6 +398,26 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 			
     		fEstadoFacturacionNavicon.appendItem(object.getName(), object.getValue());
 		}
+ 		
+ 		MLookupInfo mLookupInfo =  MLookupFactory.getLookup_TableDirWithCondition(Env.getCtx(), Env.getLanguage(Env.getCtx()),0,"C_Project", "C_Project_ID", "Name", "isActive", "Y");
+ 		MLookup mCarpeta = new MLookup( mLookupInfo,0 );
+ 		
+ 		fCarpeta = new Combobox();
+ 		fCarpeta.setAutocomplete(true);
+ 		fCarpeta.setAutodrop(true);
+ 		fCarpeta.setId("lstLanguage");
+ 		fCarpeta.addEventListener(Events.ON_SELECT, this);
+ 		fCarpeta.setWidth("220px");
+
+        // Update Language List
+ 		fCarpeta.getItems().clear();
+ 		
+ 		ArrayList availableLanguages2 = mCarpeta.getData(false, false, false, true);
+ 		for (Iterator iterator = availableLanguages2.iterator(); iterator.hasNext();) {
+ 			KeyNamePair object = (KeyNamePair) iterator.next();
+			
+ 			fCarpeta.appendItem(object.getName(), object.getKey());
+		}
         
         
     }
@@ -437,7 +462,7 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 		rows.appendChild(row);
 		//row.appendChild(lblOrderRef.rightAlign());
 		//row.appendChild(txtOrderRef);
-		row.appendChild(lblOrderRef.rightAlign());
+		row.appendChild(lblEstadoFacturacion.rightAlign());
 		row.appendChild(fEstadoFacturacionNavicon);
 		row.appendChild(lblGrandTotal.rightAlign());
 		hbox = new Hbox();
@@ -445,7 +470,13 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 		hbox.appendChild(new Label("-"));
 		hbox.appendChild(amountTo);
 		row.appendChild(hbox);
-        
+		
+		row = new Row();
+		row.setSpans("1, 1, 1, 2");
+		rows.appendChild(row);
+		row.appendChild(lblCarpeta.rightAlign());
+		row.appendChild(fCarpeta);
+
 		layout = new Borderlayout();
         layout.setWidth("100%");
         layout.setHeight("100%");
@@ -522,6 +553,9 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
         //
         if( fEstadoFacturacionNavicon.getValue() != null && !fEstadoFacturacionNavicon.getValue().trim().isEmpty()) {
             sql.append( " AND UPPER(o.estado_facturacion) LIKE ?" );
+        }
+        if( fCarpeta.getValue() != null && !fCarpeta.getValue().trim().isEmpty()) {
+        	sql.append( " AND o.c_project_id = ?" );
         }
         Date fromDate = null;
         Date toDate = null;
@@ -619,6 +653,13 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 
             pstmt.setString( index++,estadoFacturacion);
             log.fine( "estado_facturacion LIKE " + estadoFacturacion );
+        }
+        
+        if( fCarpeta.getValue() != null && !fCarpeta.getValue().trim().isEmpty()) {
+        	Integer carpeta = Integer.parseInt(fCarpeta.getSelectedItem().getValue().toString());
+
+            pstmt.setInt( index++,carpeta);
+            log.fine( "c_project_id =  " + carpeta );
         }
         
             Date fromD = null;
