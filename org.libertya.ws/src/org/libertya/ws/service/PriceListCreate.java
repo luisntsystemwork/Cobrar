@@ -40,8 +40,8 @@ public class PriceListCreate implements CustomServiceInterface {
 		
 		for (int i = 0; i < 99; i++) 
 		{
-			String key = "PriceEntered" + StringUtils.leftPad(i+"", 2, "0");
-			ArrayList<String> priceEnteredArray = content.get(key);
+			String key = "precioFacturacion" + StringUtils.leftPad(i+"", 2, "0");
+			ArrayList<String> precioFacturacionArray = content.get(key);
 			
 			key   = "preciomaximocompra" + StringUtils.leftPad(i+"", 2, "0");
 			ArrayList<String> preciomaximocompraArray = content.get(key);
@@ -49,13 +49,13 @@ public class PriceListCreate implements CustomServiceInterface {
 			key = "M_Product_ID" + StringUtils.leftPad(i+"", 2, "0");
 			ArrayList<String> mProductIDArray = content.get(key);
 			
-			if (priceEnteredArray == null || preciomaximocompraArray == null || mProductIDArray == null) {
+			if (precioFacturacionArray == null || preciomaximocompraArray == null || mProductIDArray == null) {
 				break;
 			}
-			String priceEntered = priceEnteredArray.get(0);
+			String precioFacturacion = precioFacturacionArray.get(0);
 			String preciomaximocompra = preciomaximocompraArray.get(0);
 			String mProductID = mProductIDArray.get(0);
-			PriceProduct priceProduct = new PriceProduct(new BigDecimal(priceEntered), new BigDecimal(preciomaximocompra), Integer.valueOf(mProductID));
+			PriceProduct priceProduct = new PriceProduct(new BigDecimal(precioFacturacion), new BigDecimal(preciomaximocompra), Integer.valueOf(mProductID));
 			
 			priceParameterBean.addPriceProduct(priceProduct);
 		}

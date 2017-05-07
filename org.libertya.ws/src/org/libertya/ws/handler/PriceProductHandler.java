@@ -83,7 +83,7 @@ public class PriceProductHandler extends DocumentHandler{
 	
 	private MProductPrice generarMProductPrice(Boolean esVenta, MPriceListVersion mPriceListVersion, PriceProduct priceProduct) throws SQLException {
 		
-		BigDecimal precio = esVenta ? priceProduct.getPriceEntered() : priceProduct.getPrecioMaximoCompra();
+		BigDecimal precio = esVenta ? priceProduct.getPrecioFacturacion() : priceProduct.getPrecioMaximoCompra();
 		int M_Product_ID = priceProduct.getMProductID();
 		BigDecimal PriceList = precio;
 		BigDecimal PriceStd =  precio;

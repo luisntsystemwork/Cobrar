@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 
 public class PriceProduct {
 	
-	private BigDecimal priceEntered;
+	private BigDecimal precioFacturacion;
 	
 	private BigDecimal precioMaximoCompra;
 	
 	private Integer mProductID;
 	
-	public PriceProduct(BigDecimal priceEntered, BigDecimal precioMaximoCompra, Integer mProductID) {
-		this.priceEntered = priceEntered;
+	public PriceProduct(BigDecimal precioFacturacion, BigDecimal precioMaximoCompra, Integer mProductID) {
+		this.precioFacturacion = precioFacturacion;
 		this.precioMaximoCompra = precioMaximoCompra;
 		this.mProductID = mProductID;
 	}
@@ -19,8 +19,8 @@ public class PriceProduct {
 	/**
 	 * @return the priceEntered
 	 */
-	public BigDecimal getPriceEntered() {
-		return priceEntered;
+	public BigDecimal getPrecioFacturacion() {
+		return precioFacturacion;
 	}
 
 	/**

@@ -966,8 +966,8 @@ public class JSONService {
 					ordenDeTrabajo.addColumnToCurrentLine("proveedor_id", idEntidadComercialProveedor);
 				}
 			}
-
-			boolean completeOrder = true;
+			// Para que deje la orden abierta y pueda ser modificada desde libertya.
+			boolean completeOrder = false;
 			boolean createInvoice = false;
 			boolean completeInvoice = false;
 			ResultBean orderResult = lyws.orderCreateCustomer(ordenDeTrabajo, Integer.valueOf(idEntidadComercial), null, null, completeOrder, createInvoice, completeInvoice);
@@ -1012,7 +1012,7 @@ public class JSONService {
 		for (int i = 0; i < conceptos.size(); i++) {
 			Concepto concepto = conceptos.get(i);
 			
-			String key = "PriceEntered" + StringUtils.leftPad(i+"", 2, "0");
+			String key = "precioFacturacion" + StringUtils.leftPad(i+"", 2, "0");
 			parametros.addParameter(key, concepto.getPrecioFacturacion());
 			
 			key   = "preciomaximocompra" + StringUtils.leftPad(i+"", 2, "0");
@@ -1243,7 +1243,7 @@ public class JSONService {
 		
 		if (!StringUtils.isDate(ordenTrabajo.getFechaOrdenTrabajo(),
 				"dd/MM/yyyy")) {
-			mensajesRespuesta.agregarMensaje("la fecha de la orden de trabajo no es correcta.");
+			mensajesRespuesta.agregarMensaje("la fecha de la orden de trabajo no es correcta. Formato correcto: dd/MM/yyyy");
 			mensajesRespuesta.setHayErrores(Boolean.TRUE);
 		}
 		

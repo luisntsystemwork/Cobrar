@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,8 +23,6 @@ import org.openXpertya.model.MLocation;
 import org.openXpertya.model.MOrder;
 import org.openXpertya.model.MOrderLine;
 import org.openXpertya.model.MPriceList;
-import org.openXpertya.model.MPriceListVersion;
-import org.openXpertya.model.MProductPrice;
 import org.openXpertya.model.M_Column;
 import org.openXpertya.model.M_Table;
 import org.openXpertya.model.PO;
@@ -342,39 +339,6 @@ public class OrderInvoiceHelper {
 		String getTrxName = "trxName";
 		
 		MPriceList mPriceList = getIdPriceList(esVenta, AD_Client_ID, getTrxName);
-
-//		String nombreListaPrecio = DocumentNo + "-" + C_Project_ID + "-" + (esVenta ? "Ventas" : "Compras") + "-" + Env.getDateTime("yy-MM-dd HH:mm:ss");
-//		
-//		MPriceListVersion mPriceListVersion = new MPriceListVersion(mPriceList);
-//		
-//		mPriceListVersion.setIsActive(true);
-//		mPriceListVersion.setName(nombreListaPrecio);
-//		mPriceListVersion.setDescription("");
-//		
-//		mPriceListVersion.setM_DiscountSchema_ID(1010101);
-//		Date date = new Date();
-//		mPriceListVersion.setValidFrom(new Timestamp(date.getTime()));
-//		mPriceListVersion.setProcCreate("N");
-//		
-//		if (!mPriceListVersion.save())
-//			throw new SQLException(CLogger.retrieveErrorAsString());
-//		
-//		for (int i = 0; i < mOrderLines.size(); i++) {
-//			MOrderLine mOrderLine = mOrderLines.get(i);
-//			String precio = esVenta ? mOrderLine.get_ValueAsString("PriceEntered") : mOrderLine.get_ValueAsString("preciomaximocompra");
-//			int M_Product_ID = mOrderLine.getM_Product_ID();
-//			BigDecimal PriceList = new BigDecimal(precio);
-//			BigDecimal PriceStd =  new BigDecimal(precio);
-//			BigDecimal PriceLimit = new BigDecimal(precio);
-//			MProductPrice mProductPrice = new MProductPrice(mPriceListVersion, M_Product_ID, PriceList, PriceStd, PriceLimit);
-//			mProductPrice.setIsActive(true);
-//			
-//			if (!mProductPrice.save())
-//				throw new SQLException(CLogger.retrieveErrorAsString());
-//		}
-//		
-//		/* === Commitear transaccion === */
-//		Trx.getTrx(getTrxName).commit();
 		
 		return mPriceList.getM_PriceList_ID();
 	}
@@ -524,6 +488,12 @@ public class OrderInvoiceHelper {
 	{
 		try 
 		{
+			
+			if (!sePuedeGenerarFactura(ordenTrabajo)) {
+				log.log(Level.SEVERE, "No se puede generar la factura: " + ordenTrabajo);
+				return null;
+			}
+			
 			log.log(Level.SEVERE, "Creacion de factura a partir de la orden: " + ordenTrabajo);
 			
 			// Instanciar la nueva factura
@@ -558,11 +528,17 @@ public class OrderInvoiceHelper {
 			MOrderLine[] orderLines = ordenTrabajo.getLines();
 			for (int i=0; i<orderLines.length; i++)
 			{
+				MOrderLine mOrderLine = orderLines[i];
+				// No se generara la linea si el precio es igual a cero.
+				if (BigDecimal.ZERO.equals(mOrderLine.getPriceEntered())) {
+					continue;
+				}
+				
 				// Crear nueva linea y setearle los datos originales de la linea de pedido
 				MInvoiceLine anInvoiceLine = new MInvoiceLine(anInvoice);
-				anInvoiceLine.setOrderLine(orderLines[i]);
+				anInvoiceLine.setOrderLine(mOrderLine);
 				// Copia general de campos de cabecera
-				CreateFromInvoice.copyLineValuesFromOrderLine(anInvoice, ordenTrabajo, anInvoiceLine, orderLines[i], ordenTrabajo.getCtx(), trxName);
+				CreateFromInvoice.copyLineValuesFromOrderLine(anInvoice, ordenTrabajo, anInvoiceLine, mOrderLine, ordenTrabajo.getCtx(), trxName);
 				// Copiar los datos de la linea de pedido en la linea de la factura
 				copyPOValues(orderLines[i], anInvoiceLine);
 				// Persistir la linea
@@ -600,6 +576,20 @@ public class OrderInvoiceHelper {
 		}
 	}
 	
+	private boolean sePuedeGenerarFactura(MOrder ordenTrabajo) {
+		
+		MOrderLine[] orderLines = ordenTrabajo.getLines();
+		for (int i=0; i<orderLines.length; i++)
+		{
+			MOrderLine mOrderLine = orderLines[i];
+			
+			if (!BigDecimal.ZERO.equals(mOrderLine.getPriceEntered())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private List<MOrderLine> crearLista(MOrderLine[] lines) {
 		List<MOrderLine> array = new ArrayList<MOrderLine>();
 		
@@ -758,27 +748,6 @@ public class OrderInvoiceHelper {
 
 		pstmtLine.close();
 	}
-
-	private void decrementarSecuenciador(Connection con) throws SQLException {
-		
-			
-		String sql = "UPDATE ad_sequence "
-				+ " SET currentnext=? "
-				+ "WHERE ad_sequence_id = ?";
-		
-		PreparedStatement pstmt = con.prepareStatement(sql);
-        
-		// pstmt = new CPreparedStatement( ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE, sql, "Actualizacion" );
-
-        pstmt.setInt( 1, this.currentNext);
-        
-        pstmt.setInt( 2, this.adSequenceId);
-
-        pstmt.executeUpdate();
-
-        pstmt.close();
-		
-	}
 	
 	public boolean sePuedeRechazar(MOrder mOrder) {
 		if (ESTADO_FACTURACION_RECHAZADA.equals(mOrder.get_Value("estado_facturacion"))
@@ -817,15 +786,6 @@ public class OrderInvoiceHelper {
 			throw t;
 		}
 		
-	}
-	
-	
-
-	private String getFechaFormateado(Date date, String formatoDestino) {
-		
-		SimpleDateFormat sdf = new SimpleDateFormat(formatoDestino);
-		return sdf.format(date);
-			
 	}
 
 	public void habilitarOrdenParaBatch(MOrder mOrder) throws SQLException {
