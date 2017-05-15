@@ -429,7 +429,7 @@ public class OrderInvoiceHelper {
 		for (MOrderLine mOrderLine : lineas) {
 			 String proveedorId = mOrderLine.get_ValueAsString("proveedor_id");
 			 // Pueden existir lineas sin entidad comercial, esto es porque son lineas de contratacion de servicios.
-			 if (proveedorId == null)
+			 if (proveedorId == null || proveedorId.length() == 0)
 				 continue;
 			 
 			 List<MOrderLine> lista = retorno.get(proveedorId);
@@ -530,7 +530,7 @@ public class OrderInvoiceHelper {
 			{
 				MOrderLine mOrderLine = orderLines[i];
 				// No se generara la linea si el precio es igual a cero.
-				if (BigDecimal.ZERO.equals(mOrderLine.getPriceEntered())) {
+				if (BigDecimal.ZERO.compareTo(mOrderLine.getPriceEntered()) == 0) {
 					continue;
 				}
 				
@@ -582,8 +582,8 @@ public class OrderInvoiceHelper {
 		for (int i=0; i<orderLines.length; i++)
 		{
 			MOrderLine mOrderLine = orderLines[i];
-			
-			if (!BigDecimal.ZERO.equals(mOrderLine.getPriceEntered())) {
+			// Hay un precio distinto a cero.
+			if (BigDecimal.ZERO.compareTo(mOrderLine.getPriceEntered()) != 0) {
 				return true;
 			}
 		}
@@ -817,18 +817,5 @@ public class OrderInvoiceHelper {
 		}
 		
 	}
-
-	/*public void createPriceList(MOrderLine[] lines) {
-		
-		MPriceList mPriceList = new MPriceList(Env.getCtx(), 0, "trxName");
-		mPriceList.set_Value("ad_client_id, ad_client_id);
-		
-		MPriceListVersion priceListVersion = new MPriceListVersion(mPriceList);
-		
-		for (MOrderLine mOrderLine : lines) {
-			
-		}
-		
-	}*/
 	
 }
