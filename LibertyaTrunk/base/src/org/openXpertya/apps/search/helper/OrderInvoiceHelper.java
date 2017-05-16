@@ -749,10 +749,22 @@ public class OrderInvoiceHelper {
 		pstmtLine.close();
 	}
 	
+	/**
+	 * Cambia el estado de las OT seleccionadas que se encuentren en estado distinto de “Facturado” a “Rechazadas”.
+	 * 
+	 * @param mOrder
+	 * @return
+	 */
 	public boolean sePuedeRechazar(MOrder mOrder) {
-		if (ESTADO_FACTURACION_RECHAZADA.equals(mOrder.get_Value("estado_facturacion"))
-				|| ESTADO_FACTURACION_ERROR.equals(mOrder.get_Value("estado_facturacion")))
+		Object estadoFacturacion = mOrder.get_Value("estado_facturacion");
+		// No se puede rechazar una orden rechazada
+		if (ESTADO_FACTURACION_RECHAZADA.equals(estadoFacturacion)) {
+			return false;
+		}
+		// El estado es distinto a facturado => se puede rechazar
+		if (!ESTADO_FACTURACION_FACTURADO.equals(estadoFacturacion)) {
 			return true;
+		}
 		
 		return false;
 	}

@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.adempiere.webui.apps.AEnv;
+import org.adempiere.webui.component.Button;
 import org.adempiere.webui.component.Checkbox;
 import org.adempiere.webui.component.Combobox;
 import org.adempiere.webui.component.Datebox;
@@ -38,13 +39,10 @@ import org.adempiere.webui.component.NumberBox;
 import org.adempiere.webui.component.Row;
 import org.adempiere.webui.component.Rows;
 import org.adempiere.webui.component.Textbox;
-import org.adempiere.webui.editor.WEditor;
-import org.adempiere.webui.editor.WLocatorEditor;
 import org.adempiere.webui.editor.WSearchEditor;
 import org.adempiere.webui.event.ValueChangeEvent;
 import org.adempiere.webui.event.ValueChangeListener;
 import org.adempiere.webui.event.WTableModelEvent;
-import org.openXpertya.apps.search.Info_Column;
 import org.openXpertya.apps.search.helper.OrderInvoiceHelper;
 import org.openXpertya.minigrid.ColumnInfo;
 import org.openXpertya.minigrid.IDColumn;
@@ -58,7 +56,6 @@ import org.openXpertya.util.DB;
 import org.openXpertya.util.DisplayType;
 import org.openXpertya.util.Env;
 import org.openXpertya.util.KeyNamePair;
-import org.openXpertya.util.Language;
 import org.openXpertya.util.Msg;
 import org.openXpertya.util.Util;
 import org.openXpertya.util.ValueNamePair;
@@ -181,7 +178,10 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
     private org.adempiere.webui.component.Button btnDelete = new org.adempiere.webui.component.Button(); /* Agregado */
     
     private void agregarBotonFacturas() {
-    	confirmPanel.addButton(confirmPanel.createButton( "Account" ));
+    	Button aprobar = confirmPanel.createButton( "Account" );
+    	//aprobar.setLabel("Aprobar");
+    	aprobar.setTooltiptext("Aprobar");
+    	confirmPanel.addButton(aprobar);
     	this.btnInvoice = confirmPanel.getButton("Account");
     	this.btnInvoice.setEnabled(Boolean.TRUE);
     	
@@ -235,6 +235,9 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
         
         this.statusBar.setStatusLine(builder.toString());
         
+        executeQuery();
+        renderItems();
+        
     }
 	
 	public void rechazarOrdenTrabajo() {
@@ -243,6 +246,7 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 		
 		ArrayList<Integer> recordIds = this.getSelectedRowKeys();
 		StringBuilder msgError = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 	    for (int r = 0; r < recordIds.size(); r++) {
 	    	
 	    	Integer	id	=  recordIds.get(r);
@@ -252,17 +256,19 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
 				
 				OrderInvoiceHelper helper = new OrderInvoiceHelper();
 				
-				if (!helper.sePuedeRechazar(mOrder))
+				if (!helper.sePuedeRechazar(mOrder)) {
+					builder.append("No se puede rechazar " + mOrder.getDocumentNo() + " estado: " + mOrder.get_Value("estado_facturacion") + ".\n");
 					continue;
+				}
 				
 				helper.rechazarOrdenTrabajo(mOrder);
-				
+				builder.append("Se ha rechazado correctamente la orden de trabajo " + mOrder.getDocumentNo() + ".\n");
 			} catch (Throwable e1) {
 				msgError.append("No se pudieron procesar las Ordenes de trabajo " + id + ", por favor intente nuevamente más tarde\n");
 			}
 	    }
-	    StringBuilder builder = new StringBuilder();
-        builder.append("Se han rechazado correctamente las ordenes de trabajo  seleccionadas.\n");
+	    
+        
         if (msgError.length() != 0)
         	builder.append(msgError.toString());
         
@@ -270,6 +276,8 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
         
         this.statusBar.setStatusLine(builder.toString());
         
+        executeQuery();
+        renderItems();
     }
 	    
     private int getInvoiceDocTypeTargetID(int adClientID, int adOrgID) {
