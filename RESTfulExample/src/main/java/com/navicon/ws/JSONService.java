@@ -671,7 +671,7 @@ public class JSONService {
 				return mensajesRespuesta;
 			}
 			
-			System.out.println(resultado);
+			log.log(Level.SEVERE,resultado.toString());
 			
 		} catch (Exception e) {
 			throw e;
@@ -768,6 +768,8 @@ public class JSONService {
 	
 	private String insertarOActualizarCarpeta(Carpeta carpeta, MensajesRespuesta mensajesRespuesta) throws Exception {
 		
+		log.log(Level.SEVERE, "Se insertara o actualizara la carpeta: " + carpeta);
+		
 		try {
 		
 			LibertyaWSServiceLocator locator = new LibertyaWSServiceLocator();
@@ -778,14 +780,16 @@ public class JSONService {
 			String idCarpeta = existeCarpeta(lyws, carpeta.getClave());
 			
 			if (StringUtils.isEmpty(idCarpeta)) {
-				return agregarCarpeta(lyws, carpeta, mensajesRespuesta);
+				log.log(Level.SEVERE,"No existe la carpeta");
+				idCarpeta = agregarCarpeta(lyws, carpeta, mensajesRespuesta);
 			}
 			else
 			{
+				log.log(Level.SEVERE,"Existe la carpeta, se actualizara");
 				actualizarCarpeta(lyws, idCarpeta, carpeta, mensajesRespuesta);
-				return idCarpeta;
 			}
-		
+			log.log(Level.SEVERE, "El id de carpeta a insertar en la orden es: " + idCarpeta);
+			return idCarpeta;
 		} catch (Exception e) {
 			throw e;
 		}
@@ -816,7 +820,7 @@ public class JSONService {
 			mensajesRespuesta.agregarMensaje(customServiceResultBean.getErrorMsg());
 		}
 		
-		System.out.println(customServiceResultBean);
+		log.log(Level.SEVERE, customServiceResultBean.toString());
 		
 		
 	}
@@ -845,9 +849,9 @@ public class JSONService {
 			mensajesRespuesta.agregarMensaje(customServiceResultBean.getErrorMsg());
 		}
 		
-		String idCarpeta = customServiceResultBean.getMainResult().get("C_Project_ID");
+		String idCarpeta = customServiceResultBean.getResult()[0].getValues()[0];// getMainResult().get("C_Project_ID");
 		
-		System.out.println(customServiceResultBean);
+		log.log(Level.SEVERE,customServiceResultBean.toString());
 		
 		return idCarpeta;
 		
@@ -870,8 +874,10 @@ public class JSONService {
 			// Inserta o actualiza la carpeta.
 			String idCarpeta = insertarOActualizarCarpeta(ordenTrabajoJson.getCarpeta(), mensajesRespuesta);
 			
-			if (mensajesRespuesta.getHayErrores())
+			if (mensajesRespuesta.getHayErrores()) {
+				log.log(Level.SEVERE, "Existen mensajes de error: " + mensajesRespuesta);
 				return mensajesRespuesta;
+			}
 			/*Se ELIMINA YA QUE ESTE PROCESO NO DARA DE ALTA NI ACTUALIZARA ENTIDADES COMERCIALES
 			for (EntidadComercial entidadComercial : ordenTrabajoJson.getEntidadesComerciales())
 			{
@@ -896,6 +902,7 @@ public class JSONService {
 			String idEntidadComercial = getIDEntidadComercialByClave(lyws, ordenTrabajoJson.getClaveCliente(), CLIENT_ID, ORG_ID);
 			if (idEntidadComercial.isEmpty()) {
 				mensajesRespuesta.agregarMensaje("No existe la clave de empresa " + ordenTrabajoJson.getClaveCliente() + " en Libertya");
+				log.log(Level.SEVERE, mensajesRespuesta.toString());
 				return mensajesRespuesta;
 			}
 			// Se envia en los parametros del constructor
@@ -911,7 +918,7 @@ public class JSONService {
 			if (FormaDePago.A_CREDITO.equals(formaDePago)) {
 				ordenDeTrabajo.addColumnToHeader("C_PaymentTerm_ID", getIdPaymentTermId(lyws, ordenTrabajoJson.getProgramaVencimientos(), CLIENT_ID, ORG_ID));
 			}
-			
+			log.log(Level.SEVERE, "Se asociara el id de carpeta: " + idCarpeta);
 			ordenDeTrabajo.addColumnToHeader("C_Project_ID", idCarpeta);
 			// MARCAR AL C_ORDER COMO Transaccion de venta
 			// Se debe marcar IsSOTrx='Y'
@@ -935,6 +942,7 @@ public class JSONService {
 			
 			mensajesRespuesta = crearVersionesListaPrecios(lyws, ordenTrabajoJson.getCarpeta().getNombre(), ordenTrabajoJson.getConceptos());
 			if (mensajesRespuesta.getHayErrores()) {
+				log.log(Level.SEVERE, "Error al crear las versiones de las listas de precios: " + mensajesRespuesta);
 				return mensajesRespuesta;
 			}
 			
@@ -977,14 +985,14 @@ public class JSONService {
 				return mensajesRespuesta;
 			}
 				
-			System.out.println(orderResult);
+			log.log(Level.SEVERE, "Orden retornada : " + orderResult);
 			String idOrden = orderResult.getMainResult().get("Order_DocumentNo");
 			mensajesRespuesta.setIdOrden(idOrden);
-			System.out.println(" -------------- \n ");
+			log.log(Level.SEVERE, "Mensaje a retornar: " + mensajesRespuesta);
 		}
 		catch (Exception e)
 		{
-			log.log(Level.SEVERE, "Error" + e.getMessage(), e);
+			log.log(Level.SEVERE,"Error" + e.getMessage(), e);
 			mensajesRespuesta.agregarMensaje(e.getMessage());
 			mensajesRespuesta.setHayErrores(Boolean.TRUE);
 			return mensajesRespuesta;
@@ -995,7 +1003,7 @@ public class JSONService {
 	}
 
 	private MensajesRespuesta crearVersionesListaPrecios(LibertyaWS lyws, String nombreCarpeta, List<Concepto> conceptos) throws RemoteException {
-		
+		log.log(Level.SEVERE, "Se crearan las versiones de las listas de precions para los conceptos: " + conceptos);
 		MensajesRespuesta mensajesRespuesta = new MensajesRespuesta();
 		
 		CustomServiceParameterBean parametros = new CustomServiceParameterBean("AdminLibertya", "AdminLibertya", 1010016, 0);
@@ -1030,7 +1038,7 @@ public class JSONService {
 			mensajesRespuesta.agregarMensaje(customServiceResultBean.getErrorMsg());
 		}
 		
-		System.out.println(customServiceResultBean);
+		log.log(Level.SEVERE, customServiceResultBean.toString());
 		
 		return mensajesRespuesta;
 	}
@@ -1106,6 +1114,7 @@ public class JSONService {
 	
 
 	private String getComercial(LibertyaWS lyws, String contactoCliente, Integer clientId, Integer orgId) throws RemoteException {
+		log.log(Level.SEVERE, "Se buscara el id del comercial de ventas : " + contactoCliente);
 		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
 		recParam.addColumnToFilter("ad_user_id");
 		MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "ad_user", "name = '" + contactoCliente + "'", false);
@@ -1117,6 +1126,7 @@ public class JSONService {
 	}
 
 	private String getIdMonedaARS(LibertyaWS lyws, String codigoISOMoneda, Integer clientId, Integer orgId) throws RemoteException {
+		log.log(Level.SEVERE, "Se buscara el id de la moneda: " + codigoISOMoneda);
 		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
 		recParam.addColumnToFilter("C_Currency_ID");
 		MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "C_Currency", "iso_code = '" + codigoISOMoneda + "'", false);
@@ -1128,6 +1138,7 @@ public class JSONService {
 	}
 
 	private String getIdListaPrecioVentas(LibertyaWS lyws, Integer clientId, Integer orgId) throws RemoteException {
+		log.log(Level.SEVERE, "Se buscara la lista de precio de ventas para el cliente " + clientId);
 		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
 		recParam.addColumnToFilter("M_PriceList_ID");
 		MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "M_PriceList", "name = 'Ventas' and ad_client_id = " + clientId.toString(), false);
@@ -1139,7 +1150,7 @@ public class JSONService {
 	}
 
 	private String getIdAlmacen(LibertyaWS lyws, Integer clientId, Integer orgId) throws RemoteException {
-
+		log.log(Level.SEVERE, "Se buscara el almacen de la entidad comercial: " + clientId);
 		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
 		recParam.addColumnToFilter("M_Warehouse_ID");
 		MultipleRecordsResultBean recResult = lyws.recordQuery(recParam, "M_Warehouse", "AD_Org_ID =" + orgId.toString(), false);
@@ -1151,7 +1162,7 @@ public class JSONService {
 	}
 
 	private String getIdDireccionEntidadComercial(LibertyaWS locator, String value, Integer clientId, Integer orgId) throws NumberFormatException, RemoteException {
-		
+		log.log(Level.SEVERE, "Se buscara la direccion de la entidad comercial: " + value);
 		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
 		recParam.addColumnToFilter("C_BPartner_Location_ID");
 		MultipleRecordsResultBean recResult = locator.recordQuery(recParam, "C_BPartner_Location", "c_bpartner_id =" + value, false);
@@ -1163,7 +1174,7 @@ public class JSONService {
 	}
 	
 	private String getIDEntidadComercialByClave(LibertyaWS lyws, String value, Integer clientId, Integer orgId) throws RemoteException {
-		
+		log.log(Level.SEVERE, "Se buscara la entidad comercial: " + value);
 		FilteredColumnsParameterBean recParam = new FilteredColumnsParameterBean("AdminLibertya", "AdminLibertya", clientId, orgId);
 		recParam.addColumnToFilter("C_BPartner_ID");
 		String where = "value = '" + value + "'";
