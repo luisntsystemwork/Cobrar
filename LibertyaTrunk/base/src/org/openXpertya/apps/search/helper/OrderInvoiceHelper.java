@@ -290,9 +290,13 @@ public class OrderInvoiceHelper {
 				
 				anOrderLine.setLine(i++);
 				anOrderLine.setQtyEntered( concepto.getQtyEntered());
-				anOrderLine.setPriceActual( concepto.getPriceActual());
+				//anOrderLine.setPriceActual( concepto.getPriceActual());
+				//Usar OT: 50054
+				//maximocompra = 500 deberia llegar
+				anOrderLine.setPriceActual(((BigDecimal)concepto.get_Value("preciomaximocompra")));
 				anOrderLine.setQtyOrdered( concepto.getQtyOrdered());
-				anOrderLine.setPriceEntered(concepto.getPriceEntered());
+				//anOrderLine.setPriceEntered(concepto.getPriceEntered());
+				anOrderLine.setPriceEntered(((BigDecimal)concepto.get_Value("preciomaximocompra")));
 				
 				// columnas agregadas a c_orderline
 				//ordenDeTrabajo.addColumnToHeader("precioMaximoCompra", concepto.getPrecioMaximoCompra());

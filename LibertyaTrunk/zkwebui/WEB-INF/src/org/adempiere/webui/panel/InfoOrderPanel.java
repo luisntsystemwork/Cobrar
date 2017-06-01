@@ -118,16 +118,18 @@ public class InfoOrderPanel extends InfoPanel implements ValueChangeListener
         new ColumnInfo(" ", "o.C_Order_ID", IDColumn.class),
         new ColumnInfo("Carpeta", "(SELECT Name FROM C_Project PJ WHERE PJ.C_Project_ID=o.C_Project_ID)", String.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "C_BPartner_ID"), "(SELECT Name FROM C_BPartner bp WHERE bp.C_BPartner_ID=o.C_BPartner_ID)", String.class),
+        new ColumnInfo( "Estado Facturacion","o.Estado_Facturacion",String.class ),
+        new ColumnInfo(Msg.translate(Env.getCtx(), "Description"), "o.Description", String.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "DateOrdered"), "o.DateOrdered", Timestamp.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "DocumentNo"), "o.DocumentNo", String.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "C_Currency_ID"), "(SELECT ISO_Code FROM C_Currency c WHERE c.C_Currency_ID=o.C_Currency_ID)", String.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "GrandTotal"), "o.GrandTotal",  BigDecimal.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "ConvertedAmount"), "currencyBase(o.GrandTotal,o.C_Currency_ID,o.DateAcct, o.AD_Client_ID,o.AD_Org_ID)", BigDecimal.class),
         new ColumnInfo(Msg.translate(Env.getCtx(), "IsSOTrx"), "o.IsSOTrx", Boolean.class),
-        new ColumnInfo(Msg.translate(Env.getCtx(), "Description"), "o.Description", String.class),
-        new ColumnInfo(Msg.translate(Env.getCtx(), "POReference"), "o.POReference", String.class),
+//        new ColumnInfo(Msg.translate(Env.getCtx(), "Description"), "o.Description", String.class),
+        new ColumnInfo(Msg.translate(Env.getCtx(), "POReference"), "o.POReference", String.class)
         ////
-        new ColumnInfo( "Estado Facturacion","o.Estado_Facturacion",String.class )
+//        new ColumnInfo( "Estado Facturacion","o.Estado_Facturacion",String.class )
     };
     
     protected InfoOrderPanel(int WindowNo, String value,

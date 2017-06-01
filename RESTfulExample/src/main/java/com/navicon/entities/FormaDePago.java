@@ -47,7 +47,7 @@ public enum FormaDePago {
     			return f;
     	}
     	
-    	return EFECTIVO;
+    	return null;
     }
 	
 }

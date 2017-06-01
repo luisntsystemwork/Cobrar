@@ -129,7 +129,8 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 	            OrderInvoiceHelper helper = new OrderInvoiceHelper();
 	            try {
 	            	Env.setContext(Env.getCtx(), "#AD_Client_ID", mOrder.getAD_Client_ID());
-	            	Env.setContext( Env.getCtx(),"$C_Currency_ID",mOrder.getC_Currency_ID());
+	            	// 118 es PESOS y es la moneda de la compania
+	            	Env.setContext( Env.getCtx(),"$C_Currency_ID", 118);
 	            	Env.setContext( Env.getCtx(),"#AD_User_ID", 1010717);
 	            	Env.setContext( Env.getCtx(),"$AD_User_ID", 1010717);
 					String invoiceTipoComprobante = "FC";
@@ -138,6 +139,8 @@ public class ProjectBatchProcessNTSW extends SvrProcess {
 					Timestamp dateAcct = new Timestamp(today.getTime());
 					int invoicePuntoDeVenta = 4;
 					int invoiceDocTypeTargetID =  getInvoiceDocTypeTargetID(invoicePuntoDeVenta, mOrder.getC_BPartner_ID(), mOrder.getAD_Client_ID(), mOrder.getAD_Org_ID()) ;
+					// Se actualiza la descripcion por si se reproceso la orden
+					mOrder.setDescription("");
 					
 					// EN UNA UNICA TRANSACCION SE DEBERA:
 					// CREAR LA FACTURA PARA EL CLIENTE

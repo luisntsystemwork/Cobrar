@@ -1140,14 +1140,14 @@ public abstract class InfoPanel extends Window implements EventListener, WTableM
     }  //  onEvent
 
 	private void showBusyDialog() {
-		progressWindow = new BusyDialog();
-		progressWindow.setPage(this.getPage());
-		progressWindow.doHighlighted();
+//		progressWindow = new BusyDialog();
+//		progressWindow.setPage(this.getPage());
+//		progressWindow.doHighlighted();
 	}
 
 	private void hideBusyDialog() {
-		progressWindow.dispose();
-		progressWindow = null;
+//		progressWindow.dispose();
+//		progressWindow = null;
 	}
 
     public void onQueryCallback()
