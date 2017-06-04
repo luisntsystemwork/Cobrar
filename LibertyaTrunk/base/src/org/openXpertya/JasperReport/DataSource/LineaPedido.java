@@ -1,6 +1,5 @@
 package org.openXpertya.JasperReport.DataSource;
 
-import java.math.BigDecimal;
 
 
 /**
@@ -11,21 +10,21 @@ public class LineaPedido implements Comparable<LineaPedido>{
 	private String documento;
 	private String numeroDoc;
 	private String concepto;
-	private BigDecimal lineTotalAmt;
+	private String lineTotalAmt;
 	private String isoCode;
-	private BigDecimal precioMaximoCompra;
-	private BigDecimal precioInformado;
+	private String precioMaximoCompra;
+	private String precioInformado;
 	private String razonSocial;
 	private String dateInvoicedFormated;
-	private BigDecimal tipoCambio;
-
-
+	private String tipoCambio;
+	
+	public static final LineaPedido NULL = new LineaPedido("-", "-", "-", "-", "-", "-", "-", "-", "-", "-");
 
 	public LineaPedido(String documento, String numerodoc, String concepto,
-			BigDecimal lineTotalAmt, String iso_code,
-			BigDecimal preciomaximocompra, BigDecimal precioinformado,
+			String lineTotalAmt, String iso_code,
+			String preciomaximocompra, String precioinformado,
 			String razonsocial, String dateInvoicedFormated,
-			BigDecimal tipocambio) {
+			String tipocambio) {
 		super();
 		
 		this.documento = documento;
@@ -76,7 +75,7 @@ public class LineaPedido implements Comparable<LineaPedido>{
 	/**
 	 * @return the lineTotalAmt
 	 */
-	public BigDecimal getLineTotalAmt() {
+	public String getLineTotalAmt() {
 		return lineTotalAmt;
 	}
 
@@ -96,7 +95,7 @@ public class LineaPedido implements Comparable<LineaPedido>{
 	/**
 	 * @return the precioMaximoCompra
 	 */
-	public BigDecimal getPrecioMaximoCompra() {
+	public String getPrecioMaximoCompra() {
 		return precioMaximoCompra;
 	}
 
@@ -106,7 +105,7 @@ public class LineaPedido implements Comparable<LineaPedido>{
 	/**
 	 * @return the precioInformado
 	 */
-	public BigDecimal getPrecioInformado() {
+	public String getPrecioInformado() {
 		return precioInformado;
 	}
 
@@ -136,7 +135,7 @@ public class LineaPedido implements Comparable<LineaPedido>{
 	/**
 	 * @return the tipoCambio
 	 */
-	public BigDecimal getTipoCambio() {
+	public String getTipoCambio() {
 		return tipoCambio;
 	}
 
@@ -146,5 +145,7 @@ public class LineaPedido implements Comparable<LineaPedido>{
 	@Override
 	public int compareTo(LineaPedido o) {
 		return numeroDoc.compareTo(o.numeroDoc);
-	}		
+	}
+
+	
 }

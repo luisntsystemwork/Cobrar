@@ -23,10 +23,6 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
-	<parameter name="TOTALCOMPROBANTES" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="TOTALIMPORTES" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="TOTALNOGRAVADOS" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="TOTALGRAVADOS" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="HOJA" isForPrompting="false" class="java.lang.Integer"/>
 	<parameter name="COMPANIA" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="LOCALIZACION" isForPrompting="false" class="java.lang.String"/>
@@ -37,17 +33,20 @@
 	<parameter name="ORG_NAME" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="ORG_LOCALIZATION" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="TOTAL_INGRESADO" isForPrompting="false" class="java.math.BigDecimal"/>
+	<parameter name="COMPILED_SUBREPORT_PROVEEDOR" isForPrompting="false" class="java.io.InputStream"/>
+	<parameter name="SUBREPORT_PROVEEDOR_DATASOURCE" isForPrompting="false" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="TOTAL_INGRESADO_HBL" isForPrompting="false" class="java.math.BigDecimal"/>
 
 	<field name="TIPOCOMPROBANTE_LINEA" class="java.lang.String"/>
 	<field name="NUMEROFACTURA_LINEA" class="java.lang.String"/>
 	<field name="CONCEPTO_LINEA" class="java.lang.String"/>
-	<field name="IMPORTE_LINEA" class="java.math.BigDecimal"/>
+	<field name="IMPORTE_LINEA" class="java.lang.String"/>
 	<field name="MONEDA_LINEA" class="java.lang.String"/>
-	<field name="IMPORTE_PESOS_LINEA" class="java.math.BigDecimal"/>
-	<field name="IMPORTE_HBL_LINEA" class="java.math.BigDecimal"/>
+	<field name="IMPORTE_PESOS_LINEA" class="java.lang.String"/>
+	<field name="IMPORTE_HBL_LINEA" class="java.lang.String"/>
 	<field name="RAZON_SOCIAL_LINEA" class="java.lang.String"/>
 	<field name="FECHA_LINEA" class="java.lang.String"/>
-	<field name="TIPO_CAMBIO_LINEA" class="java.math.BigDecimal"/>
+	<field name="TIPO_CAMBIO_LINEA" class="java.lang.String"/>
 
 
 		<group  name="TIPODOC" >
@@ -403,7 +402,7 @@
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTE_LINEA} == null ? java.math.BigDecimal.ZERO : $F{IMPORTE_LINEA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{IMPORTE_LINEA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -445,7 +444,7 @@
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTE_PESOS_LINEA} == null ? java.math.BigDecimal.ZERO : $F{IMPORTE_PESOS_LINEA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{IMPORTE_PESOS_LINEA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -459,7 +458,7 @@
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTE_HBL_LINEA} == null ? java.math.BigDecimal.ZERO : $F{IMPORTE_HBL_LINEA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{IMPORTE_HBL_LINEA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -501,7 +500,7 @@
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TIPO_CAMBIO_LINEA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO_CAMBIO_LINEA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -515,138 +514,6 @@
 		</pageFooter>
 		<summary>
 			<band height="186"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="79"
-						y="142"
-						width="63"
-						height="11"
-						key="textField"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TOTALCOMPROBANTES}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="0"
-						y="84"
-						width="53"
-						height="16"
-						forecolor="#010101"
-						backcolor="#FFFFFF"
-						key="staticText-16"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[TOTALES]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="79"
-						y="103"
-						width="63"
-						height="11"
-						key="textField-2"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TOTALGRAVADOS}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="79"
-						y="116"
-						width="63"
-						height="11"
-						key="textField-3"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TOTALNOGRAVADOS}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="79"
-						y="128"
-						width="63"
-						height="11"
-						key="textField-4"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TOTALIMPORTES}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="0"
-						y="103"
-						width="79"
-						height="11"
-						forecolor="#010101"
-						backcolor="#FFFFFF"
-						key="staticText-17"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[Neto Gravado:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="0"
-						y="116"
-						width="79"
-						height="11"
-						forecolor="#010101"
-						backcolor="#FFFFFF"
-						key="staticText-18"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[Neto No Grav.:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="0"
-						y="128"
-						width="79"
-						height="11"
-						forecolor="#010101"
-						backcolor="#FFFFFF"
-						key="staticText-21"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[Importe:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="0"
-						y="142"
-						width="79"
-						height="11"
-						forecolor="#010101"
-						backcolor="#FFFFFF"
-						key="staticText-22"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[Facturado:]]></text>
-				</staticText>
 				<staticText>
 					<reportElement
 						mode="Transparent"
@@ -667,7 +534,7 @@
 					<reportElement
 						x="273"
 						y="5"
-						width="55"
+						width="53"
 						height="11"
 						key="textField-21"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
@@ -675,6 +542,31 @@
 						<font size="7"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$P{TOTAL_INGRESADO}]]></textFieldExpression>
+				</textField>
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="30"
+						width="535"
+						height="30"
+						key="subreport-1"
+						positionType="Float"/>
+					<dataSourceExpression><![CDATA[$P{SUBREPORT_PROVEEDOR_DATASOURCE}]]></dataSourceExpression>
+					<subreportExpression  class="java.io.InputStream"><![CDATA[$P{COMPILED_SUBREPORT_PROVEEDOR}]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="328"
+						y="5"
+						width="53"
+						height="11"
+						key="textField-22"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$P{TOTAL_INGRESADO_HBL}]]></textFieldExpression>
 				</textField>
 			</band>
 		</summary>

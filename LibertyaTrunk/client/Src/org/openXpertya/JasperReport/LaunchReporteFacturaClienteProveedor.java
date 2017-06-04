@@ -1,45 +1,36 @@
 package org.openXpertya.JasperReport;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
 import org.openXpertya.JasperReport.DataSource.JasperReportsUtil;
-import org.openXpertya.JasperReport.DataSource.ReporteFacturaClienteProveedorDataSource;
-import org.openXpertya.model.MOrder;
+import org.openXpertya.JasperReport.DataSource.ReporteFacturaClienteDataSource;
 import org.openXpertya.model.MProcess;
 import org.openXpertya.process.ProcessInfo;
 import org.openXpertya.process.ProcessInfoParameter;
 import org.openXpertya.process.SvrProcess;
 import org.openXpertya.util.DB;
 import org.openXpertya.util.Env;
-import org.openXpertya.util.Util;
 
 	public class LaunchReporteFacturaClienteProveedor extends SvrProcess {
 
 		/** Jasper Report			*/
 		private int AD_JasperReport_ID;
 		
-		/** Table					*/
-		private int AD_Table_ID;
-		
 		/** Date Acct From			*/
 		private Timestamp	p_dateFrom = null;
 		/** Date Acct To			*/
 		private Timestamp	p_dateTo = null;
-		
-		private String	p_transactionType = null;
-		
+
 		private int p_hoja;
 		
-//		private String p_tipoLibro = null;
+		private int pProjectID = -1;
 		
-		private int p_OrgID = -1;
+		private int pCurrencyID = -1;
 		
-		private boolean groupCFInvoices = false;
-		
-		/** Nombre del informe	*/
-//		private final String p_reportName = "Libro de IVA";
+		private int pBPartnerID = -1;
 		
 		@Override
 		protected void prepare() {
@@ -52,36 +43,40 @@ import org.openXpertya.util.Util;
 				return;
 
 			AD_JasperReport_ID = proceso.getAD_JasperReport_ID();
-			AD_Table_ID = getTable_ID();	
-			
+			/*[ProcessInfoParameter[C_Project_ID=1010142.000000{java.math.BigDecimal} (00000001_00000001), 
+			 * ProcessInfoParameter[C_Currency_ID=118.000000{java.math.BigDecimal} (ARS), 
+			 * ProcessInfoParameter[C_BPartner_ID=1015444.000000{java.math.BigDecimal} (AMESUR S.A.), 
+			 * ProcessInfoParameter[DateAcct=2017-01-01 00:00:00.0{java.sql.Timestamp} (01.01.2017) - 2017-06-03 00:00:00.0{java.sql.Timestamp} (03.06.2017), 
+			 * ProcessInfoParameter[Hoja=0.000000{java.math.BigDecimal} (0)]*/
 	        ProcessInfoParameter[] para = getParameter();
 	        for( int i = 0;i < para.length;i++ ) {
 	            String name = para[ i ].getParameterName();
 	            if( para[ i ].getParameter() == null ) ;	            
 	            else {
+	            	if(name.equals("C_Project_ID"))
+		            {
+		            	BigDecimal tmp = ( BigDecimal )para[ i ].getParameter();
+		            	pProjectID = tmp == null ? null : tmp.intValue();
+		            }
+	            	if(name.equals("C_Currency_ID"))
+		            {
+		            	BigDecimal tmp = ( BigDecimal )para[ i ].getParameter();
+		            	pCurrencyID = tmp == null ? null : tmp.intValue();
+		            }
+	            	if(name.equals("C_BPartner_ID"))
+		            {
+		            	BigDecimal tmp = ( BigDecimal )para[ i ].getParameter();
+		            	pBPartnerID = tmp == null ? null : tmp.intValue();
+		            }
 	            	if(name.equals("DateAcct"))
 					{
 						p_dateFrom = (Timestamp)para[i].getParameter();
 						p_dateTo = (Timestamp)para[i].getParameter_To();
 					}
-		            if(name.equals("IsSOTrx"))
-		            {
-		            	p_transactionType = (String)para[ i ].getParameter();
-		            }
-		            if(name.equals("AD_Org_ID"))
-		            {
-		            	BigDecimal tmp = ( BigDecimal )para[ i ].getParameter();
-		            	p_OrgID = tmp == null ? null : tmp.intValue();
-		            }
 		            if(name.equals("Hoja"))
 		            {
 		            	BigDecimal tmp = ( BigDecimal )para[ i ].getParameter();
 		            	p_hoja = tmp == null ? null : tmp.intValue();
-		            }
-		            if(name.equals("GroupCFInvoices"))
-		            {
-		            	String tmp = ( String )para[ i ].getParameter();
-		            	groupCFInvoices = tmp == null ? false : tmp.equalsIgnoreCase("Y");
 		            }
 	            }
 	        }
@@ -97,41 +92,39 @@ import org.openXpertya.util.Util;
 						
 			MJasperReport jasperwrapper = new MJasperReport(getCtx(), AD_JasperReport_ID, get_TrxName());
 			
-//			p_tipoLibro="";
-			
-			ReporteFacturaClienteProveedorDataSource ds = new ReporteFacturaClienteProveedorDataSource(getCtx(),
-					(Date) p_dateFrom, (Date) p_dateTo, p_transactionType, p_OrgID,
-					groupCFInvoices, get_TrxName());
+			ReporteFacturaClienteDataSource dsCliente = new ReporteFacturaClienteDataSource(
+					this.pProjectID,
+					this.pCurrencyID, this.pBPartnerID,
+					(Date) p_dateFrom, (Date) p_dateTo, 
+					get_TrxName(), getSQLQueryCliente());
 			
 			try {
-				ds.loadData();
+				dsCliente.loadData();
+			}
+			catch (RuntimeException e)	{
+				throw new RuntimeException("No se pueden cargar los datos del informe", e);
+			}
+			
+			ReporteFacturaClienteDataSource dsProveedor = new ReporteFacturaClienteDataSource(
+					this.pProjectID,
+					this.pCurrencyID, this.pBPartnerID,
+					(Date) p_dateFrom, (Date) p_dateTo, 
+					get_TrxName(), getSQLQueryProveedor(),
+					dsCliente.getTotal(), dsCliente.getTotalHBL());
+			
+			try {
+				dsProveedor.loadData();
 			}
 			catch (RuntimeException e)	{
 				throw new RuntimeException("No se pueden cargar los datos del informe", e);
 			}
 			
 			///////////////////////////////////////
-			// Subreporte de Impuestos.
-//			MJasperReport taxSubreport = getTaxSubreport(); 
-			// Se agrega el informe compilado como parámetro.
-//			jasperwrapper.addParameter("COMPILED_SUBREPORT_TAXS", new ByteArrayInputStream(taxSubreport.getBinaryData()));
-			// Se agrega el datasource del subreporte.
-//			jasperwrapper.addParameter("SUBREPORT_TAXS_DATASOURCE", ds.getInvoiceCustomerDataSource());
-			///////////////////////////////////////
-			// Subreporte de Totales 
-//			MJasperReport documentsSubreport = getTotalSubreport(); 
-			// Se agrega el informe compilado como parámetro.
-//			jasperwrapper.addParameter("COMPILED_SUBREPORT_TOTAL", new ByteArrayInputStream(documentsSubreport.getBinaryData()));
-			// Se agrega el datasource del subreporte.
-//			jasperwrapper.addParameter("SUBREPORT_TOTAL_GENERAL_DATASOURCE", ds.getTotalGeneralDataSource());
-			///////////////////////////////////////
-			// Subreporte de Totales de Créditos
-			// Se agrega el datasource del subreporte.
-//			jasperwrapper.addParameter("SUBREPORT_TOTAL_CREDITS_DATASOURCE", ds.getTotalCreditsDataSource());
-			///////////////////////////////////////
-			// Subreporte de Totales de Débitos
-			// Se agrega el datasource del subreporte.
-//			jasperwrapper.addParameter("SUBREPORT_TOTAL_DEBITS_DATASOURCE", ds.getTotalDebitsDataSource());			
+			MJasperReport proveedorSubreport = getFacturaProveedorSubreport(); 
+//			 Se agrega el informe compilado como parámetro.
+			jasperwrapper.addParameter("COMPILED_SUBREPORT_PROVEEDOR", new ByteArrayInputStream(proveedorSubreport.getBinaryData()));
+//			 Se agrega el datasource del subreporte.
+			jasperwrapper.addParameter("SUBREPORT_PROVEEDOR_DATASOURCE", dsProveedor);
 			
 			// Establecemos parametros
 		 	Integer clientID = Env.getAD_Client_ID(getCtx());
@@ -140,35 +133,18 @@ import org.openXpertya.util.Util;
 			jasperwrapper.addParameter("TOTALIMPORTES", "");
 			jasperwrapper.addParameter("TOTALGRAVADOS", "-");
 			jasperwrapper.addParameter("TOTALNOGRAVADOS", "-");
-			jasperwrapper.addParameter("TOTAL_INGRESADO", ds.getTotalIngresado());
+			jasperwrapper.addParameter("TOTAL_INGRESADO", dsCliente.getTotal());
+			jasperwrapper.addParameter("TOTAL_INGRESADO_HBL", dsCliente.getTotalHBL());
+
 			jasperwrapper.addParameter("HOJA", p_hoja);
-			MOrder order = new MOrder(getCtx(), 0, null);
 			jasperwrapper.addParameter("COMPANIA", JasperReportsUtil.getClientName(getCtx(), clientID));
 			jasperwrapper.addParameter("LOCALIZACION", "");
-			if(!Util.isEmpty(p_OrgID, true)){
-				jasperwrapper.addParameter("ORG_NAME",
-						JasperReportsUtil.getOrgName(getCtx(), p_OrgID));
-				jasperwrapper.addParameter("ORG_LOCALIZATION",
-						JasperReportsUtil.getLocalizacion(getCtx(), clientID,
-								p_OrgID, get_TrxName()));
-			}
-//			jasperwrapper.addParameter("REPORT_NAME", p_reportName);
+			
 			jasperwrapper.addParameter("FECHADESDE", (Date)p_dateFrom);
 			jasperwrapper.addParameter("FECHAHASTA",(Date) p_dateTo);
-			if(!p_transactionType.equals("B")){
-            	 //Si es transacción de ventas, C = Customer(Cliente)
-//            	 if(p_transactionType.equals("C")){
-//            		 p_tipoLibro = "VENTAS";
-//            	 }
-//            	 else{
-//            		//Si es transacción de compra
-//            		 p_tipoLibro="COMPRAS";
-//            	 }
-             }
-//			jasperwrapper.addParameter("TIPOLIBRO", p_tipoLibro);
 			
 			try {
-				jasperwrapper.fillReport(ds);
+				jasperwrapper.fillReport(dsCliente);
 				jasperwrapper.showReport(getProcessInfo());
 			}
 				
@@ -179,18 +155,70 @@ import org.openXpertya.util.Util;
 			return "doIt";
 		}
 		
-		protected MJasperReport getTaxSubreport() throws Exception {
-			return getJasperReport("SubReporte_FacturaCliente");
+		private String getSQLQueryProveedor() {
+			StringBuffer query = new StringBuffer(
+					" select doc.name as tipoComprobante, "
+					+ "i.documentno as numeroFC, p.name as concepto, "
+					+ "il.linetotalamt as importeMO, c.iso_code as moneda, "
+					+ "ol.preciomaximocompra importePesos, "
+					+ "ol.precioinformado importeHBL, "
+					+ "b.name as razonsocial, i.DateInvoiced as fecha, "
+					+ "i.grandtotal as tipocambio "
+					+ "from C_Invoice i  "
+					+ "inner join c_invoiceline il on i.c_invoice_id = il.c_invoice_id "
+					+ "inner join m_product p on il.m_product_id = p.m_product_id "
+					+ "inner join c_currency c on c.c_currency_id = i.c_currency_id "
+					+ "inner join c_orderline ol on il.c_orderline_id = ol.c_orderline_id "
+					+ "inner join c_bpartner b on b.c_bpartner_id = i.c_bpartner_id "
+					+ "inner join c_doctype doc on doc.c_doctype_id = i.c_doctypetarget_id "
+					+ "where i.IsActive='Y' "
+					+ "and i.ad_client_id = ? " 
+					+ "and i.ad_org_id = ? "
+					+ "AND i.DateInvoiced::date BETWEEN ? ::date AND ? ::date ");
+
+			query.append(" AND i.c_project_id = ? ");
+			query.append(" AND c.c_currency_id = ? ");
+			query.append(" AND b.c_bpartner_id = ? ");
+			
+			query.append(" AND i.issotrx = 'N' ");
+			
+			return query.toString() + " order by i.documentno, p.name";
 		}
-		
-		protected MJasperReport getTotalSubreport() throws Exception {
-			return getJasperReport("Total - Libro IVA");
+
+		private String getSQLQueryCliente() {
+			
+			StringBuffer query = new StringBuffer(
+					" select doc.name as tipoComprobante, "
+					+ "i.documentno as numeroFC, p.name as concepto, "
+					+ "il.linetotalamt as importeMO, c.iso_code as moneda, "
+					+ "ol.preciomaximocompra importePesos, "
+					+ "ol.precioinformado importeHBL, "
+					+ "b.name as razonsocial, i.DateInvoiced as fecha, "
+					+ "i.grandtotal as tipocambio "
+					+ "from C_Invoice i  "
+					+ "inner join c_invoiceline il on i.c_invoice_id = il.c_invoice_id "
+					+ "inner join m_product p on il.m_product_id = p.m_product_id "
+					+ "inner join c_currency c on c.c_currency_id = i.c_currency_id "
+					+ "inner join c_orderline ol on il.c_orderline_id = ol.c_orderline_id "
+					+ "inner join c_bpartner b on b.c_bpartner_id = i.c_bpartner_id "
+					+ "inner join c_doctype doc on doc.c_doctype_id = i.c_doctypetarget_id "
+					+ "where i.IsActive='Y' "
+					+ "and i.ad_client_id = ? " 
+					+ "and i.ad_org_id = ? "
+					+ "AND i.DateInvoiced::date BETWEEN ? ::date AND ? ::date ");
+
+			query.append(" AND i.c_project_id = ? ");
+			query.append(" AND c.c_currency_id = ? ");
+			query.append(" AND b.c_bpartner_id = ? ");
+			
+			query.append(" AND i.issotrx = 'Y' ");
+			
+			return query.toString() + " order by i.documentno, p.name";
 		}
-		
-		/**
-		 * @return Retorna el MJasperReport con el nombre indicado.
-		 */
-		private MJasperReport getJasperReport(String name) throws Exception {
+
+		private MJasperReport getFacturaProveedorSubreport() throws Exception {
+			String name = "SubReporte_FacturaProveedor";
+			
 			Integer jasperReport_ID = 
 				(Integer)DB.getSQLObject(get_TrxName(), "SELECT AD_JasperReport_ID FROM AD_JasperReport WHERE Name ilike ?", new Object[] { name });
 			if(jasperReport_ID == null || jasperReport_ID == 0)
@@ -199,5 +227,9 @@ import org.openXpertya.util.Util;
 			MJasperReport jasperReport = new MJasperReport(getCtx(), jasperReport_ID, get_TrxName());
 			return jasperReport;
 		}
+		
+		
+		
+		
 		
 }
