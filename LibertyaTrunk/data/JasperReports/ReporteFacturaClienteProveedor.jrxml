@@ -25,17 +25,18 @@
 
 	<parameter name="HOJA" isForPrompting="false" class="java.lang.Integer"/>
 	<parameter name="COMPANIA" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="LOCALIZACION" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="FECHADESDE" isForPrompting="false" class="java.util.Date"/>
 	<parameter name="FECHAHASTA" isForPrompting="false" class="java.util.Date"/>
 	<parameter name="OP_TAXNAME" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="OP_TAXAMOUNT" isForPrompting="false" class="java.math.BigDecimal"/>
 	<parameter name="ORG_NAME" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="ORG_LOCALIZATION" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="TOTAL_INGRESADO" isForPrompting="false" class="java.math.BigDecimal"/>
 	<parameter name="COMPILED_SUBREPORT_PROVEEDOR" isForPrompting="false" class="java.io.InputStream"/>
 	<parameter name="SUBREPORT_PROVEEDOR_DATASOURCE" isForPrompting="false" class="net.sf.jasperreports.engine.JRDataSource"/>
 	<parameter name="TOTAL_INGRESADO_HBL" isForPrompting="false" class="java.math.BigDecimal"/>
+	<parameter name="CARPETA" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="CLIENTE" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="MONEDA" isForPrompting="false" class="java.lang.String"/>
 
 	<field name="TIPOCOMPROBANTE_LINEA" class="java.lang.String"/>
 	<field name="NUMEROFACTURA_LINEA" class="java.lang.String"/>
@@ -72,16 +73,16 @@
 			<band height="73"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="7"
+						x="87"
 						y="37"
-						width="181"
-						height="34"
+						width="112"
+						height="16"
 						key="textField-6"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement>
 						<font fontName="Tahoma" size="6"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ORG_NAME} != null?$P{ORG_LOCALIZATION}:$P{LOCALIZACION}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{CARPETA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -94,7 +95,7 @@
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[new Integer($V{PAGE_NUMBER}.intValue()+$P{HOJA}.intValue()-1)]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[new Integer($V{PAGE_NUMBER}.intValue())]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -195,6 +196,80 @@
 						<font fontName="Tahoma" size="6"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ORG_NAME}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="87"
+						y="53"
+						width="112"
+						height="16"
+						key="textField-23"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Tahoma" size="6"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{CLIENTE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="7"
+						y="37"
+						width="80"
+						height="16"
+						forecolor="#010101"
+						backcolor="#FFFFFF"
+						key="staticText-36"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Proyecto / Carpeta:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="7"
+						y="53"
+						width="80"
+						height="16"
+						forecolor="#010101"
+						backcolor="#FFFFFF"
+						key="staticText-37"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Cliente:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="199"
+						y="37"
+						width="80"
+						height="16"
+						forecolor="#010101"
+						backcolor="#FFFFFF"
+						key="staticText-38"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Moneda:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="279"
+						y="37"
+						width="112"
+						height="16"
+						key="textField-24"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Tahoma" size="6"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{MONEDA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>

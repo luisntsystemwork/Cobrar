@@ -7,7 +7,10 @@ import java.util.Date;
 
 import org.openXpertya.JasperReport.DataSource.JasperReportsUtil;
 import org.openXpertya.JasperReport.DataSource.ReporteFacturaClienteDataSource;
+import org.openXpertya.model.MBPartner;
+import org.openXpertya.model.MCurrency;
 import org.openXpertya.model.MProcess;
+import org.openXpertya.model.MProject;
 import org.openXpertya.process.ProcessInfo;
 import org.openXpertya.process.ProcessInfoParameter;
 import org.openXpertya.process.SvrProcess;
@@ -138,7 +141,13 @@ import org.openXpertya.util.Env;
 
 			jasperwrapper.addParameter("HOJA", p_hoja);
 			jasperwrapper.addParameter("COMPANIA", JasperReportsUtil.getClientName(getCtx(), clientID));
+			Integer orgID = Env.getAD_Org_ID(getCtx());
+			jasperwrapper.addParameter("ORG_NAME", JasperReportsUtil.getOrgName(getCtx(), orgID));
 			jasperwrapper.addParameter("LOCALIZACION", "");
+			
+			jasperwrapper.addParameter("CARPETA", new MProject(getCtx(), this.pProjectID, this.get_TrxName()).getName());
+			jasperwrapper.addParameter("MONEDA", new MCurrency(getCtx(), this.pCurrencyID, this.get_TrxName()).getISO_Code());
+			jasperwrapper.addParameter("CLIENTE", JasperReportsUtil.getBPartnerName(getCtx(), this.pBPartnerID, this.get_TrxName()));
 			
 			jasperwrapper.addParameter("FECHADESDE", (Date)p_dateFrom);
 			jasperwrapper.addParameter("FECHAHASTA",(Date) p_dateTo);
