@@ -92,7 +92,7 @@ public class ReporteFacturaDataSource implements JRDataSource {
 				BigDecimal tipocambioBig = rs.getBigDecimal("tipocambio");
 				String tipocambio = tipocambioBig == null ? BigDecimal.ZERO.toString() : tipocambioBig.toString();
 				
-				allByCategoriaIVAList.add(new LineaPedido(documento, numerodoc, concepto, lineTotalAmt, iso_code, preciomaximocompra, precioinformado, razonsocial, dateInvoicedFormated, tipocambio));
+				allByCategoriaIVAList.add(new LineaPedido(documento, numerodoc, concepto, lineTotalAmt, iso_code, preciomaximocompra, precioinformado, razonsocial, dateInvoicedFormated, tipocambio,"", "", ""));
 				
 				if (preciomaximocompraBig != null) {
 					this.total = this.total.add(preciomaximocompraBig);

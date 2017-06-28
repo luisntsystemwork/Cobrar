@@ -6,8 +6,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import org.openXpertya.JasperReport.DataSource.JasperReportsUtil;
-import org.openXpertya.JasperReport.DataSource.ReporteFacturaClienteDataSource;
-import org.openXpertya.model.MCurrency;
+import org.openXpertya.JasperReport.DataSource.ReporteFacturaClienteDataSourcePorProyecto;
 import org.openXpertya.model.MProcess;
 import org.openXpertya.model.MProject;
 import org.openXpertya.process.ProcessInfo;
@@ -16,7 +15,7 @@ import org.openXpertya.process.SvrProcess;
 import org.openXpertya.util.DB;
 import org.openXpertya.util.Env;
 
-	public class LaunchReporteFacturaClienteProveedor extends SvrProcess {
+public class LaunchReporteFacturaClienteProveedorPorProyecto extends SvrProcess {
 
 		/** Jasper Report			*/
 		private int AD_JasperReport_ID;
@@ -29,10 +28,6 @@ import org.openXpertya.util.Env;
 		private int p_hoja;
 		
 		private int pProjectID = -1;
-		
-		private int pCurrencyID = -1;
-		
-		private int pBPartnerID = -1;
 		
 		@Override
 		protected void prepare() {
@@ -60,16 +55,6 @@ import org.openXpertya.util.Env;
 		            	BigDecimal tmp = ( BigDecimal )para[ i ].getParameter();
 		            	pProjectID = tmp == null ? null : tmp.intValue();
 		            }
-	            	if(name.equals("C_Currency_ID"))
-		            {
-		            	BigDecimal tmp = ( BigDecimal )para[ i ].getParameter();
-		            	pCurrencyID = tmp == null ? null : tmp.intValue();
-		            }
-	            	if(name.equals("C_BPartner_ID"))
-		            {
-		            	BigDecimal tmp = ( BigDecimal )para[ i ].getParameter();
-		            	pBPartnerID = tmp == null ? null : tmp.intValue();
-		            }
 	            	if(name.equals("DateAcct"))
 					{
 						p_dateFrom = (Timestamp)para[i].getParameter();
@@ -94,9 +79,8 @@ import org.openXpertya.util.Env;
 						
 			MJasperReport jasperwrapper = new MJasperReport(getCtx(), AD_JasperReport_ID, get_TrxName());
 			
-			ReporteFacturaClienteDataSource dsCliente = new ReporteFacturaClienteDataSource(
+			ReporteFacturaClienteDataSourcePorProyecto dsCliente = new ReporteFacturaClienteDataSourcePorProyecto(
 					this.pProjectID,
-					this.pCurrencyID, this.pBPartnerID,
 					(Date) p_dateFrom, (Date) p_dateTo, 
 					get_TrxName(), getSQLQueryCliente());
 			
@@ -107,9 +91,8 @@ import org.openXpertya.util.Env;
 				throw new RuntimeException("No se pueden cargar los datos del informe", e);
 			}
 			
-			ReporteFacturaClienteDataSource dsProveedor = new ReporteFacturaClienteDataSource(
+			ReporteFacturaClienteDataSourcePorProyecto dsProveedor = new ReporteFacturaClienteDataSourcePorProyecto(
 					this.pProjectID,
-					this.pCurrencyID, this.pBPartnerID,
 					(Date) p_dateFrom, (Date) p_dateTo, 
 					get_TrxName(), getSQLQueryProveedor(),
 					dsCliente.getTotal(), dsCliente.getTotalHBL());
@@ -123,7 +106,7 @@ import org.openXpertya.util.Env;
 			
 			///////////////////////////////////////
 			MJasperReport proveedorSubreport = getFacturaProveedorSubreport(); 
-//			 Se agrega el informe compilado como parámetro.
+//			 Se agrega el informe compilado como par�metro.
 			jasperwrapper.addParameter("COMPILED_SUBREPORT_PROVEEDOR", new ByteArrayInputStream(proveedorSubreport.getBinaryData()));
 //			 Se agrega el datasource del subreporte.
 			jasperwrapper.addParameter("SUBREPORT_PROVEEDOR_DATASOURCE", dsProveedor);
@@ -145,8 +128,8 @@ import org.openXpertya.util.Env;
 			jasperwrapper.addParameter("LOCALIZACION", "");
 			
 			jasperwrapper.addParameter("CARPETA", new MProject(getCtx(), this.pProjectID, this.get_TrxName()).getName());
-			jasperwrapper.addParameter("MONEDA", new MCurrency(getCtx(), this.pCurrencyID, this.get_TrxName()).getISO_Code());
-			jasperwrapper.addParameter("CLIENTE", JasperReportsUtil.getBPartnerName(getCtx(), this.pBPartnerID, this.get_TrxName()));
+			jasperwrapper.addParameter("MONEDA", dsCliente.getMonedaProyecto());
+			jasperwrapper.addParameter("CLIENTE", "");
 			
 			jasperwrapper.addParameter("FECHADESDE", (Date)p_dateFrom);
 			jasperwrapper.addParameter("FECHAHASTA",(Date) p_dateTo);
@@ -182,7 +165,8 @@ import org.openXpertya.util.Env;
 							+ "where v.\"IngresoEgreso\" = 'EGRE' "
 							+ "and v.ad_client_id = ? "
 							+ "and v.ad_org_id = ? "
-							+ "and to_date(v.\"FECHA\", 'YYYY/MM/DD')::date between ? ::date and ? ::date");
+							+ "and to_date(v.\"FECHA\", 'YYYY/MM/DD')::date between ? ::date and ? ::date "
+							+ "and v.\"CODIGO_Proyecto\" = ? ");
 			
 			return query.toString();
 		}
@@ -207,7 +191,8 @@ import org.openXpertya.util.Env;
 					+ "where v.\"IngresoEgreso\" = 'INGRE' "
 					+ "and v.ad_client_id = ? "
 					+ "and v.ad_org_id = ? "
-					+ "and to_date(v.\"FECHA\", 'YYYY/MM/DD')::date between ? ::date and ? ::date");
+					+ "and to_date(v.\"FECHA\", 'YYYY/MM/DD')::date between ? ::date and ? ::date "
+					+ "and v.\"CODIGO_Proyecto\" = ? ");
 			
 			return query.toString();
 		}

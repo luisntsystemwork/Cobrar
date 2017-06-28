@@ -17,14 +17,17 @@ public class LineaPedido implements Comparable<LineaPedido>{
 	private String razonSocial;
 	private String dateInvoicedFormated;
 	private String tipoCambio;
+	private String nombreProyecto;
+	private String monedaProyecto;
+	private String codigoProyecto;
 	
-	public static final LineaPedido NULL = new LineaPedido("-", "-", "-", "-", "-", "-", "-", "-", "-", "-");
+	public static final LineaPedido NULL = new LineaPedido("-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-");
 
 	public LineaPedido(String documento, String numerodoc, String concepto,
 			String lineTotalAmt, String iso_code,
 			String preciomaximocompra, String precioinformado,
 			String razonsocial, String dateInvoicedFormated,
-			String tipocambio) {
+			String tipocambio, String nombreProyecto, String monedaProyecto, String codigoProyecto) {
 		super();
 		
 		this.documento = documento;
@@ -37,10 +40,10 @@ public class LineaPedido implements Comparable<LineaPedido>{
 		this.razonSocial = razonsocial;
 		this.dateInvoicedFormated = dateInvoicedFormated;
 		this.tipoCambio = tipocambio;
+		this.nombreProyecto = nombreProyecto;
+		this.monedaProyecto = monedaProyecto;
+		this.codigoProyecto = codigoProyecto;
 	}
-
-	
-
 
 	/**
 	 * @return the documento
@@ -49,18 +52,12 @@ public class LineaPedido implements Comparable<LineaPedido>{
 		return documento;
 	}
 
-
-
-
 	/**
 	 * @return the numeroDoc
 	 */
 	public String getNumeroDoc() {
 		return numeroDoc;
 	}
-
-
-
 
 	/**
 	 * @return the concepto
@@ -69,18 +66,12 @@ public class LineaPedido implements Comparable<LineaPedido>{
 		return concepto;
 	}
 
-
-
-
 	/**
 	 * @return the lineTotalAmt
 	 */
 	public String getLineTotalAmt() {
 		return lineTotalAmt;
 	}
-
-
-
 
 	/**
 	 * @return the isoCode
@@ -89,18 +80,12 @@ public class LineaPedido implements Comparable<LineaPedido>{
 		return isoCode;
 	}
 
-
-
-
 	/**
 	 * @return the precioMaximoCompra
 	 */
 	public String getPrecioMaximoCompra() {
 		return precioMaximoCompra;
 	}
-
-
-
 
 	/**
 	 * @return the precioInformado
@@ -109,18 +94,12 @@ public class LineaPedido implements Comparable<LineaPedido>{
 		return precioInformado;
 	}
 
-
-
-
 	/**
 	 * @return the razonSocial
 	 */
 	public String getRazonSocial() {
 		return razonSocial;
 	}
-
-
-
 
 	/**
 	 * @return the dateInvoicedFormated
@@ -129,18 +108,30 @@ public class LineaPedido implements Comparable<LineaPedido>{
 		return dateInvoicedFormated;
 	}
 
-
-
-
 	/**
 	 * @return the tipoCambio
 	 */
 	public String getTipoCambio() {
 		return tipoCambio;
 	}
+	
+	public String getNombreProyecto() {
+		return nombreProyecto;
+	}
 
+	/**
+	 * @return the monedaProyecto
+	 */
+	public String getMonedaProyecto() {
+		return monedaProyecto;
+	}
 
-
+	/**
+	 * @return the codigoProyecto
+	 */
+	public String getCodigoProyecto() {
+		return codigoProyecto;
+	}
 
 	@Override
 	public int compareTo(LineaPedido o) {

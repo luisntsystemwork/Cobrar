@@ -19,11 +19,9 @@ import net.sf.jasperreports.engine.JRField;
 import org.openXpertya.util.CPreparedStatement;
 import org.openXpertya.util.Env;
 
-public class ReporteFacturaClienteDataSource implements JRDataSource {
+public class ReporteFacturaClienteDataSourcePorProyecto implements JRDataSource {
 
 	private int pProjectID;
-	private int pCurrencyID;
-	private int pBPartnerID;
 	/** Fecha desde y hasta de las facturas */
 	private Date p_dateFrom;
 	private Date p_dateTo;
@@ -48,11 +46,11 @@ public class ReporteFacturaClienteDataSource implements JRDataSource {
 	
 	private String sQLQuery = null;
 	
-	public ReporteFacturaClienteDataSource(int pProjectID, int pCurrencyID, int pBPartnerID, 
+	public ReporteFacturaClienteDataSourcePorProyecto(int pProjectID,  
 			Date p_dateFrom,
 			Date p_dateTo,
 			String trxName, String sQLQuery, BigDecimal total, BigDecimal totalHBL) {
-		this(pProjectID, pCurrencyID, pBPartnerID, 
+		this(pProjectID, 
 				p_dateFrom,
 				p_dateTo,
 				trxName, sQLQuery);
@@ -63,13 +61,11 @@ public class ReporteFacturaClienteDataSource implements JRDataSource {
 	}
 	
 
-	public ReporteFacturaClienteDataSource(int pProjectID, int pCurrencyID, int pBPartnerID, 
+	public ReporteFacturaClienteDataSourcePorProyecto(int pProjectID,  
 			Date p_dateFrom,
 			Date p_dateTo,
 			String trxName, String sQLQuery) {
 		this.pProjectID = pProjectID;
-		this.pCurrencyID = pCurrencyID;
-		this.pBPartnerID = pBPartnerID;
 		this.p_dateFrom = p_dateFrom;
 		this.p_dateTo = p_dateTo;
 		this.sQLQuery = sQLQuery;
@@ -108,7 +104,7 @@ public class ReporteFacturaClienteDataSource implements JRDataSource {
 			pstmt.setInt(j++, Env.getAD_Org_ID(Env.getCtx()));
 			pstmt.setTimestamp(j++, new Timestamp(this.p_dateFrom.getTime()));
 			pstmt.setTimestamp(j++, new Timestamp(this.p_dateTo.getTime()));
-//			pstmt.setInt(j++, this.pProjectID);
+			pstmt.setInt(j++, this.pProjectID);
 //			pstmt.setInt(j++, this.pCurrencyID);
 //			pstmt.setInt(j++, this.pBPartnerID);
 			
@@ -209,7 +205,7 @@ public class ReporteFacturaClienteDataSource implements JRDataSource {
 			throw new JRException("No se ha podido invocar el metodo "
 					+ methodMapper.get(name));
 		} catch (InvocationTargetException e) {
-			throw new JRException("Excepcion al invocar el método "
+			throw new JRException("Excepcion al invocar el m�todo "
 					+ methodMapper.get(name));
 		} catch (Exception e) {
 			throw new JRException("Excepcion general al acceder al campo "
@@ -268,6 +264,8 @@ public class ReporteFacturaClienteDataSource implements JRDataSource {
 		return this.totalHBL;
 	}
 	
+	public String getMonedaProyecto() {
+		return this.lines.get(0).getMonedaProyecto();
+	}
+	
 }
-
-
