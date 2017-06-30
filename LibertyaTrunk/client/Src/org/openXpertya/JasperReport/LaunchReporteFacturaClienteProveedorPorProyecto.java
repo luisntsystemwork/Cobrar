@@ -166,7 +166,7 @@ public class LaunchReporteFacturaClienteProveedorPorProyecto extends SvrProcess 
 							+ "and v.ad_client_id = ? "
 							+ "and v.ad_org_id = ? "
 							+ "and to_date(v.\"FECHA\", 'YYYY/MM/DD')::date between ? ::date and ? ::date "
-							+ "and v.\"CODIGO_Proyecto\" = ? ");
+							+ "and v.\"Project_ID\" = ? ");
 			
 			return query.toString();
 		}
@@ -192,13 +192,13 @@ public class LaunchReporteFacturaClienteProveedorPorProyecto extends SvrProcess 
 					+ "and v.ad_client_id = ? "
 					+ "and v.ad_org_id = ? "
 					+ "and to_date(v.\"FECHA\", 'YYYY/MM/DD')::date between ? ::date and ? ::date "
-					+ "and v.\"CODIGO_Proyecto\" = ? ");
+					+ "and v.\"Project_ID\" = ? ");
 			
 			return query.toString();
 		}
 
 		private MJasperReport getFacturaProveedorSubreport() throws Exception {
-			String name = "SubReporte_FacturaProveedor";
+			String name = "SubReporte_FacturaProveedorPorProyecto";
 			
 			Integer jasperReport_ID = 
 				(Integer)DB.getSQLObject(get_TrxName(), "SELECT AD_JasperReport_ID FROM AD_JasperReport WHERE Name ilike ?", new Object[] { name });

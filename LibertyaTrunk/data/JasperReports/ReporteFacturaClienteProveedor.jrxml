@@ -195,7 +195,7 @@
 						mode="Transparent"
 						x="0"
 						y="0"
-						width="46"
+						width="45"
 						height="23"
 						forecolor="#010101"
 						backcolor="#FFFFFF"
@@ -209,9 +209,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="91"
+						x="92"
 						y="0"
-						width="60"
+						width="58"
 						height="23"
 						forecolor="#010101"
 						backcolor="#FFFFFF"
@@ -259,7 +259,7 @@
 						mode="Transparent"
 						x="205"
 						y="0"
-						width="25"
+						width="24"
 						height="23"
 						forecolor="#010101"
 						backcolor="#FFFFFF"
@@ -275,7 +275,7 @@
 						mode="Transparent"
 						x="229"
 						y="0"
-						width="55"
+						width="54"
 						height="23"
 						forecolor="#010101"
 						backcolor="#FFFFFF"
@@ -291,7 +291,7 @@
 						mode="Transparent"
 						x="283"
 						y="0"
-						width="55"
+						width="54"
 						height="23"
 						forecolor="#010101"
 						backcolor="#FFFFFF"
@@ -307,7 +307,7 @@
 						mode="Transparent"
 						x="337"
 						y="0"
-						width="55"
+						width="54"
 						height="23"
 						forecolor="#010101"
 						backcolor="#FFFFFF"
@@ -355,7 +355,7 @@
 						mode="Transparent"
 						x="461"
 						y="0"
-						width="55"
+						width="54"
 						height="23"
 						forecolor="#010101"
 						backcolor="#FFFFFF"
@@ -380,7 +380,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<text><![CDATA[T/C]]></text>
+				<text><![CDATA[Mon.]]></text>
 				</staticText>
 			</band>
 		</columnHeader>
@@ -390,7 +390,7 @@
 					<reportElement
 						x="0"
 						y="0"
-						width="46"
+						width="45"
 						height="19"
 						key="textField"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
@@ -403,7 +403,7 @@
 					<reportElement
 						x="93"
 						y="0"
-						width="58"
+						width="57"
 						height="19"
 						key="textField"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
@@ -444,7 +444,7 @@
 					<reportElement
 						x="205"
 						y="0"
-						width="25"
+						width="24"
 						height="19"
 						key="textField-15"
 						isPrintWhenDetailOverflows="true"/>
@@ -486,7 +486,7 @@
 					<reportElement
 						x="339"
 						y="0"
-						width="53"
+						width="52"
 						height="19"
 						key="textField-18"
 						isPrintWhenDetailOverflows="true"/>
@@ -528,7 +528,7 @@
 					<reportElement
 						x="461"
 						y="0"
-						width="55"
+						width="53"
 						height="19"
 						key="textField-25"
 						isPrintWhenDetailOverflows="true"/>

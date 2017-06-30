@@ -55,7 +55,7 @@ public class ReporteFacturaClienteDataSourcePorProyecto implements JRDataSource 
 				p_dateTo,
 				trxName, sQLQuery);
 		this.totalImporte = total;
-		this.totalImporte = totalImporteHBL.setScale(2, BigDecimal.ROUND_DOWN);
+		this.totalImporte = totalImporte.setScale(2, BigDecimal.ROUND_DOWN);
 		this.totalImporteHBL = totalHBL;
 		this.totalImporteHBL = totalImporteHBL.setScale(2, BigDecimal.ROUND_DOWN);
 	}
