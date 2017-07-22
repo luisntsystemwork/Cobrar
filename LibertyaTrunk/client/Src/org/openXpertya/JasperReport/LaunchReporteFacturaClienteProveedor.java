@@ -25,8 +25,6 @@ import org.openXpertya.util.Env;
 		private Timestamp	p_dateFrom = null;
 		/** Date Acct To			*/
 		private Timestamp	p_dateTo = null;
-
-		private int p_hoja;
 		
 		private int pProjectID = -1;
 		
@@ -75,12 +73,13 @@ import org.openXpertya.util.Env;
 						p_dateFrom = (Timestamp)para[i].getParameter();
 						p_dateTo = (Timestamp)para[i].getParameter_To();
 					}
-		            if(name.equals("Hoja"))
-		            {
-		            	BigDecimal tmp = ( BigDecimal )para[ i ].getParameter();
-		            	p_hoja = tmp == null ? null : tmp.intValue();
-		            }
 	            }
+	        }
+	        if (p_dateFrom == null) {
+	        	p_dateFrom = p_dateTo;
+	        }
+	        if (p_dateTo == null) {
+	        	p_dateTo = p_dateFrom;
 	        }
 			
 		}
@@ -138,7 +137,6 @@ import org.openXpertya.util.Env;
 			jasperwrapper.addParameter("TOTAL_INGRESADO", dsCliente.getTotal());
 			jasperwrapper.addParameter("TOTAL_INGRESADO_HBL", dsCliente.getTotalHBL());
 
-			jasperwrapper.addParameter("HOJA", p_hoja);
 			jasperwrapper.addParameter("COMPANIA", JasperReportsUtil.getClientName(getCtx(), clientID));
 			Integer orgID = Env.getAD_Org_ID(getCtx());
 			jasperwrapper.addParameter("ORG_NAME", JasperReportsUtil.getOrgName(getCtx(), orgID));
