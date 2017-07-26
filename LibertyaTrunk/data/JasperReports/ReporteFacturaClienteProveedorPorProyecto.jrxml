@@ -211,7 +211,7 @@
 					<textElement textAlignment="Left">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Proyecto / Carpeta:]]></text>
+				<text><![CDATA[Carpeta:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
